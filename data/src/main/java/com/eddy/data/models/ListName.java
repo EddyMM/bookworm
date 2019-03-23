@@ -13,6 +13,10 @@ public class ListName {
     @SerializedName("list_name_encoded")
     String listNameEncoded;
 
+    public String getDisplayName() {
+        return displayName;
+    }
+
     @Override
     public String toString() {
         return "ListName{" +

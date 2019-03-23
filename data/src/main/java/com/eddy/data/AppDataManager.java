@@ -5,40 +5,42 @@ import android.util.Log;
 import com.eddy.data.models.ListName;
 import com.eddy.data.models.ListNamesResponse;
 
-import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
+import androidx.annotation.NonNull;
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
 import retrofit2.Call;
+import retrofit2.Callback;
 import retrofit2.Response;
 
 public class AppDataManager implements DataManager {
 
     @Override
-    public List<ListName> getListNames() {
-        final List<ListName> listNames = new ArrayList<>();
+    public LiveData<List<ListName>> getListNames() {
+        final MutableLiveData<List<ListName>> listNamesLiveData = new MutableLiveData<>();
 
         BooksApiService booksApiService = BooksApi.getInstance();
         Call<ListNamesResponse> listNameResponseCall = booksApiService.listNames();
-
-        try {
-            Response<ListNamesResponse> response = listNameResponseCall.execute();
-
-            if(response.isSuccessful()) {
+        listNameResponseCall.enqueue(new Callback<ListNamesResponse>() {
+            @Override
+            public void onResponse(@NonNull Call<ListNamesResponse> call, @NonNull Response<ListNamesResponse> response) {
                 ListNamesResponse listNamesResponse = response.body();
 
                 if (listNamesResponse != null) {
                     List<ListName> books = listNamesResponse.getListNames();
-                    listNames.addAll(books);
-                    Log.i(AppDataManager.class.toString(), "LIST NAMES: "+ listNames.toString());
+                    listNamesLiveData.setValue(books);
                 } else {
                     Log.e(AppDataManager.class.toString(), "Null best seller response");
                 }
             }
-        } catch (IOException e) {
-            Log.e(AppDataManager.class.toString(), e.getMessage());
-        }
 
-        return listNames;
+            @Override
+            public void onFailure(@NonNull Call<ListNamesResponse> call, @NonNull Throwable t) {
+                Log.e(AppDataManager.class.toString(), t.getMessage());
+            }
+        });
+
+        return listNamesLiveData;
     }
 }

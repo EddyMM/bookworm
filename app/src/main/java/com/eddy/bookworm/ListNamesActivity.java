@@ -1,55 +1,68 @@
 package com.eddy.bookworm;
 
-import android.annotation.SuppressLint;
-import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
-import android.widget.TextView;
-import android.widget.Toast;
+import android.view.View;
+import android.widget.ProgressBar;
 
-import com.eddy.data.AppDataManager;
-import com.eddy.data.models.ListName;
-
-import java.util.List;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.ViewModelProviders;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
 public class ListNamesActivity extends AppCompatActivity {
 
-    private TextView textView;
+    @BindView(R.id.list_names_rv)
+    RecyclerView listNamesRecyclerView;
+
+    @BindView(R.id.list_names_progress_bar)
+    ProgressBar listNamesProgressBar;
+
+    ListNamesAdapter listNamesAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_list_names);
 
-        textView = findViewById(R.id.booksTextView);
+        ButterKnife.bind(this);
 
-        fetchListNames();
+        setUpListNamesRecyclerView();
+
+        setUpViewModel();
     }
 
-    private void fetchListNames() {
-        @SuppressLint("StaticFieldLeak") AsyncTask<Void, Void, List<ListName>> listNamesTask = new AsyncTask<Void, Void, List<ListName>> () {
+    private void setUpListNamesRecyclerView() {
+        listNamesAdapter = new ListNamesAdapter(this);
 
-            @Override
-            protected void onPreExecute() {
-                super.onPreExecute();
-                Toast.makeText(ListNamesActivity.this, "Fetching list names ...", Toast.LENGTH_LONG)
-                        .show();
+        listNamesRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        listNamesRecyclerView.setAdapter(listNamesAdapter);
+    }
+
+    private void setUpViewModel() {
+        ListNamesViewModel listNamesViewModel = ViewModelProviders.of(this).get(
+                ListNamesViewModel.class);
+
+        showProgressBar();
+
+        listNamesViewModel.listNamesLiveData.observe(this, listNames -> {
+            if (listNames != null) {
+                listNamesAdapter.setListNames(listNames);
             }
+//            else {
+//                Timber.d("No movies fetched");
+//            }
 
-            @Override
-            protected List<ListName> doInBackground(Void... voids) {
-                AppDataManager appDataManager = new AppDataManager();
-                return appDataManager.getListNames();
-            }
+            hideProgressBar();
+        });
+    }
 
-            @Override
-            protected void onPostExecute(List<ListName> listNames) {
-                Log.i(ListNamesActivity.class.toString(), "LIST NAMES: "+ listNames.toString());
-                textView.setText(listNames.toString());
-            }
-        };
+    private void hideProgressBar() {
+        listNamesProgressBar.setVisibility(View.GONE);
+    }
 
-        listNamesTask.execute();
+    private void showProgressBar() {
+        listNamesProgressBar.setVisibility(View.VISIBLE);
     }
 }

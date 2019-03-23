@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">Book Worm</string>
+    <string name="list_name_icon">List Name Icon</string>
 </resources>
