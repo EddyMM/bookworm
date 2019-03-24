@@ -97,4 +97,5 @@
     <string name="book_detail_title_author">Author</string>
     <string name="book_detail_title_publisher">Publisher</string>
     <string name="newest_published_on">Latest on %s</string>
+    <string name="menu_logout">Log out</string>
 </resources>
