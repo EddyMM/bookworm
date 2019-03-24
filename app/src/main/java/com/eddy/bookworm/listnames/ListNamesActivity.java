@@ -5,11 +5,11 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.ProgressBar;
 
-import com.eddy.bookworm.bookslist.BooksListActivity;
+import com.eddy.bookworm.base.BaseBookwormActivity;
 import com.eddy.bookworm.R;
+import com.eddy.bookworm.bookslist.BooksListActivity;
 import com.eddy.data.models.ListName;
 
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -17,7 +17,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import timber.log.Timber;
 
-public class ListNamesActivity extends AppCompatActivity implements ListNamesAdapter.ListNameListener {
+public class ListNamesActivity extends BaseBookwormActivity implements ListNamesAdapter.ListNameListener {
 
     @BindView(R.id.list_names_rv)
     RecyclerView listNamesRecyclerView;
@@ -50,7 +50,7 @@ public class ListNamesActivity extends AppCompatActivity implements ListNamesAda
         ListNamesViewModel listNamesViewModel = ViewModelProviders.of(this).get(
                 ListNamesViewModel.class);
 
-        showProgressBar();
+        onBeginSignIn();
 
         listNamesViewModel.listNamesLiveData.observe(this, listNames -> {
             if (listNames != null) {
@@ -60,16 +60,21 @@ public class ListNamesActivity extends AppCompatActivity implements ListNamesAda
                 Timber.d("No list names fetched");
             }
 
-            hideProgressBar();
+            onCompleteSignIn();
         });
     }
 
-    private void hideProgressBar() {
+    protected void onCompleteSignIn() {
         listNamesProgressBar.setVisibility(View.GONE);
     }
 
-    private void showProgressBar() {
+    protected void onBeginSignIn() {
         listNamesProgressBar.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    protected void onSuccessfulSignIn() {
+
     }
 
     @Override
