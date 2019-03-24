@@ -1,4 +1,4 @@
-package com.eddy.bookworm;
+package com.eddy.bookworm.listnames;
 
 import android.app.Application;
 

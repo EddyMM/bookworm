@@ -1,7 +1,7 @@
 package com.eddy.data;
 
-import android.util.Log;
-
+import com.eddy.data.models.Book;
+import com.eddy.data.models.BooksResponse;
 import com.eddy.data.models.ListName;
 import com.eddy.data.models.ListNamesResponse;
 
@@ -13,6 +13,7 @@ import androidx.lifecycle.MutableLiveData;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+import timber.log.Timber;
 
 public class AppDataManager implements DataManager {
 
@@ -31,16 +32,44 @@ public class AppDataManager implements DataManager {
                     List<ListName> books = listNamesResponse.getListNames();
                     listNamesLiveData.setValue(books);
                 } else {
-                    Log.e(AppDataManager.class.toString(), "Null best seller response");
+                    Timber.e("Null best seller response");
                 }
             }
 
             @Override
             public void onFailure(@NonNull Call<ListNamesResponse> call, @NonNull Throwable t) {
-                Log.e(AppDataManager.class.toString(), t.getMessage());
+                Timber.e(t);
             }
         });
 
         return listNamesLiveData;
+    }
+
+    @Override
+    public LiveData<List<Book>> getBooks(String encodedListName) {
+        final MutableLiveData<List<Book>> booksLiveData = new MutableLiveData<>();
+
+        BooksApiService booksApiService = BooksApi.getInstance();
+        Call<BooksResponse> booksResponseCall = booksApiService.listBooks(encodedListName);
+        booksResponseCall.enqueue(new Callback<BooksResponse>() {
+            @Override
+            public void onResponse(@NonNull Call<BooksResponse> call, @NonNull Response<BooksResponse> response) {
+                BooksResponse booksResponse = response.body();
+
+                if (booksResponse != null) {
+                    List<Book> books = booksResponse.getBooksResults().getBooks();
+                    booksLiveData.setValue(books);
+                } else {
+                    Timber.e("Null best seller response");
+                }
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<BooksResponse> call, @NonNull Throwable t) {
+                Timber.e(t);
+            }
+        });
+
+        return booksLiveData;
     }
 }

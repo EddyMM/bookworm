@@ -1,4 +1,4 @@
-package com.eddy.bookworm;
+package com.eddy.bookworm.listnames;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -6,6 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.eddy.bookworm.R;
 import com.eddy.data.models.ListName;
 
 import java.util.List;
@@ -19,9 +20,15 @@ public class ListNamesAdapter extends RecyclerView.Adapter<ListNamesAdapter.List
 
     private Context context;
     private List<ListName> listNames;
+    private  ListNameListener listNameListener;
 
-    ListNamesAdapter(Context context) {
+    ListNamesAdapter(Context context, ListNameListener listNameListener) {
         this.context = context;
+        this.listNameListener = listNameListener;
+    }
+
+    public interface ListNameListener {
+        void onClick(ListName listName);
     }
 
     @NonNull
@@ -48,20 +55,31 @@ public class ListNamesAdapter extends RecyclerView.Adapter<ListNamesAdapter.List
 
     void setListNames(List<ListName> listNames) {
         this.listNames = listNames;
+
         notifyDataSetChanged();
     }
 
-    class ListNamesViewHolder extends RecyclerView.ViewHolder {
+    class ListNamesViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         @BindView(R.id.list_name_tv)
         TextView listNameTextView;
+
+        @BindView(R.id.latest_publish_date_tv)
+        TextView latestPublishDate;
 
         ListNamesViewHolder(@NonNull View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
+            itemView.setOnClickListener(this);
         }
 
         void bind(ListName listName) {
             listNameTextView.setText(listName.getDisplayName());
+            latestPublishDate.setText(listName.getFormattedDate());
+        }
+
+        @Override
+        public void onClick(View v) {
+            listNameListener.onClick(listNames.get(getAdapterPosition()));
         }
     }
 }
