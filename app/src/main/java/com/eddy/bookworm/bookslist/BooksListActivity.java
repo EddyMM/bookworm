@@ -5,7 +5,9 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.ProgressBar;
 
+import com.eddy.bookworm.BookDetailActivity;
 import com.eddy.bookworm.R;
+import com.eddy.data.models.Book;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -16,7 +18,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import timber.log.Timber;
 
-public class BooksListActivity extends AppCompatActivity {
+public class BooksListActivity extends AppCompatActivity implements BooksAdapter.BooksListListener {
 
     public static final String LIST_NAME_ENCODED_EXTRA = "LIST_NAME_ENCODED_EXTRA";
 
@@ -45,7 +47,7 @@ public class BooksListActivity extends AppCompatActivity {
     }
 
     private void setUpBooksListUI() {
-        booksAdapter = new BooksAdapter(this);
+        booksAdapter = new BooksAdapter(this, this);
         booksRecyclerView.setAdapter(booksAdapter);
 
         StaggeredGridLayoutManager staggeredGridLayoutManager =
@@ -78,5 +80,13 @@ public class BooksListActivity extends AppCompatActivity {
 
     private void showProgressBar() {
         booksListProgressBar.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void onClick(Book book) {
+        Intent intent = new Intent(this, BookDetailActivity.class);
+        intent.putExtra(BookDetailActivity.BOOK_DETAIL_EXTRA, book);
+
+        startActivity(intent);
     }
 }
