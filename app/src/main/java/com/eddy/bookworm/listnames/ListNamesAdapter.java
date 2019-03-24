@@ -74,7 +74,8 @@ public class ListNamesAdapter extends RecyclerView.Adapter<ListNamesAdapter.List
 
         void bind(ListName listName) {
             listNameTextView.setText(listName.getDisplayName());
-            latestPublishDate.setText(listName.getFormattedDate());
+            latestPublishDate.setText(context.getString(
+                    R.string.newest_published_on, listName.getFormattedDate()));
         }
 
         @Override
