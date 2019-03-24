@@ -23,8 +23,15 @@ class BooksAdapter extends RecyclerView.Adapter<BooksAdapter.BooksViewHolder> {
     private List<Book> books;
     private Context context;
 
-    BooksAdapter(Context context) {
+    private BooksListListener booksListListener;
+
+    BooksAdapter(Context context, BooksListListener booksListListener) {
         this.context = context;
+        this.booksListListener = booksListListener;
+    }
+
+    public interface BooksListListener {
+        void onClick(Book book);
     }
 
     void setBooks(List<Book> books) {
@@ -54,7 +61,7 @@ class BooksAdapter extends RecyclerView.Adapter<BooksAdapter.BooksViewHolder> {
         return 0;
     }
 
-    class BooksViewHolder extends RecyclerView.ViewHolder {
+    class BooksViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         @BindView(R.id.book_list_item_iv)
         ImageView bookImageView;
@@ -68,6 +75,7 @@ class BooksAdapter extends RecyclerView.Adapter<BooksAdapter.BooksViewHolder> {
         BooksViewHolder(@NonNull View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
+            itemView.setOnClickListener(this);
         }
 
         void bind(Book book) {
@@ -78,6 +86,12 @@ class BooksAdapter extends RecyclerView.Adapter<BooksAdapter.BooksViewHolder> {
                     .into(bookImageView);
             titleTextView.setText(book.getTitle());
             authorTextView.setText(book.getAuthor());
+        }
+
+        @Override
+        public void onClick(View v) {
+            Book book = books.get(getAdapterPosition());
+            booksListListener.onClick(book);
         }
     }
 

@@ -1,8 +1,11 @@
 package com.eddy.data.models;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.google.gson.annotations.SerializedName;
 
-public class Book {
+public class Book implements Parcelable {
 
     @SerializedName("title")
     String title;
@@ -19,6 +22,26 @@ public class Book {
     @SerializedName("publisher")
     String publisher;
 
+    protected Book(Parcel in) {
+        title = in.readString();
+        author = in.readString();
+        description = in.readString();
+        bookImageUrl = in.readString();
+        publisher = in.readString();
+    }
+
+    public static final Creator<Book> CREATOR = new Creator<Book>() {
+        @Override
+        public Book createFromParcel(Parcel in) {
+            return new Book(in);
+        }
+
+        @Override
+        public Book[] newArray(int size) {
+            return new Book[size];
+        }
+    };
+
     public String getTitle() {
         return title;
     }
@@ -31,6 +54,14 @@ public class Book {
         return author;
     }
 
+    public String getDescription() {
+        return description;
+    }
+
+    public String getPublisher() {
+        return publisher;
+    }
+
     @Override
     public String toString() {
         return "Book{" +
@@ -40,5 +71,19 @@ public class Book {
                 ", bookImageUrl='" + bookImageUrl + '\'' +
                 ", publisher='" + publisher + '\'' +
                 '}';
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(title);
+        dest.writeString(author);
+        dest.writeString(description);
+        dest.writeString(bookImageUrl);
+        dest.writeString(publisher);
     }
 }

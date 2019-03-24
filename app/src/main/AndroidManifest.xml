@@ -2,6 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
           xmlns:tools="http://schemas.android.com/tools"
           package="com.eddy.bookworm">
+
     <uses-permission android:name="android.permission.INTERNET"/>
 
     <application
@@ -22,13 +23,24 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-
         <activity
             android:name=".bookslist.BooksListActivity"
             android:parentActivityName=".listnames.ListNamesActivity"
+            android:launchMode="singleTop"
             tools:targetApi="jelly_bean">
-            <meta-data android:name="android.support.PARENT_ACTIVITY"
-                       android:value=".listnames.ListNamesActivity"/>
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".listnames.ListNamesActivity"/>
+        </activity>
+        <activity
+            android:name=".BookDetailActivity"
+            android:label="@string/title_activity_book_detail"
+            android:parentActivityName=".bookslist.BooksListActivity"
+            android:theme="@style/AppTheme.NoActionBar"
+            tools:targetApi="jelly_bean">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.eddy.bookworm.bookslist.BooksListActivity"/>
         </activity>
     </application>
 
