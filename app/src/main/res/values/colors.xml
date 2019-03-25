@@ -3,7 +3,9 @@
     <color name="colorPrimary">#0277bd</color>
     <color name="colorPrimaryDark">#004c8c</color>
     <color name="colorAccent">#ffd180</color>
-    <color name="ltGray">#55bdbdbd</color>
+    <color name="dividerGray">#55bdbdbd</color>
+    <color name="lightGray">#c2cacaca</color>
+    <color name="darkGray">#757575</color>
     <color name="photo_placeholder">#ccc</color>
 
     <color name="weekly_view_background">#1b5e20</color>

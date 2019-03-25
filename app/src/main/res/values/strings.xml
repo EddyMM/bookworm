@@ -101,4 +101,9 @@
     <string name="weekly_update">WEEKLY</string>
     <string name="monthly_update">MONTHLY</string>
     <string name="categories_title">Categories</string>
+    <string name="book_info_section">Info</string>
+    <string name="ranking_section">Ranking</string>
+    <string name="rank_this_week">This week</string>
+    <string name="rank_last_week">Last week</string>
+    <string name="weeks_on_list">Weeks on list</string>
 </resources>

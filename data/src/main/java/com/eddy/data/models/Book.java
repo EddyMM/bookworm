@@ -22,12 +22,37 @@ public class Book implements Parcelable {
     @SerializedName("publisher")
     String publisher;
 
+    @SerializedName("rank")
+    Integer rankThisWeek;
+
+    @SerializedName("rank_last_week")
+    Integer rankLastWeek;
+
+    @SerializedName("weeks_on_list")
+    Integer weeksOnList;
+
+
     protected Book(Parcel in) {
         title = in.readString();
         author = in.readString();
         description = in.readString();
         bookImageUrl = in.readString();
         publisher = in.readString();
+        if (in.readByte() == 0) {
+            rankThisWeek = null;
+        } else {
+            rankThisWeek = in.readInt();
+        }
+        if (in.readByte() == 0) {
+            rankLastWeek = null;
+        } else {
+            rankLastWeek = in.readInt();
+        }
+        if (in.readByte() == 0) {
+            weeksOnList = null;
+        } else {
+            weeksOnList = in.readInt();
+        }
     }
 
     public static final Creator<Book> CREATOR = new Creator<Book>() {
@@ -62,6 +87,18 @@ public class Book implements Parcelable {
         return publisher;
     }
 
+    public Integer getRankThisWeek() {
+        return rankThisWeek;
+    }
+
+    public Integer getRankLastWeek() {
+        return rankLastWeek;
+    }
+
+    public Integer getWeeksOnList() {
+        return weeksOnList;
+    }
+
     @Override
     public String toString() {
         return "Book{" +
@@ -85,5 +122,23 @@ public class Book implements Parcelable {
         dest.writeString(description);
         dest.writeString(bookImageUrl);
         dest.writeString(publisher);
+        if (rankThisWeek == null) {
+            dest.writeByte((byte) 0);
+        } else {
+            dest.writeByte((byte) 1);
+            dest.writeInt(rankThisWeek);
+        }
+        if (rankLastWeek == null) {
+            dest.writeByte((byte) 0);
+        } else {
+            dest.writeByte((byte) 1);
+            dest.writeInt(rankLastWeek);
+        }
+        if (weeksOnList == null) {
+            dest.writeByte((byte) 0);
+        } else {
+            dest.writeByte((byte) 1);
+            dest.writeInt(weeksOnList);
+        }
     }
 }

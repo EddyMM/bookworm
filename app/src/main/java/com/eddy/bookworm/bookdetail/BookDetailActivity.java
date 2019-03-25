@@ -44,6 +44,15 @@ public class BookDetailActivity extends BaseBookwormActivity implements View.OnC
     @BindView(R.id.book_detail_publisher)
     TextView bookPublisher;
 
+    @BindView(R.id.rank_this_week)
+    TextView rankThisWeekTextView;
+
+    @BindView(R.id.rank_last_week)
+    TextView rankLastWeekTextView;
+
+    @BindView(R.id.weeks_on_list)
+    TextView weeksOnListTextView;
+
     @BindView(R.id.sign_in_pb)
     ProgressBar signInProgressBar;
 
@@ -88,6 +97,9 @@ public class BookDetailActivity extends BaseBookwormActivity implements View.OnC
             bookDescription.setText(book.getDescription());
             bookAuthor.setText(book.getAuthor());
             bookPublisher.setText(book.getPublisher());
+            rankThisWeekTextView.setText(String.valueOf(book.getRankThisWeek()));
+            rankLastWeekTextView.setText(String.valueOf(book.getRankLastWeek()));
+            weeksOnListTextView.setText(String.valueOf(book.getWeeksOnList()));
         }
     }
 
