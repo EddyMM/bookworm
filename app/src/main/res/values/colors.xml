@@ -5,4 +5,8 @@
     <color name="colorAccent">#D81B60</color>
     <color name="ltGray">#55bdbdbd</color>
     <color name="photo_placeholder">#ccc</color>
+
+    <color name="weekly_view_background">#1b5e20</color>
+    <color name="monthly_view_background">#512da8</color>
+    <color name="default_update_frequency_background">#263238</color>
 </resources>

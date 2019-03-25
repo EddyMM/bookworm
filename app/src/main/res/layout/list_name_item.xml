@@ -8,7 +8,7 @@
 
     <TextView
         android:id="@+id/list_name_tv"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginLeft="8dp"
@@ -16,7 +16,7 @@
         android:layout_marginEnd="8dp"
         android:layout_marginRight="8dp"
         android:textAppearance="@style/ListName"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/update_frequency_tv"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         tools:text="LIST NAME"/>
@@ -25,11 +25,11 @@
         android:id="@+id/view"
         android:layout_width="match_parent"
         android:layout_height="1dp"
+        android:layout_marginTop="4dp"
+        android:layout_marginBottom="4dp"
         android:background="@color/ltGray"
-        android:layout_marginTop="@dimen/divider_margin"
-        android:layout_marginBottom="@dimen/divider_margin"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/latest_publish_date_tv"/>
 
@@ -41,5 +41,21 @@
         app:layout_constraintStart_toStartOf="@+id/list_name_tv"
         app:layout_constraintTop_toBottomOf="@+id/list_name_tv"
         tools:text="LATEST DATE"/>
+
+    <TextView
+        android:id="@+id/update_frequency_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginBottom="8dp"
+        android:padding="4dp"
+        android:textAppearance="@style/update_text_view"
+        android:background="@drawable/weekly_update_background"
+        app:layout_constraintBottom_toTopOf="@+id/view"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="UPDATE"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

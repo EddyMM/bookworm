@@ -21,6 +21,7 @@ import timber.log.Timber;
 public class BooksListActivity extends BaseBookwormActivity implements BooksAdapter.BooksListListener {
 
     public static final String LIST_NAME_ENCODED_EXTRA = "LIST_NAME_ENCODED_EXTRA";
+    public static final String DISPLAY_NAME_ENCODED_EXTRA = "DISPLAY_NAME_ENCODED_EXTRA";
 
     private BooksAdapter booksAdapter;
 
@@ -40,7 +41,10 @@ public class BooksListActivity extends BaseBookwormActivity implements BooksAdap
         Intent intent = getIntent();
         if (intent != null) {
             String encodedListName = intent.getStringExtra(LIST_NAME_ENCODED_EXTRA);
+            String displayListName = intent.getStringExtra(DISPLAY_NAME_ENCODED_EXTRA);
 
+
+            setTitle(displayListName);
             setUpBooksListUI();
             setUpViewModel(encodedListName);
         }

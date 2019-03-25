@@ -98,4 +98,7 @@
     <string name="book_detail_title_publisher">Publisher</string>
     <string name="newest_published_on">Latest on %s</string>
     <string name="menu_logout">Log out</string>
+    <string name="weekly_update">WEEKLY</string>
+    <string name="monthly_update">MONTHLY</string>
+    <string name="categories_title">Categories</string>
 </resources>

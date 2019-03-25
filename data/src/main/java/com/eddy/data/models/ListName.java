@@ -26,6 +26,9 @@ public class ListName {
     @SerializedName("newest_published_date")
     String newestPublishedDate;
 
+    @SerializedName("updated")
+    String updateFrequency;
+
     public String getDisplayName() {
         return displayName;
     }
@@ -43,6 +46,9 @@ public class ListName {
         }
     }
 
+    public String getUpdateFrequency() {
+        return updateFrequency;
+    }
 
     @Override
     public String toString() {

@@ -36,6 +36,7 @@ public class ListNamesActivity extends BaseBookwormActivity implements ListNames
 
         setUpListNamesRecyclerView();
 
+        setTitle(getString(R.string.categories_title));
         setUpViewModel();
     }
 
@@ -83,6 +84,10 @@ public class ListNamesActivity extends BaseBookwormActivity implements ListNames
         intent.putExtra(
                 BooksListActivity.LIST_NAME_ENCODED_EXTRA,
                 listName.getListNameEncoded()
+        );
+        intent.putExtra(
+                BooksListActivity.DISPLAY_NAME_ENCODED_EXTRA,
+                listName.getDisplayName()
         );
 
         startActivity(intent);

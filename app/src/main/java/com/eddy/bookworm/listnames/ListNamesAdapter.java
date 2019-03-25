@@ -1,6 +1,7 @@
 package com.eddy.bookworm.listnames;
 
 import android.content.Context;
+import android.os.Build;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,6 +16,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import timber.log.Timber;
 
 public class ListNamesAdapter extends RecyclerView.Adapter<ListNamesAdapter.ListNamesViewHolder> {
 
@@ -66,6 +68,9 @@ public class ListNamesAdapter extends RecyclerView.Adapter<ListNamesAdapter.List
         @BindView(R.id.latest_publish_date_tv)
         TextView latestPublishDate;
 
+        @BindView(R.id.update_frequency_tv)
+        TextView updateFrequencyTextView;
+
         ListNamesViewHolder(@NonNull View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
@@ -76,6 +81,20 @@ public class ListNamesAdapter extends RecyclerView.Adapter<ListNamesAdapter.List
             listNameTextView.setText(listName.getDisplayName());
             latestPublishDate.setText(context.getString(
                     R.string.newest_published_on, listName.getFormattedDate()));
+
+            String updateFrequency = listName.getUpdateFrequency();
+            Timber.d("UPDATE FREQUENCY: %s", updateFrequency);
+            updateFrequencyTextView.setText(updateFrequency);
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                if (updateFrequency.equals(context.getString(R.string.weekly_update))) {
+                    updateFrequencyTextView.setBackground(context.getDrawable(R.drawable.weekly_update_background));
+                } else if (updateFrequency.equals(context.getString(R.string.monthly_update))) {
+                    updateFrequencyTextView.setBackground(context.getDrawable(R.drawable.monthly_update_background));
+                } else {
+                    Timber.d("NO FREQUENCY MATCH");
+                }
+            }
         }
 
         @Override
