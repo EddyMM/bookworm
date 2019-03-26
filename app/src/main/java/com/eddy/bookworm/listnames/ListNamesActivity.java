@@ -2,8 +2,12 @@ package com.eddy.bookworm.listnames;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ProgressBar;
+import android.widget.Toast;
 
 import com.eddy.bookworm.base.BaseBookwormActivity;
 import com.eddy.bookworm.R;
@@ -38,6 +42,27 @@ public class ListNamesActivity extends BaseBookwormActivity implements ListNames
 
         setTitle(getString(R.string.categories_title));
         setUpViewModel();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater menuInflater = new MenuInflater(this);
+        menuInflater.inflate(R.menu.categories_list_menu, menu);
+
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == R.id.bookmark_menu_item) {
+            Toast.makeText(this, "Book", Toast.LENGTH_LONG).show();
+
+            Intent intent = new Intent(this, BooksListActivity.class);
+            startActivity(intent);
+
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     private void setUpListNamesRecyclerView() {

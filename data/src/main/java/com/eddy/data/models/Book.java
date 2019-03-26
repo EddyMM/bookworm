@@ -7,6 +7,8 @@ import com.google.gson.annotations.SerializedName;
 
 public class Book implements Parcelable {
 
+    String key;
+
     @SerializedName("title")
     String title;
 
@@ -31,6 +33,8 @@ public class Book implements Parcelable {
     @SerializedName("weeks_on_list")
     Integer weeksOnList;
 
+
+    public Book() {}
 
     protected Book(Parcel in) {
         title = in.readString();
@@ -66,6 +70,14 @@ public class Book implements Parcelable {
             return new Book[size];
         }
     };
+
+    public String getKey() {
+        return key;
+    }
+
+    public void setKey(String key) {
+        this.key = key;
+    }
 
     public String getTitle() {
         return title;

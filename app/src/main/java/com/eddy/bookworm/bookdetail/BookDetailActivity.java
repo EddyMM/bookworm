@@ -2,18 +2,22 @@ package com.eddy.bookworm.bookdetail;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.eddy.bookworm.R;
-import com.eddy.bookworm.signin.SignInManager;
 import com.eddy.bookworm.base.BaseBookwormActivity;
+import com.eddy.bookworm.signin.SignInManager;
+import com.eddy.data.Constants;
 import com.eddy.data.models.Book;
 import com.google.android.material.appbar.CollapsingToolbarLayout;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.squareup.picasso.Picasso;
 
 import java.util.Objects;
@@ -58,6 +62,7 @@ public class BookDetailActivity extends BaseBookwormActivity implements View.OnC
 
     @BindView(R.id.fab)
     FloatingActionButton fab;
+    private Book book;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,11 +76,7 @@ public class BookDetailActivity extends BaseBookwormActivity implements View.OnC
             SignInManager signInManager = SignInManager.getInstance();
 
             if(signInManager.userLoggedIn()) {
-                Snackbar.make(view,
-                        String.format("Saving bookmark for %s",
-                                signInManager.getCurrentUserName()),
-                        Snackbar.LENGTH_LONG)
-                        .show();
+                saveBook();
             } else {
                 Snackbar.make(view, "Not signed in at the moment", Snackbar.LENGTH_LONG)
                         .setAction("Sign In", BookDetailActivity.this)
@@ -87,7 +88,7 @@ public class BookDetailActivity extends BaseBookwormActivity implements View.OnC
 
         Intent intent = getIntent();
         if (intent != null) {
-            Book book = intent.getParcelableExtra(BOOK_DETAIL_EXTRA);
+            book = intent.getParcelableExtra(BOOK_DETAIL_EXTRA);
 
             Picasso.get()
                     .load(book.getBookImageUrl())
@@ -130,7 +131,30 @@ public class BookDetailActivity extends BaseBookwormActivity implements View.OnC
      * Saves the bookmarked book to Firebase Realtime DB
      */
     private void saveBook() {
-        /// TODO: Save in FB RT DB
+        SignInManager signInManager = SignInManager.getInstance();
+
+        try {
+            FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
+            DatabaseReference databaseReference = firebaseDatabase.getReference()
+                    .child(Constants.LIBRARY_DB_REF);
+
+            if (TextUtils.isEmpty(book.getKey())) {
+                book.setKey(databaseReference.push().getKey());
+            }
+
+            databaseReference.child(book.getKey()).setValue(book);
+
+            Snackbar.make(findViewById(android.R.id.content),
+                    String.format("Saving bookmark for %s",
+                            signInManager.getCurrentUserName()),
+                    Snackbar.LENGTH_LONG)
+                    .show();
+        } catch (Exception e) {
+            Snackbar.make(findViewById(android.R.id.content),
+                    "Error saving bookmark",
+                    Snackbar.LENGTH_LONG)
+                    .show();
+        }
     }
 
     @Override

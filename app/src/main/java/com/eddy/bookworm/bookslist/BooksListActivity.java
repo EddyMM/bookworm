@@ -5,10 +5,14 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.ProgressBar;
 
+import com.eddy.bookworm.Utils;
 import com.eddy.bookworm.base.BaseBookwormActivity;
 import com.eddy.bookworm.bookdetail.BookDetailActivity;
 import com.eddy.bookworm.R;
 import com.eddy.data.models.Book;
+import com.google.android.material.snackbar.Snackbar;
+
+import java.util.List;
 
 import androidx.annotation.Nullable;
 import androidx.lifecycle.ViewModelProviders;
@@ -43,11 +47,39 @@ public class BooksListActivity extends BaseBookwormActivity implements BooksAdap
             String encodedListName = intent.getStringExtra(LIST_NAME_ENCODED_EXTRA);
             String displayListName = intent.getStringExtra(DISPLAY_NAME_ENCODED_EXTRA);
 
-
-            setTitle(displayListName);
             setUpBooksListUI();
-            setUpViewModel(encodedListName);
+
+            if (encodedListName != null) {
+                setTitle(displayListName);
+                setUpBooksListViewModel(encodedListName);
+            } else {
+                // User is opening bookmarks
+                setUpBookmarksViewModel();
+            }
         }
+    }
+
+    private void setUpBookmarksViewModel() {
+        BookmarksViewModel booksListViewModel = ViewModelProviders
+                .of(this)
+                .get(BookmarksViewModel.class);
+
+        showProgressBar();
+
+        booksListViewModel.getDataSnapshotLiveData().observe(this, dataSnapshot -> {
+            List<Book> books = Utils.toList(dataSnapshot.getChildren());
+
+            if (books != null) {
+                booksAdapter.setBooks(books);
+            }
+            else {
+                Snackbar.make(findViewById(android.R.id.content),
+                        "No bookmarks found",
+                        Snackbar.LENGTH_LONG)
+                        .show();
+            }
+            hideProgressBar();
+        });
     }
 
     private void setUpBooksListUI() {
@@ -59,7 +91,7 @@ public class BooksListActivity extends BaseBookwormActivity implements BooksAdap
         booksRecyclerView.setLayoutManager(staggeredGridLayoutManager);
     }
 
-    private void setUpViewModel(String encodedListName) {
+    private void setUpBooksListViewModel(String encodedListName) {
         BooksListViewModel booksListViewModel = ViewModelProviders
                 .of(this, new BooksListViewModelFactory(encodedListName))
                 .get(BooksListViewModel.class);
