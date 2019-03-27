@@ -112,4 +112,8 @@
     <string name="removed_bookmark_message">Removed bookmark</string>
     <string name="error_removing_bookmark_message">Problem removing bookmark. Try again later</string>
     <string name="bookmarks">Bookmarks</string>
+    <string name="appwidget_text">Bookworm Widget</string>
+    <string name="configure">Configure</string>
+    <string name="add_widget">Add widget</string>
+    <string name="snackbar_sigin_for_bookmark">Sign in to add bookmarks to your account</string>
 </resources>
