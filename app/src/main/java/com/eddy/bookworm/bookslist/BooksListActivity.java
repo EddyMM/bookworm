@@ -54,6 +54,7 @@ public class BooksListActivity extends BaseBookwormActivity implements BooksAdap
                 setUpBooksListViewModel(encodedListName);
             } else {
                 // User is opening bookmarks
+                setTitle(R.string.bookmarks);
                 setUpBookmarksViewModel();
             }
         }
