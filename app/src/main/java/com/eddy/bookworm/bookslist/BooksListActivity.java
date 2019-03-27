@@ -9,6 +9,7 @@ import com.eddy.bookworm.Utils;
 import com.eddy.bookworm.base.BaseBookwormActivity;
 import com.eddy.bookworm.bookdetail.BookDetailActivity;
 import com.eddy.bookworm.R;
+import com.eddy.bookworm.signin.SignInManager;
 import com.eddy.data.models.Book;
 import com.google.android.material.snackbar.Snackbar;
 
@@ -55,7 +56,9 @@ public class BooksListActivity extends BaseBookwormActivity implements BooksAdap
             } else {
                 // User is opening bookmarks
                 setTitle(R.string.bookmarks);
-                setUpBookmarksViewModel();
+                if (SignInManager.getInstance().userLoggedIn()) {
+                    setUpBookmarksViewModel();
+                }
             }
         }
     }

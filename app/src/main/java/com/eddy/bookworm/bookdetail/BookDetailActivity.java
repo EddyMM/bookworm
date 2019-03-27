@@ -143,29 +143,38 @@ public class BookDetailActivity extends BaseBookwormActivity implements View.OnC
     }
 
     private void showBookmarkState() {
-        FirebaseDatabaseManager firebaseDatabaseManager = FirebaseDatabaseManager.getInstance();
-        DatabaseReference databaseReference =firebaseDatabaseManager.getDatabaseReference()
-                .child(Constants.BOOKMARKS_DB_REF);
+        SignInManager signInManager = SignInManager.getInstance();
+        if (signInManager.userLoggedIn()) {
+            FirebaseDatabaseManager firebaseDatabaseManager = FirebaseDatabaseManager.getInstance();
+            DatabaseReference databaseReference = firebaseDatabaseManager.getDatabaseReference()
+                    .child(Constants.BOOKMARKS_DB_REF);
 
-        Query query = databaseReference
-                .orderByChild(getString(R.string.db_child_title))
-                .equalTo(book.getTitle());
+            Query query = databaseReference
+                    .orderByChild(getString(R.string.db_child_title))
+                    .equalTo(book.getTitle());
 
-        query.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                if (dataSnapshot.getValue() == null) {
-                    fab.setImageResource(R.drawable.ic_bookmark_border_black_24dp);
-                } else {
-                    fab.setImageResource(R.drawable.ic_bookmark_black_24dp);
+            query.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    if (dataSnapshot.getValue() == null) {
+                        fab.setImageResource(R.drawable.ic_bookmark_border_black_24dp);
+                    } else {
+                        fab.setImageResource(R.drawable.ic_bookmark_black_24dp);
+                    }
+
+                    query.removeEventListener(this);
                 }
 
-                query.removeEventListener(this);
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) { }
-        });
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+                }
+            });
+        } else {
+            Snackbar.make(findViewById(android.R.id.content),
+                    getString(R.string.snackbar_sigin_for_bookmark), Snackbar.LENGTH_LONG)
+                    .setAction(getString(R.string.snackbar_sigin), BookDetailActivity.this)
+                    .show();
+        }
     }
 
     private void deleteBook(Book bookmarkedBook) {
