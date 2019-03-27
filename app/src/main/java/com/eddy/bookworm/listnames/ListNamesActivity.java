@@ -55,8 +55,6 @@ public class ListNamesActivity extends BaseBookwormActivity implements ListNames
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.bookmark_menu_item) {
-            Toast.makeText(this, "Book", Toast.LENGTH_LONG).show();
-
             Intent intent = new Intent(this, BooksListActivity.class);
             startActivity(intent);
 

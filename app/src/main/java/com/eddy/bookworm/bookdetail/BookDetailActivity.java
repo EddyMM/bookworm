@@ -8,7 +8,9 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.eddy.bookworm.FirebaseDatabaseManager;
 import com.eddy.bookworm.R;
+import com.eddy.bookworm.Utils;
 import com.eddy.bookworm.base.BaseBookwormActivity;
 import com.eddy.bookworm.signin.SignInManager;
 import com.eddy.data.Constants;
@@ -16,15 +18,20 @@ import com.eddy.data.models.Book;
 import com.google.android.material.appbar.CollapsingToolbarLayout;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 
 import java.util.Objects;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.widget.Toolbar;
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import timber.log.Timber;
 
 public class BookDetailActivity extends BaseBookwormActivity implements View.OnClickListener {
 
@@ -76,10 +83,10 @@ public class BookDetailActivity extends BaseBookwormActivity implements View.OnC
             SignInManager signInManager = SignInManager.getInstance();
 
             if(signInManager.userLoggedIn()) {
-                saveBook();
+                determineFabAction();
             } else {
-                Snackbar.make(view, "Not signed in at the moment", Snackbar.LENGTH_LONG)
-                        .setAction("Sign In", BookDetailActivity.this)
+                Snackbar.make(view, getString(R.string.not_signed_message), Snackbar.LENGTH_LONG)
+                        .setAction(getString(R.string.snackbar_sigin), BookDetailActivity.this)
                         .show();
             }
         });
@@ -90,18 +97,111 @@ public class BookDetailActivity extends BaseBookwormActivity implements View.OnC
         if (intent != null) {
             book = intent.getParcelableExtra(BOOK_DETAIL_EXTRA);
 
-            Picasso.get()
-                    .load(book.getBookImageUrl())
-                    .into(bookImageView);
+            if (book != null) {
+                showBookmarkState();
 
-            collapsingToolbarLayout.setTitle(book.getTitle());
-            bookDescription.setText(book.getDescription());
-            bookAuthor.setText(book.getAuthor());
-            bookPublisher.setText(book.getPublisher());
-            rankThisWeekTextView.setText(String.valueOf(book.getRankThisWeek()));
-            rankLastWeekTextView.setText(String.valueOf(book.getRankLastWeek()));
-            weeksOnListTextView.setText(String.valueOf(book.getWeeksOnList()));
+                Picasso.get()
+                        .load(book.getBookImageUrl())
+                        .into(bookImageView);
+
+                collapsingToolbarLayout.setTitle(book.getTitle());
+                bookDescription.setText(book.getDescription());
+                bookAuthor.setText(book.getAuthor());
+                bookPublisher.setText(book.getPublisher());
+                rankThisWeekTextView.setText(String.valueOf(book.getRankThisWeek()));
+                rankLastWeekTextView.setText(String.valueOf(book.getRankLastWeek()));
+                weeksOnListTextView.setText(String.valueOf(book.getWeeksOnList()));
+            }
         }
+    }
+
+    private void determineFabAction() {
+        FirebaseDatabaseManager firebaseDatabaseManager = FirebaseDatabaseManager.getInstance();
+        DatabaseReference databaseReference =firebaseDatabaseManager.getDatabaseReference()
+                .child(Constants.BOOKMARKS_DB_REF);
+
+        Query query = databaseReference.orderByChild(getString(R.string.db_child_title))
+                .equalTo(book.getTitle());
+
+        query.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if (dataSnapshot.getChildrenCount() <= 0) {
+                    saveBook();
+                } else {
+                    Book book = Utils.toList(dataSnapshot.getChildren()).get(0);
+                    Timber.d("Book: %s", book);
+                    deleteBook(book);
+                }
+
+                query.removeEventListener(this);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) { }
+        });
+    }
+
+    private void showBookmarkState() {
+        FirebaseDatabaseManager firebaseDatabaseManager = FirebaseDatabaseManager.getInstance();
+        DatabaseReference databaseReference =firebaseDatabaseManager.getDatabaseReference()
+                .child(Constants.BOOKMARKS_DB_REF);
+
+        Query query = databaseReference
+                .orderByChild(getString(R.string.db_child_title))
+                .equalTo(book.getTitle());
+
+        query.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if (dataSnapshot.getValue() == null) {
+                    fab.setImageResource(R.drawable.ic_bookmark_border_black_24dp);
+                } else {
+                    fab.setImageResource(R.drawable.ic_bookmark_black_24dp);
+                }
+
+                query.removeEventListener(this);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) { }
+        });
+    }
+
+    private void deleteBook(Book bookmarkedBook) {
+        try {
+            FirebaseDatabaseManager firebaseDatabaseManager = FirebaseDatabaseManager.getInstance();
+            DatabaseReference databaseReference =firebaseDatabaseManager.getDatabaseReference()
+                    .child(Constants.BOOKMARKS_DB_REF);
+
+            if (!TextUtils.isEmpty(bookmarkedBook.getKey())) {
+                databaseReference.child(bookmarkedBook.getKey())
+                        .removeValue()
+                        .addOnCompleteListener(task -> {
+                            fab.setImageResource(R.drawable.ic_bookmark_border_black_24dp);
+                            refreshFab();
+
+                            Snackbar.make(findViewById(android.R.id.content),
+                                    getString(R.string.removed_bookmark_message),
+                                    Snackbar.LENGTH_LONG)
+                                    .show();
+                            finish();
+                        });
+            }
+        } catch (Exception e) {
+            Timber.e(e);
+            Snackbar.make(findViewById(android.R.id.content),
+                    getString(R.string.error_removing_bookmark_message),
+                    Snackbar.LENGTH_LONG)
+                    .show();
+        }
+
+    }
+
+    private void refreshFab() {
+        // Refresh FAA
+        fab.hide();
+        fab.show();
     }
 
     protected void hideProgressBar() {
@@ -134,9 +234,9 @@ public class BookDetailActivity extends BaseBookwormActivity implements View.OnC
         SignInManager signInManager = SignInManager.getInstance();
 
         try {
-            FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
-            DatabaseReference databaseReference = firebaseDatabase.getReference()
-                    .child(Constants.LIBRARY_DB_REF);
+            FirebaseDatabaseManager firebaseDatabaseManager = FirebaseDatabaseManager.getInstance();
+            DatabaseReference databaseReference =firebaseDatabaseManager.getDatabaseReference()
+                    .child(Constants.BOOKMARKS_DB_REF);
 
             if (TextUtils.isEmpty(book.getKey())) {
                 book.setKey(databaseReference.push().getKey());
@@ -149,6 +249,8 @@ public class BookDetailActivity extends BaseBookwormActivity implements View.OnC
                             signInManager.getCurrentUserName()),
                     Snackbar.LENGTH_LONG)
                     .show();
+            fab.setImageResource(R.drawable.ic_bookmark_black_24dp);
+            refreshFab();
         } catch (Exception e) {
             Snackbar.make(findViewById(android.R.id.content),
                     "Error saving bookmark",

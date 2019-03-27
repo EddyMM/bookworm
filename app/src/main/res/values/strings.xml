@@ -106,4 +106,9 @@
     <string name="rank_this_week">This week</string>
     <string name="rank_last_week">Last week</string>
     <string name="weeks_on_list">Weeks on list</string>
+    <string name="db_child_title">title</string>
+    <string name="snackbar_sigin">Sign In</string>
+    <string name="not_signed_message">Not signed in at the moment</string>
+    <string name="removed_bookmark_message">Removed bookmark</string>
+    <string name="error_removing_bookmark_message">Problem removing bookmark. Try again later</string>
 </resources>

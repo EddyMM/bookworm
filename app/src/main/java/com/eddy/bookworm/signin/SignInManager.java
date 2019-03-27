@@ -5,8 +5,10 @@ import com.google.firebase.auth.FirebaseAuth;
 
 public class SignInManager {
     private static final SignInManager ourInstance = new SignInManager();
+    private static FirebaseAuth fbAuthInstance;
 
     public static SignInManager getInstance() {
+        fbAuthInstance = FirebaseAuth.getInstance();
         return ourInstance;
     }
 
@@ -14,20 +16,21 @@ public class SignInManager {
     }
 
     public boolean userLoggedIn() {
-        FirebaseAuth fbAuthInstance = FirebaseAuth.getInstance();
         return fbAuthInstance.getCurrentUser() != null;
     }
 
     public String getCurrentUserName() {
-        FirebaseAuth fbAuthInstance = FirebaseAuth.getInstance();
         if (fbAuthInstance.getCurrentUser() != null) {
             return fbAuthInstance.getCurrentUser().getDisplayName();
         }
         return null;
     }
 
+    public String getUserId(){
+        return fbAuthInstance.getUid();
+    }
+
     public void signOut(GoogleSignInClient googleSignInClient) {
-        FirebaseAuth fbAuthInstance = FirebaseAuth.getInstance();
         fbAuthInstance.signOut();
         googleSignInClient.signOut();
     }
