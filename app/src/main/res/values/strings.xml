@@ -111,4 +111,5 @@
     <string name="not_signed_message">Not signed in at the moment</string>
     <string name="removed_bookmark_message">Removed bookmark</string>
     <string name="error_removing_bookmark_message">Problem removing bookmark. Try again later</string>
+    <string name="bookmarks">Bookmarks</string>
 </resources>
