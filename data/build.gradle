@@ -27,7 +27,7 @@ android {
     }
 
     buildTypes.each {
-        it.buildConfigField 'String', 'NewYorkimesApiKey', NewYorkimesApiKey
+        it.buildConfigField 'String', 'NewYorkTimesApiKey', NewYorkimesApiKey
     }
 
 
