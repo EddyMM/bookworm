@@ -16,6 +16,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 public class BookmarkIntentService extends IntentService {
+
     /**
      * Creates an IntentService.  Invoked by your subclass's constructor.
      *
