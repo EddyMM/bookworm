@@ -34,10 +34,11 @@
 
                 <ImageView
                     android:id="@+id/book_detail_photo_iv"
+                    android:contentDescription="@string/book_detail_image"
+                    android:transitionName="@string/book_item_to_detail_transition"
                     android:layout_width="match_parent"
                     android:scaleType="centerCrop"
-                    android:layout_height="match_parent"
-                    android:contentDescription="@string/book_detail_image"/>
+                    android:layout_height="match_parent" />
 
                 <View
                     android:layout_width="match_parent"

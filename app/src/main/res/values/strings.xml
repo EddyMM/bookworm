@@ -120,4 +120,5 @@
     <string name="sign_in_with_google">Sign In with Google</string>
     <string name="intro_icon">Intro icon</string>
     <string name="book_item_to_detail_transition">book_item_to_detail_transition</string>
+    <string name="book_detail_image">Book detail image</string>
 </resources>
