@@ -12,7 +12,7 @@ To run this project, do the following:
 1. Clone the project
 2. Open the project from `Android Studio`
 3. Get an API_KEY for books api from [here](https://developer.nytimes.com/docs/books-product/1/overview)
-4. Add it to your ~/.gradle/gradle.properties as NewYorkimesApiKey="<API KEY>"
+4. Add it to your ~/.gradle/gradle.properties as NewYorkTimesApiKey=<API KEY>
 
 Get the latest APK release [here](https://github.com/EddyMM/bookworm/releases)
 
