@@ -1,8 +1,10 @@
 package com.eddy.bookworm.bookslist;
 
+import android.app.ActivityOptions;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 
 import com.eddy.bookworm.Utils;
@@ -133,10 +135,23 @@ public class BooksListActivity extends BaseBookwormActivity implements BooksAdap
     }
 
     @Override
-    public void onClick(Book book) {
+    public void onClick(Book book, ImageView bookImageView) {
         Intent intent = new Intent(this, BookDetailActivity.class);
         intent.putExtra(BookDetailActivity.BOOK_DETAIL_EXTRA, book);
 
-        startActivity(intent);
+        if (bookImageView != null) {
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
+                Bundle bundle = ActivityOptions
+                        .makeSceneTransitionAnimation(
+                                this,
+                                bookImageView,
+                                bookImageView.getTransitionName())
+                        .toBundle();
+
+                startActivity(intent, bundle);
+            }
+        } else {
+            startActivity(intent);
+        }
     }
 }

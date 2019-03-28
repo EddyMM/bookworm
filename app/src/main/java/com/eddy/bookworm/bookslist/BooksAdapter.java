@@ -31,7 +31,7 @@ class BooksAdapter extends RecyclerView.Adapter<BooksAdapter.BooksViewHolder> {
     }
 
     public interface BooksListListener {
-        void onClick(Book book);
+        void onClick(Book book, ImageView imageView);
     }
 
     void setBooks(List<Book> books) {
@@ -91,7 +91,7 @@ class BooksAdapter extends RecyclerView.Adapter<BooksAdapter.BooksViewHolder> {
         @Override
         public void onClick(View v) {
             Book book = books.get(getAdapterPosition());
-            booksListListener.onClick(book);
+            booksListListener.onClick(book, bookImageView);
         }
     }
 

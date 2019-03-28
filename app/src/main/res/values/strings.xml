@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Book Worm</string>
+    <string name="app_name">Bookworm</string>
     <string name="list_name_icon">List Name Icon</string>
     <string name="book_list_item_image">Book List Item Image</string>
     <string name="title_activity_book_detail">Book Detail</string>
@@ -116,4 +116,8 @@
     <string name="configure">Configure</string>
     <string name="add_widget">Add widget</string>
     <string name="snackbar_sigin_for_bookmark">Sign in to add bookmarks to your account</string>
+    <string name="intro_message">Get details about the best-selling books based on New York Times ratings</string>
+    <string name="sign_in_with_google">Sign In with Google</string>
+    <string name="intro_icon">Intro icon</string>
+    <string name="book_item_to_detail_transition">book_item_to_detail_transition</string>
 </resources>

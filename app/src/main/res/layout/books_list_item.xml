@@ -19,10 +19,12 @@
 
         <ImageView
             android:id="@+id/book_list_item_iv"
+            android:transitionName="@string/book_item_to_detail_transition"
             android:contentDescription="@string/book_list_item_image"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:scaleType="centerCrop"/>
+            android:scaleType="centerCrop"
+            tools:targetApi="lollipop"/>
 
         <TextView
             android:id="@+id/book_item_title_tv"
