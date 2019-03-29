@@ -25,12 +25,6 @@ android {
         sourceCompatibility = '1.8'
         targetCompatibility = '1.8'
     }
-
-    buildTypes.each {
-        it.buildConfigField 'String', 'NewYorkTimesApiKey', NewYorkimesApiKey
-    }
-
-
 }
 
 dependencies {
