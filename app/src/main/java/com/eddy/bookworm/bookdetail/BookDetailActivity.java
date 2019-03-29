@@ -8,11 +8,11 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.eddy.bookworm.FirebaseDatabaseManager;
+import com.eddy.bookworm.firebase.FirebaseDatabaseManager;
 import com.eddy.bookworm.R;
 import com.eddy.bookworm.Utils;
 import com.eddy.bookworm.base.BaseBookwormActivity;
-import com.eddy.bookworm.signin.SignInManager;
+import com.eddy.bookworm.firebase.SignInManager;
 import com.eddy.data.Constants;
 import com.eddy.data.models.Book;
 import com.google.android.material.appbar.CollapsingToolbarLayout;

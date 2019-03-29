@@ -10,6 +10,8 @@ import timber.log.Timber;
 
 public class ListName {
 
+    String key;
+
     @SerializedName("display_name")
     String displayName;
 
@@ -44,6 +46,14 @@ public class ListName {
             Timber.e(e);
             return null;
         }
+    }
+
+    public String getKey() {
+        return key;
+    }
+
+    public void setKey(String key) {
+        this.key = key;
     }
 
     public String getUpdateFrequency() {

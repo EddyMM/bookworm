@@ -1,10 +1,15 @@
 package com.eddy.data;
 
+import android.content.Context;
+import android.content.SharedPreferences;
+
 import com.eddy.data.models.Book;
 import com.eddy.data.models.BooksResponse;
+import com.eddy.data.models.BooksResults;
 import com.eddy.data.models.ListName;
 import com.eddy.data.models.ListNamesResponse;
 
+import java.io.IOException;
 import java.util.List;
 
 import androidx.annotation.NonNull;
@@ -71,5 +76,51 @@ public class AppDataManager implements DataManager {
         });
 
         return booksLiveData;
+    }
+
+    public List<Book> getCategoriesSync(String category) {
+        BooksApiService booksApiService = BooksApi.getInstance();
+        Call<BooksResponse> booksResponseCall = booksApiService.listBooks(category);
+
+        List<Book> bookList = null;
+
+        try {
+            Response<BooksResponse> booksResponse = booksResponseCall.execute();
+            BooksResponse booksBody = booksResponse.body();
+            if (booksBody != null) {
+                BooksResults booksResults = booksBody.getBooksResults();
+                if (booksResults != null) {
+                    bookList = booksResults.getBooks();
+                }
+            }
+        } catch (IOException e) {
+            Timber.e(e);
+        }
+
+        return bookList;
+    }
+
+    public String getPreferredCategoryCode(Context context) {
+        SharedPreferences sharedPreferences = context.getSharedPreferences(
+                Constants.WIDGET_CATEGORY_PREFERENCE, Context.MODE_PRIVATE);
+        return sharedPreferences.getString(Constants.PREFERRED_CATEGORY, "");
+    }
+
+    public void setPreferredCategoryCode(Context context, String categoryCode) {
+        SharedPreferences sharedPreferences = context.getSharedPreferences(
+                Constants.WIDGET_CATEGORY_PREFERENCE, Context.MODE_PRIVATE);
+        if (sharedPreferences != null) {
+            sharedPreferences.edit().putString(Constants.PREFERRED_CATEGORY, categoryCode)
+                    .apply();
+        }
+    }
+
+    public void removePreferredCategoryCode(Context context) {
+        SharedPreferences sharedPreferences = context.getSharedPreferences(
+                Constants.WIDGET_CATEGORY_PREFERENCE, Context.MODE_PRIVATE);
+        if (sharedPreferences != null) {
+            sharedPreferences.edit().remove(Constants.PREFERRED_CATEGORY)
+                    .apply();
+        }
     }
 }

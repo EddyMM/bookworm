@@ -7,7 +7,7 @@ import android.widget.ProgressBar;
 
 import com.eddy.bookworm.base.BaseBookwormActivity;
 import com.eddy.bookworm.listnames.ListNamesActivity;
-import com.eddy.bookworm.signin.SignInManager;
+import com.eddy.bookworm.firebase.SignInManager;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;

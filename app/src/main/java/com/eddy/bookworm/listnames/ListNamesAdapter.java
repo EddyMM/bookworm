@@ -24,7 +24,7 @@ public class ListNamesAdapter extends RecyclerView.Adapter<ListNamesAdapter.List
     private List<ListName> listNames;
     private  ListNameListener listNameListener;
 
-    ListNamesAdapter(Context context, ListNameListener listNameListener) {
+    public ListNamesAdapter(Context context, ListNameListener listNameListener) {
         this.context = context;
         this.listNameListener = listNameListener;
     }
@@ -55,7 +55,7 @@ public class ListNamesAdapter extends RecyclerView.Adapter<ListNamesAdapter.List
         return 0;
     }
 
-    void setListNames(List<ListName> listNames) {
+    public void setListNames(List<ListName> listNames) {
         this.listNames = listNames;
 
         notifyDataSetChanged();
@@ -83,7 +83,6 @@ public class ListNamesAdapter extends RecyclerView.Adapter<ListNamesAdapter.List
                     R.string.newest_published_on, listName.getFormattedDate()));
 
             String updateFrequency = listName.getUpdateFrequency();
-            Timber.d("UPDATE FREQUENCY: %s", updateFrequency);
             updateFrequencyTextView.setText(updateFrequency);
 
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {

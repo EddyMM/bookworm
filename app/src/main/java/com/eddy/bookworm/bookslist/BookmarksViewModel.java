@@ -2,7 +2,7 @@ package com.eddy.bookworm.bookslist;
 
 import android.app.Application;
 
-import com.eddy.bookworm.FirebaseDatabaseManager;
+import com.eddy.bookworm.firebase.FirebaseDatabaseManager;
 import com.eddy.data.Constants;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseReference;

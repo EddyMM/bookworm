@@ -37,19 +37,6 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.eddy.bookworm.bookslist.BooksListActivity"/>
         </activity>
-
-        <receiver android:name=".widget.BookwormWidget">
-            <intent-filter>
-                <action android:name="android.appwidget.action.APPWIDGET_UPDATE"/>
-            </intent-filter>
-
-            <meta-data
-                android:name="android.appwidget.provider"
-                android:resource="@xml/bookworm_widget_info"/>
-        </receiver>
-
-        <service android:name=".widget.BookmarkIntentService"/>
-
         <activity android:name=".IntroActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
@@ -57,6 +44,23 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
+
+        <receiver android:name=".widget.BookwormRandomBestSellerWidget">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE"/>
+            </intent-filter>
+
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/bookworm_random_best_seller_widget_info"/>
+        </receiver>
+
+        <activity android:name=".widget.BookwormRandomBestSellerWidgetConfigureActivity">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE"/>
+            </intent-filter>
+        </activity>
+        <service android:name=".widget.GetRandomBookIntentService"/>
     </application>
 
 </manifest>

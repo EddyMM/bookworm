@@ -15,10 +15,15 @@ public class ListNamesViewModel extends AndroidViewModel {
 
     LiveData<List<ListName>> listNamesLiveData;
 
+    public LiveData<List<ListName>> getListNamesLiveData() {
+        return listNamesLiveData;
+    }
+
     public ListNamesViewModel(@NonNull Application application) {
         super(application);
 
         AppDataManager appDataManager = new AppDataManager();
         listNamesLiveData = appDataManager.getListNames();
     }
+
 }

@@ -11,7 +11,7 @@ import com.eddy.bookworm.Utils;
 import com.eddy.bookworm.base.BaseBookwormActivity;
 import com.eddy.bookworm.bookdetail.BookDetailActivity;
 import com.eddy.bookworm.R;
-import com.eddy.bookworm.signin.SignInManager;
+import com.eddy.bookworm.firebase.SignInManager;
 import com.eddy.data.models.Book;
 import com.google.android.material.snackbar.Snackbar;
 

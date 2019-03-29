@@ -7,4 +7,6 @@ public abstract class Constants {
     public static final String LIBRARY_DB_REF = "library";
     public static final String BOOKMARKS_DB_REF = "bookmarks";
     public static final String DB_CHILD_USERS = "users";
+    public static final String PREFERRED_CATEGORY = "preferred_category";
+    public static final String WIDGET_CATEGORY_PREFERENCE = "category_preference";
 }

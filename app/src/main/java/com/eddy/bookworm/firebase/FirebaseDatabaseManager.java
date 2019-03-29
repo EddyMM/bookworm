@@ -1,6 +1,5 @@
-package com.eddy.bookworm;
+package com.eddy.bookworm.firebase;
 
-import com.eddy.bookworm.signin.SignInManager;
 import com.eddy.data.Constants;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;

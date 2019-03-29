@@ -112,7 +112,7 @@
     <string name="removed_bookmark_message">Removed bookmark</string>
     <string name="error_removing_bookmark_message">Problem removing bookmark. Try again later</string>
     <string name="bookmarks">Bookmarks</string>
-    <string name="appwidget_text">Bookworm Widget</string>
+    <string name="widget_image_view_description">Bookworm Widget</string>
     <string name="configure">Configure</string>
     <string name="add_widget">Add widget</string>
     <string name="snackbar_sigin_for_bookmark">Sign in to add bookmarks to your account</string>
@@ -121,4 +121,6 @@
     <string name="intro_icon">Intro icon</string>
     <string name="book_item_to_detail_transition">book_item_to_detail_transition</string>
     <string name="book_detail_image">Book detail image</string>
+    <string name="widget_instructions">Select category to get random book recommendations</string>
+    <string name="widget_db_child">widget</string>
 </resources>
