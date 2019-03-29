@@ -21,7 +21,7 @@ public class BooksApi {
 
                     HttpUrl modifiedHttpUrl = initialHttpUrl.newBuilder()
                             .addQueryParameter(Constants.API_KEY_REQUEST_KEY,
-                                    BuildConfig.NewYorkTimesApiKey)
+                                    Constants.NEW_YORK_TIMES_API_KEY)
                             .build();
                     Request modifiedRequest = initialRequest.newBuilder()
                             .url(modifiedHttpUrl)
