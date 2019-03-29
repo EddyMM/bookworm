@@ -44,7 +44,7 @@ git clone https://github.com/EddyMM/bookworm.git
 - Retrofit as a REST client library
 - Picasso for image loading and caching 
 - FirebaseAuth - User Authentication
-- FirebaseDatabase - Data persistence
+- Firebase Realtime Database - Data persistence
 
 
 ## Contributing
