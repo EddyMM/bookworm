@@ -1,3 +1,5 @@
+
+# Firebase
 google-services.json
 
 # Ignore idea files
@@ -17,6 +19,7 @@ google-services.json
 bin/
 gen/
 out/
+release/
 
 # Gradle files
 .gradle/
