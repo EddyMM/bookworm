@@ -2,7 +2,7 @@
 
 An Android Application to show details on the best-selling books based on the New York Times ratings
 
-<img src="github_assets/imgs/categories.jpg" alt="categories" width=250 height=450 /> <img src="github_assets/imgs/book_list.jpg" alt="book list" width=250 height=450 /> <img src="github_assets/imgs/book_detail.jpg" alt="book detail" width=250 height=450 /> <img src="github_assets/imgs/bookmarks.jpg" alt="bookmarks" width=250 height=450 />
+<img src="github_assets/imgs/categories.jpg" alt="categories" width=250 height=450 /> <img src="github_assets/imgs/book_list.jpg" alt="book list" width=250 height=450 /> <img src="github_assets/imgs/book_detail.jpg" alt="book detail" width=250 height=450 /> <img src="github_assets/imgs/bookmarks.jpg" alt="bookmarks" width=250 height=450 /> <img src="github_assets/imgs/widget.jpg" alt="bookmarks" width=250 height=450 />
 
 
 ## Getting Started
