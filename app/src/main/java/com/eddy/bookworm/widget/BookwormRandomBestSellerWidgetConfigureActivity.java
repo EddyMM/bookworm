@@ -88,6 +88,9 @@ public class BookwormRandomBestSellerWidgetConfigureActivity extends BaseBookwor
                 Toast.LENGTH_LONG)
         .show();
 
+        // Initiate refresh of widget
+        GetRandomBookIntentService.startService(this);
+
         setResult(RESULT_OK);
         finish();
     }
