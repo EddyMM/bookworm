@@ -123,4 +123,11 @@
     <string name="book_detail_image">Book detail image</string>
     <string name="widget_instructions">Select category to get random book recommendations</string>
     <string name="widget_db_child">widget</string>
+    <string name="authenticaion_failed">Authentication Failed.</string>
+    <string name="successful_sigin">Successfully signed in as %s</string>
+    <string name="logout">Logout</string>
+    <string name="logged_out_user">Logged out: %s</string>
+    <string name="saving_bookmark_for_user">Saving bookmark for %s</string>
+    <string name="error_saving_bookmark">Error saving bookmark</string>
+    <string name="saved_widget_as">Saved %s as the widget category</string>
 </resources>

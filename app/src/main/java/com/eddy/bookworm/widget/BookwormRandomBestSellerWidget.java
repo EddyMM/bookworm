@@ -23,11 +23,12 @@ public class BookwormRandomBestSellerWidget extends AppWidgetProvider {
         // Construct the RemoteViews object
         RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.bookworm_random_best_seller_widget);
         if (!TextUtils.isEmpty(bookImageUrl)) {
-            views.setImageViewResource(R.id.widget_image_view, R.drawable.ic_library);
             Handler handler = new Handler(Looper.getMainLooper());
             handler.post(() -> Picasso.get()
                     .load(bookImageUrl)
                     .into(views, R.id.widget_image_view, appWidgetIds));
+        } else {
+            views.setImageViewResource(R.id.widget_image_view, R.drawable.ic_broken_image_grey_24dp);
         }
 
         appWidgetManager.updateAppWidget(appWidgetId, views);

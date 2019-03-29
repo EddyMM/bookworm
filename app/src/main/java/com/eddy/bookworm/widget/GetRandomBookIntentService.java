@@ -21,7 +21,7 @@ public class GetRandomBookIntentService extends IntentService {
     }
 
     public GetRandomBookIntentService() {
-        super("GetRandomBookIntentService");
+        super(GetRandomBookIntentService.class.getName());
     }
 
     @Override

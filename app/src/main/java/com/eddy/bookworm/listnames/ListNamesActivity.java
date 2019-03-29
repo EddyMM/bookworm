@@ -7,10 +7,9 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ProgressBar;
-import android.widget.Toast;
 
-import com.eddy.bookworm.base.BaseBookwormActivity;
 import com.eddy.bookworm.R;
+import com.eddy.bookworm.base.BaseBookwormActivity;
 import com.eddy.bookworm.bookslist.BooksListActivity;
 import com.eddy.data.models.ListName;
 

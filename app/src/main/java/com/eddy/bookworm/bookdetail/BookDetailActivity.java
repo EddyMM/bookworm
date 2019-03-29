@@ -254,7 +254,7 @@ public class BookDetailActivity extends BaseBookwormActivity implements View.OnC
             databaseReference.child(book.getKey()).setValue(book);
 
             Snackbar.make(findViewById(android.R.id.content),
-                    String.format("Saving bookmark for %s",
+                    getString(R.string.saving_bookmark_for_user,
                             signInManager.getCurrentUserName()),
                     Snackbar.LENGTH_LONG)
                     .show();
@@ -262,7 +262,7 @@ public class BookDetailActivity extends BaseBookwormActivity implements View.OnC
             refreshFab();
         } catch (Exception e) {
             Snackbar.make(findViewById(android.R.id.content),
-                    "Error saving bookmark",
+                    getString(R.string.error_saving_bookmark),
                     Snackbar.LENGTH_LONG)
                     .show();
         }

@@ -26,7 +26,7 @@ public class SignInManager {
         return null;
     }
 
-    public String getUserId(){
+    String getUserId(){
         return fbAuthInstance.getUid();
     }
 

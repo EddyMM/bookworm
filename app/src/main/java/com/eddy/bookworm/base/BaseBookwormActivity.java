@@ -46,9 +46,9 @@ public abstract class BaseBookwormActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         SignInManager signInManager = SignInManager.getInstance();
         if (signInManager.userLoggedIn()) {
-            MenuItem logoutMenuItem = menu.add("Logout");
+            MenuItem logoutMenuItem = menu.add(getString(R.string.logout));
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                logoutMenuItem.setContentDescription("Logout");
+                logoutMenuItem.setContentDescription(getString(R.string.logout));
             }
             logoutMenuItemId =  logoutMenuItem.getItemId();
         } else {
@@ -67,7 +67,7 @@ public abstract class BaseBookwormActivity extends AppCompatActivity {
                 signInManager.signOut(googleSignInClient);
 
                 Snackbar.make(findViewById(android.R.id.content),
-                        String.format("Logged out: %s", displayName),
+                        getString(R.string.logged_out_user, displayName),
                         Snackbar.LENGTH_SHORT)
                         .show();
 
@@ -149,7 +149,7 @@ public abstract class BaseBookwormActivity extends AppCompatActivity {
             Timber.i("Sign in as %s successful", displayName);
             Snackbar.make(
                     findViewById(android.R.id.content),
-                    String.format("Successfully signed in as %s", displayName),
+                    getString(R.string.successful_sigin, displayName),
                     Snackbar.LENGTH_SHORT
             ).show();
 
@@ -161,7 +161,7 @@ public abstract class BaseBookwormActivity extends AppCompatActivity {
             Timber.e( authResultTask.getException());
             Snackbar.make(
                     findViewById(android.R.id.content),
-                    "Authentication Failed.",
+                    getString(R.string.authenticaion_failed),
                     Snackbar.LENGTH_SHORT
             ).show();
         }

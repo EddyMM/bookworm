@@ -13,14 +13,10 @@ import timber.log.Timber;
 public class FirebaseQueryLiveData extends LiveData<DataSnapshot> {
 
     private final Query query;
-    private final EntriesEventListener listener = new EntriesEventListener();
-
-    public FirebaseQueryLiveData(Query query) {
-        this.query = query;
-    }
+    private final BooksEventListener listener = new BooksEventListener();
 
     FirebaseQueryLiveData(DatabaseReference ref) {
-        this.query = ref.orderByChild("lastUpdatedOn");
+        this.query = ref.orderByKey();
     }
 
     @Override
@@ -35,7 +31,7 @@ public class FirebaseQueryLiveData extends LiveData<DataSnapshot> {
         query.removeEventListener(listener);
     }
 
-    private class EntriesEventListener implements ValueEventListener {
+    private class BooksEventListener implements ValueEventListener {
         @Override
         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
             setValue(dataSnapshot);

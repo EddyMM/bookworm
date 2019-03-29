@@ -84,7 +84,7 @@ public class BookwormRandomBestSellerWidgetConfigureActivity extends BaseBookwor
         appDataManager.setPreferredCategoryCode(this, listName.getListNameEncoded());
 
         Toast.makeText(this,
-                String.format("Saved %s as the widget category", listName.getListNameEncoded()),
+                getString(R.string.saved_widget_as, listName.getDisplayName()),
                 Toast.LENGTH_LONG)
         .show();
 
