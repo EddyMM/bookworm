@@ -130,4 +130,5 @@
     <string name="saving_bookmark_for_user">Saving bookmark for %s</string>
     <string name="error_saving_bookmark">Error saving bookmark</string>
     <string name="saved_widget_as">Saved %s as the widget category</string>
+    <string name="bookmarks_description">bookmarks</string>
 </resources>
