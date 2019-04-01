@@ -1,9 +1,9 @@
 package com.eddy.bookworm.base;
 
 import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 
 import com.eddy.bookworm.R;
@@ -29,7 +29,6 @@ import timber.log.Timber;
 public abstract class BaseBookwormActivity extends AppCompatActivity {
 
     private GoogleSignInClient googleSignInClient;
-    private int logoutMenuItemId;
     private static final int SIGN_IN_REQUEST_CODE = 12;
 
     protected GoogleSignInClient getGoogleSignInClient() {
@@ -46,13 +45,10 @@ public abstract class BaseBookwormActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         SignInManager signInManager = SignInManager.getInstance();
         if (signInManager.userLoggedIn()) {
-            MenuItem logoutMenuItem = menu.add(getString(R.string.logout));
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                logoutMenuItem.setContentDescription(getString(R.string.logout));
-            }
-            logoutMenuItemId =  logoutMenuItem.getItemId();
+            MenuInflater menuInflater = new MenuInflater(this);
+            menuInflater.inflate(R.menu.user_sign_menu, menu);
         } else {
-            menu.removeItem(logoutMenuItemId);
+            menu.removeItem(R.id.logout_menu_item);
         }
 
         return true;
@@ -60,7 +56,7 @@ public abstract class BaseBookwormActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == logoutMenuItemId) {
+        if (item.getItemId() == R.id.logout_menu_item) {
             SignInManager signInManager = SignInManager.getInstance();
             if (signInManager.userLoggedIn()) {
                 String displayName = signInManager.getCurrentUserName();

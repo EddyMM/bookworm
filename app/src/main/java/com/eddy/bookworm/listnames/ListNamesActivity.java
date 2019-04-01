@@ -48,7 +48,9 @@ public class ListNamesActivity extends BaseBookwormActivity implements ListNames
         MenuInflater menuInflater = new MenuInflater(this);
         menuInflater.inflate(R.menu.categories_list_menu, menu);
 
-        return super.onCreateOptionsMenu(menu);
+        super.onCreateOptionsMenu(menu);
+
+        return true;
     }
 
     @Override
