@@ -7,12 +7,14 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 
+import com.eddy.bookworm.R;
 import com.eddy.bookworm.Utils;
 import com.eddy.bookworm.base.BaseBookwormActivity;
 import com.eddy.bookworm.bookdetail.BookDetailActivity;
-import com.eddy.bookworm.R;
 import com.eddy.bookworm.firebase.SignInManager;
-import com.eddy.data.models.Book;
+import com.eddy.bookworm.models.ParcelableBook;
+import com.eddy.bookworm.models.mappers.ParcelableBookMapper;
+import com.eddy.data.models.BookEntity;
 import com.google.android.material.snackbar.Snackbar;
 
 import java.util.List;
@@ -73,18 +75,20 @@ public class BooksListActivity extends BaseBookwormActivity implements BooksAdap
         showProgressBar();
 
         booksListViewModel.getDataSnapshotLiveData().observe(this, dataSnapshot -> {
-            List<Book> books = Utils.toList(dataSnapshot.getChildren());
+//            List<Book> books = Utils.toList(dataSnapshot.getChildren());
 
-            if (books != null) {
-                booksAdapter.setBooks(books);
-            }
-            else {
-                Snackbar.make(findViewById(android.R.id.content),
-                        "No bookmarks found",
-                        Snackbar.LENGTH_LONG)
-                        .show();
-            }
-            hideProgressBar();
+//            if (books != null) {
+//                List<ParcelableBook> parcelableBooks = new ParcelableBookMapper()
+//                        .transform(books);
+//                booksAdapter.setBooks(parcelableBooks);
+//            }
+//            else {
+//                Snackbar.make(findViewById(android.R.id.content),
+//                        "No bookmarks found",
+//                        Snackbar.LENGTH_LONG)
+//                        .show();
+//            }
+//            hideProgressBar();
         });
     }
 
@@ -135,7 +139,7 @@ public class BooksListActivity extends BaseBookwormActivity implements BooksAdap
     }
 
     @Override
-    public void onClick(Book book, ImageView bookImageView) {
+    public void onClick(ParcelableBook book, ImageView bookImageView) {
         Intent intent = new Intent(this, BookDetailActivity.class);
         intent.putExtra(BookDetailActivity.BOOK_DETAIL_EXTRA, book);
 

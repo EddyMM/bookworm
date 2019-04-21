@@ -1,6 +1,6 @@
 package com.eddy.bookworm;
 
-import com.eddy.data.models.Book;
+import com.eddy.data.models.BookEntity;
 import com.google.firebase.database.DataSnapshot;
 
 import java.util.ArrayList;
@@ -15,11 +15,11 @@ public class Utils {
      *
      * @return List of tye <E>
      */
-    public static List<Book> toList(Iterable<DataSnapshot> iterable) {
-        ArrayList<Book> list = new ArrayList<>();
+    public static List<BookEntity> toList(Iterable<DataSnapshot> iterable) {
+        ArrayList<BookEntity> list = new ArrayList<>();
         if (iterable != null) {
             for (DataSnapshot dataSnapshot : iterable) {
-                list.add(dataSnapshot.getValue(Book.class));
+                list.add(dataSnapshot.getValue(BookEntity.class));
             }
         }
         return list;

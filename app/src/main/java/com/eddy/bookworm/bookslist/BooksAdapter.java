@@ -8,7 +8,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.eddy.bookworm.R;
-import com.eddy.data.models.Book;
+import com.eddy.bookworm.models.ParcelableBook;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
@@ -20,7 +20,7 @@ import butterknife.ButterKnife;
 
 class BooksAdapter extends RecyclerView.Adapter<BooksAdapter.BooksViewHolder> {
 
-    private List<Book> books;
+    private List<ParcelableBook> books;
     private Context context;
 
     private BooksListListener booksListListener;
@@ -31,10 +31,10 @@ class BooksAdapter extends RecyclerView.Adapter<BooksAdapter.BooksViewHolder> {
     }
 
     public interface BooksListListener {
-        void onClick(Book book, ImageView imageView);
+        void onClick(ParcelableBook book, ImageView imageView);
     }
 
-    void setBooks(List<Book> books) {
+    void setBooks(List<ParcelableBook> books) {
         this.books = books;
         notifyDataSetChanged();
     }
@@ -78,7 +78,7 @@ class BooksAdapter extends RecyclerView.Adapter<BooksAdapter.BooksViewHolder> {
             itemView.setOnClickListener(this);
         }
 
-        void bind(Book book) {
+        void bind(ParcelableBook book) {
             Picasso.get()
                     .load(book.getBookImageUrl())
                     .placeholder(R.drawable.ic_image_grey_24dp)
@@ -90,7 +90,7 @@ class BooksAdapter extends RecyclerView.Adapter<BooksAdapter.BooksViewHolder> {
 
         @Override
         public void onClick(View v) {
-            Book book = books.get(getAdapterPosition());
+            ParcelableBook book = books.get(getAdapterPosition());
             booksListListener.onClick(book, bookImageView);
         }
     }

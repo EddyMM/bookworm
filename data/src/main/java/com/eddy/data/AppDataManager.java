@@ -1,6 +1,6 @@
 package com.eddy.data;
 
-import com.eddy.data.models.Book;
+import com.eddy.data.models.BookEntity;
 import com.eddy.data.models.BooksResponse;
 import com.eddy.data.models.BooksResults;
 import com.eddy.data.models.ListName;
@@ -12,7 +12,6 @@ import java.util.Objects;
 
 import retrofit2.Call;
 import retrofit2.Response;
-import timber.log.Timber;
 
 public class AppDataManager implements DataManager {
 
@@ -28,18 +27,18 @@ public class AppDataManager implements DataManager {
             ListNamesResponse listNamesResponse = response.body();
             listNames = Objects.requireNonNull(listNamesResponse).getListNames();
         } catch (IOException e) {
-            Timber.e(e);
+//            Timber.e(e);
         }
 
         return listNames;
     }
 
     @Override
-    public List<Book> getBooks(String encodedListName) {
+    public List<BookEntity> getBooks(String encodedListName) {
         BooksApiService booksApiService = BooksApi.getInstance();
         Call<BooksResponse> booksResponseCall = booksApiService.listBooks(encodedListName);
 
-        List<Book> books = null;
+        List<BookEntity> books = null;
 
         try {
             Response<BooksResponse> response = booksResponseCall.execute();

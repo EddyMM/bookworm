@@ -13,8 +13,9 @@ import com.eddy.bookworm.R;
 import com.eddy.bookworm.Utils;
 import com.eddy.bookworm.base.BaseBookwormActivity;
 import com.eddy.bookworm.firebase.SignInManager;
+import com.eddy.bookworm.models.ParcelableBook;
 import com.eddy.data.Constants;
-import com.eddy.data.models.Book;
+import com.eddy.data.models.BookEntity;
 import com.google.android.material.appbar.CollapsingToolbarLayout;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
@@ -69,7 +70,7 @@ public class BookDetailActivity extends BaseBookwormActivity implements View.OnC
 
     @BindView(R.id.fab)
     FloatingActionButton fab;
-    private Book book;
+    private ParcelableBook book;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -95,7 +96,7 @@ public class BookDetailActivity extends BaseBookwormActivity implements View.OnC
 
         Intent intent = getIntent();
         if (intent != null) {
-            book = (Book) intent.getSerializableExtra(BOOK_DETAIL_EXTRA);
+            book = intent.getParcelableExtra(BOOK_DETAIL_EXTRA);
 
             if (book != null) {
                 showBookmarkState();
@@ -129,8 +130,8 @@ public class BookDetailActivity extends BaseBookwormActivity implements View.OnC
                 if (dataSnapshot.getChildrenCount() <= 0) {
                     saveBook();
                 } else {
-                    Book book = Utils.toList(dataSnapshot.getChildren()).get(0);
-                    Timber.d("Book: %s", book);
+                    BookEntity book = Utils.toList(dataSnapshot.getChildren()).get(0);
+                    Timber.d("BookEntity: %s", book);
                     deleteBook(book);
                 }
 
@@ -177,7 +178,7 @@ public class BookDetailActivity extends BaseBookwormActivity implements View.OnC
         }
     }
 
-    private void deleteBook(Book bookmarkedBook) {
+    private void deleteBook(BookEntity bookmarkedBook) {
         try {
             FirebaseDatabaseManager firebaseDatabaseManager = FirebaseDatabaseManager.getInstance();
             DatabaseReference databaseReference =firebaseDatabaseManager.getDatabaseReference()
