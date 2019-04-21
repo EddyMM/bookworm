@@ -6,8 +6,6 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import timber.log.Timber;
-
 public class ListName {
 
     String key;
@@ -43,7 +41,7 @@ public class ListName {
             sf.applyLocalizedPattern("E, MMM dd, yyyy");
             return sf.format(date);
         } catch (ParseException e) {
-            Timber.e(e);
+//            Timber.e(e);
             return null;
         }
     }

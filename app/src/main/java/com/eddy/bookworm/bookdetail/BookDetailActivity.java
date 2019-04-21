@@ -95,7 +95,7 @@ public class BookDetailActivity extends BaseBookwormActivity implements View.OnC
 
         Intent intent = getIntent();
         if (intent != null) {
-            book = intent.getParcelableExtra(BOOK_DETAIL_EXTRA);
+            book = (Book) intent.getSerializableExtra(BOOK_DETAIL_EXTRA);
 
             if (book != null) {
                 showBookmarkState();

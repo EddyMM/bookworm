@@ -81,7 +81,7 @@ public class BookwormRandomBestSellerWidgetConfigureActivity extends BaseBookwor
     @Override
     public void onClick(ListName listName) {
         AppDataManager appDataManager = new AppDataManager();
-        appDataManager.setPreferredCategoryCode(this, listName.getListNameEncoded());
+//        appDataManager.setPreferredCategoryCode(this, listName.getListNameEncoded());
 
         Toast.makeText(this,
                 getString(R.string.saved_widget_as, listName.getDisplayName()),

@@ -48,7 +48,7 @@ public class BookwormRandomBestSellerWidget extends AppWidgetProvider {
     @Override
     public void onDeleted(Context context, int[] appWidgetIds) {
         AppDataManager appDataManager = new AppDataManager();
-        appDataManager.removePreferredCategoryCode(context);
+//        appDataManager.removePreferredCategoryCode(context);
     }
 
     @Override
