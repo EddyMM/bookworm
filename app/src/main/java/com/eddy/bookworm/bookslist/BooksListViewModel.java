@@ -18,9 +18,9 @@ import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
-class BooksListViewModel extends AndroidViewModel {
+public class BooksListViewModel extends AndroidViewModel {
 
-    BooksListViewModel(@NonNull Application application) {
+    public BooksListViewModel(@NonNull Application application) {
         super(application);
     }
 

@@ -102,10 +102,8 @@ public class BooksListActivity extends BaseBookwormActivity implements
     }
 
     private void setUpBooksListViewModel() {
-        booksListViewModel = ViewModelProviders
-                .of(this)
+        booksListViewModel = ViewModelProviders.of(this)
                 .get(BooksListViewModel.class);
-
         refresh();
     }
 
