@@ -19,14 +19,12 @@ import androidx.lifecycle.MutableLiveData;
 
 public class ListNamesViewModel extends AndroidViewModel {
 
-    MutableLiveData<List<ListName>> listNamesLiveData = new MutableLiveData<>();
-
-    public LiveData<List<ListName>> getListNamesLiveData() {
-        return listNamesLiveData;
-    }
-
     public ListNamesViewModel(@NonNull Application application) {
         super(application);
+    }
+
+    public LiveData<List<ListName>> getListNamesLiveData () {
+        MutableLiveData<List<ListName>> listNamesLiveData = new MutableLiveData<>();
 
         Executor executor = Executors.newFixedThreadPool(3);
         executor.execute(() -> {
@@ -34,6 +32,8 @@ public class ListNamesViewModel extends AndroidViewModel {
             Handler handler = new Handler(Looper.getMainLooper());
             handler.post(() -> listNamesLiveData.setValue(listNames));
         });
+
+        return listNamesLiveData;
     }
 
 }

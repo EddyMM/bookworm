@@ -3,42 +3,40 @@ package com.eddy.bookworm.bookslist;
 import android.app.ActivityOptions;
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
 import android.widget.ImageView;
-import android.widget.ProgressBar;
 
 import com.eddy.bookworm.R;
-import com.eddy.bookworm.Utils;
 import com.eddy.bookworm.base.BaseBookwormActivity;
+import com.eddy.bookworm.base.BookwormSwipeRefreshLayout;
 import com.eddy.bookworm.bookdetail.BookDetailActivity;
 import com.eddy.bookworm.firebase.SignInManager;
 import com.eddy.bookworm.models.ParcelableBook;
-import com.eddy.bookworm.models.mappers.ParcelableBookMapper;
-import com.eddy.data.models.BookEntity;
-import com.google.android.material.snackbar.Snackbar;
-
-import java.util.List;
 
 import androidx.annotation.Nullable;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import timber.log.Timber;
 
-public class BooksListActivity extends BaseBookwormActivity implements BooksAdapter.BooksListListener {
+public class BooksListActivity extends BaseBookwormActivity implements
+        BooksAdapter.BooksListListener, SwipeRefreshLayout.OnRefreshListener {
 
     public static final String LIST_NAME_ENCODED_EXTRA = "LIST_NAME_ENCODED_EXTRA";
     public static final String DISPLAY_NAME_ENCODED_EXTRA = "DISPLAY_NAME_ENCODED_EXTRA";
 
+    private String encodedListName;
+
     private BooksAdapter booksAdapter;
+    private BooksListViewModel booksListViewModel;
 
     @BindView(R.id.books_list_rv)
     RecyclerView booksRecyclerView;
 
-    @BindView(R.id.books_list_pb)
-    ProgressBar booksListProgressBar;
+    @BindView(R.id.swipe_refresh_book_list)
+    BookwormSwipeRefreshLayout swipeRefreshBookListLayout;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -49,14 +47,14 @@ public class BooksListActivity extends BaseBookwormActivity implements BooksAdap
 
         Intent intent = getIntent();
         if (intent != null) {
-            String encodedListName = intent.getStringExtra(LIST_NAME_ENCODED_EXTRA);
+            encodedListName = intent.getStringExtra(LIST_NAME_ENCODED_EXTRA);
             String displayListName = intent.getStringExtra(DISPLAY_NAME_ENCODED_EXTRA);
 
             setUpBooksListUI();
 
             if (encodedListName != null) {
                 setTitle(displayListName);
-                setUpBooksListViewModel(encodedListName);
+                setUpBooksListViewModel();
             } else {
                 // User is opening bookmarks
                 setTitle(R.string.bookmarks);
@@ -99,33 +97,40 @@ public class BooksListActivity extends BaseBookwormActivity implements BooksAdap
         StaggeredGridLayoutManager staggeredGridLayoutManager =
                 new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
         booksRecyclerView.setLayoutManager(staggeredGridLayoutManager);
+
+        swipeRefreshBookListLayout.setOnRefreshListener(this);
     }
 
-    private void setUpBooksListViewModel(String encodedListName) {
-        BooksListViewModel booksListViewModel = ViewModelProviders
-                .of(this, new BooksListViewModelFactory(encodedListName))
+    private void setUpBooksListViewModel() {
+        booksListViewModel = ViewModelProviders
+                .of(this)
                 .get(BooksListViewModel.class);
 
-        showProgressBar();
-
-        booksListViewModel.booksLiveData.observe(this, books -> {
-            if (books != null) {
-                booksAdapter.setBooks(books);
-            }
-            else {
-                Timber.d("No list names fetched");
-            }
-
-            hideProgressBar();
-        });
+        refresh();
     }
 
     protected void hideProgressBar() {
-        booksListProgressBar.setVisibility(View.GONE);
+        swipeRefreshBookListLayout.setRefreshing(false);
     }
 
     protected void showProgressBar() {
-        booksListProgressBar.setVisibility(View.VISIBLE);
+        swipeRefreshBookListLayout.setRefreshing(true);
+    }
+
+    private void refresh() {
+        showProgressBar();
+
+        booksListViewModel.getBooksLiveData(encodedListName)
+                .observe(this, books -> {
+                    if (books != null) {
+                        booksAdapter.setBooks(books);
+                    }
+                    else {
+                        Timber.d("No list names fetched");
+                    }
+
+                    hideProgressBar();
+                });
     }
 
     @Override
@@ -157,5 +162,10 @@ public class BooksListActivity extends BaseBookwormActivity implements BooksAdap
         } else {
             startActivity(intent);
         }
+    }
+
+    @Override
+    public void onRefresh() {
+        refresh();
     }
 }

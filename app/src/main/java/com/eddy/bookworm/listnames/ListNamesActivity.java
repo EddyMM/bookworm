@@ -5,28 +5,31 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.ProgressBar;
 
 import com.eddy.bookworm.R;
 import com.eddy.bookworm.base.BaseBookwormActivity;
+import com.eddy.bookworm.base.BookwormSwipeRefreshLayout;
 import com.eddy.bookworm.bookslist.BooksListActivity;
 import com.eddy.data.models.ListName;
 
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import timber.log.Timber;
 
-public class ListNamesActivity extends BaseBookwormActivity implements ListNamesAdapter.ListNameListener {
+public class ListNamesActivity extends BaseBookwormActivity implements
+        ListNamesAdapter.ListNameListener, SwipeRefreshLayout.OnRefreshListener {
+
+    private ListNamesViewModel listNamesViewModel;
 
     @BindView(R.id.list_names_rv)
     RecyclerView listNamesRecyclerView;
 
-    @BindView(R.id.list_names_progress_bar)
-    ProgressBar listNamesProgressBar;
+    @BindView(R.id.swipe_refresh_list_names)
+    BookwormSwipeRefreshLayout swipeRefreshListNamesLayout;
 
     ListNamesAdapter listNamesAdapter;
 
@@ -37,7 +40,7 @@ public class ListNamesActivity extends BaseBookwormActivity implements ListNames
 
         ButterKnife.bind(this);
 
-        setUpListNamesRecyclerView();
+        setUpListNamesUI();
 
         setTitle(getString(R.string.categories_title));
         setUpViewModel();
@@ -64,20 +67,25 @@ public class ListNamesActivity extends BaseBookwormActivity implements ListNames
         return super.onOptionsItemSelected(item);
     }
 
-    private void setUpListNamesRecyclerView() {
+    private void setUpListNamesUI() {
         listNamesAdapter = new ListNamesAdapter(this, this);
 
         listNamesRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         listNamesRecyclerView.setAdapter(listNamesAdapter);
+
+        swipeRefreshListNamesLayout.setOnRefreshListener(this);
     }
 
     private void setUpViewModel() {
-        ListNamesViewModel listNamesViewModel = ViewModelProviders.of(this).get(
+       listNamesViewModel = ViewModelProviders.of(this).get(
                 ListNamesViewModel.class);
+        refresh();
+    }
 
-        onBeginSignIn();
+    private void refresh() {
+        showProgressBar();
 
-        listNamesViewModel.listNamesLiveData.observe(this, listNames -> {
+        listNamesViewModel.getListNamesLiveData().observe(this, listNames -> {
             if (listNames != null) {
                 listNamesAdapter.setListNames(listNames);
             }
@@ -85,21 +93,26 @@ public class ListNamesActivity extends BaseBookwormActivity implements ListNames
                 Timber.d("No list names fetched");
             }
 
-            onCompleteSignIn();
+            hideProgressBar();
         });
     }
 
-    protected void onCompleteSignIn() {
-        listNamesProgressBar.setVisibility(View.GONE);
+    protected void hideProgressBar() {
+        swipeRefreshListNamesLayout.setRefreshing(false);
     }
 
-    protected void onBeginSignIn() {
-        listNamesProgressBar.setVisibility(View.VISIBLE);
+    protected void showProgressBar() {
+        swipeRefreshListNamesLayout.setRefreshing(true);
     }
 
     @Override
-    protected void onSuccessfulSignIn() {
+    protected void onCompleteSignIn() {
+        hideProgressBar();
+    }
 
+    @Override
+    protected void onBeginSignIn() {
+        showProgressBar();
     }
 
     @Override
@@ -116,4 +129,10 @@ public class ListNamesActivity extends BaseBookwormActivity implements ListNames
 
         startActivity(intent);
     }
+
+    @Override
+    public void onRefresh() {
+        refresh();
+    }
+
 }
