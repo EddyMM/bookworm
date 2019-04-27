@@ -15,13 +15,10 @@ import com.eddy.bookworm.models.ParcelableBook;
 import com.eddy.bookworm.models.mappers.ParcelableBookMapper;
 import com.eddy.data.models.Book;
 
-import com.google.firebase.database.DataSnapshot;
-
 import java.util.List;
 
 import androidx.annotation.Nullable;
 import androidx.constraintlayout.widget.Group;
-import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
@@ -33,6 +30,8 @@ public class BookmarksListActivity extends BaseBookwormActivity implements
         BooksAdapter.BooksListListener, SwipeRefreshLayout.OnRefreshListener {
 
     private BooksAdapter booksAdapter;
+
+    private BookmarksViewModel booksListViewModel;
 
     @BindView(R.id.books_list_rv)
     RecyclerView booksRecyclerView;
@@ -70,17 +69,16 @@ public class BookmarksListActivity extends BaseBookwormActivity implements
     }
 
     private void setUpBookmarksViewModel() {
-        BookmarksViewModel booksListViewModel = ViewModelProviders
+        booksListViewModel = ViewModelProviders
                 .of(this)
                 .get(BookmarksViewModel.class);
-
-        refresh(booksListViewModel.getDataSnapshotLiveData());
+        refresh();
     }
 
-    private void refresh(LiveData<DataSnapshot> dataSnapshotLiveData) {
+    private void refresh() {
         showProgressBar();
 
-        dataSnapshotLiveData.observe(this, dataSnapshot -> {
+        booksListViewModel.getDataSnapshotLiveData().observe(this, dataSnapshot -> {
             List<Book> books = Utils.toList(dataSnapshot.getChildren());
 
             if (books != null) {
@@ -103,7 +101,7 @@ public class BookmarksListActivity extends BaseBookwormActivity implements
 
     @Override
     public void onRefresh() {
-
+        refresh();
     }
 
     @Override

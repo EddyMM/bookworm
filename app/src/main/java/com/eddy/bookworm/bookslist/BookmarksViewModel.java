@@ -4,12 +4,10 @@ import android.app.Application;
 
 import com.eddy.bookworm.firebase.FirebaseDatabaseManager;
 import com.eddy.data.Constants;
-import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseReference;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
-import androidx.lifecycle.LiveData;
 
 public class BookmarksViewModel extends AndroidViewModel {
     private static final DatabaseReference JOURNAL_REF =
@@ -23,7 +21,7 @@ public class BookmarksViewModel extends AndroidViewModel {
     }
 
     @NonNull
-    LiveData<DataSnapshot> getDataSnapshotLiveData() {
+    FirebaseQueryLiveData getDataSnapshotLiveData() {
         return liveData;
     }
 }
