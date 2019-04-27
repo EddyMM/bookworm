@@ -13,7 +13,9 @@ import com.eddy.bookworm.base.BaseBookwormActivity;
 import com.eddy.bookworm.base.BookwormSwipeRefreshLayout;
 import com.eddy.bookworm.bookslist.BookmarksListActivity;
 import com.eddy.bookworm.bookslist.BooksListActivity;
+import com.eddy.bookworm.firebase.SignInManager;
 import com.eddy.data.models.ListName;
+import com.google.android.material.snackbar.Snackbar;
 
 import androidx.constraintlayout.widget.Group;
 import androidx.lifecycle.ViewModelProviders;
@@ -66,11 +68,23 @@ public class ListNamesActivity extends BaseBookwormActivity implements
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.bookmark_menu_item) {
-            Intent intent = new Intent(this, BookmarksListActivity.class);
-            startActivity(intent);
+
+            SignInManager signInManager = new SignInManager();
+            if (signInManager.userLoggedIn()) {
+                Intent intent = new Intent(this, BookmarksListActivity.class);
+                startActivity(intent);
+            } else {
+                Snackbar.make(findViewById(android.R.id.content),
+                            getString(R.string.sign_in_for_bookmark_message),
+                            Snackbar.LENGTH_LONG)
+                        .setAction(getString(R.string.sigin),
+                                view -> signInWithFirebase())
+                        .show();
+            }
 
             return true;
         }
+
         return super.onOptionsItemSelected(item);
     }
 

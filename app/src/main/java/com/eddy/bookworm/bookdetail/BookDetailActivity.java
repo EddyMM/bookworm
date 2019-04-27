@@ -71,6 +71,8 @@ public class BookDetailActivity extends BaseBookwormActivity implements View.OnC
     @BindView(R.id.fab)
     FloatingActionButton fab;
     private ParcelableBook book;
+    private boolean signInForBookmarkAction; // Flag used to determine whether action to
+    // perform on successful sign in is bookmarking or not
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -229,7 +231,12 @@ public class BookDetailActivity extends BaseBookwormActivity implements View.OnC
 
     @Override
     protected void onSuccessfulSignIn() {
-        saveBook();
+        if (signInForBookmarkAction) {
+            // Ensure we save the book only if user was signing in to save bookmark
+            // then deactivate flag by setting it to false
+            signInForBookmarkAction = false;
+            determineFabAction();
+        }
     }
 
     @Override
@@ -271,6 +278,7 @@ public class BookDetailActivity extends BaseBookwormActivity implements View.OnC
 
     @Override
     public void onClick(View v) {
+        signInForBookmarkAction = true;
         super.signInWithFirebase();
     }
 }

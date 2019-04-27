@@ -12,7 +12,11 @@ public class SignInManager {
         return ourInstance;
     }
 
-    private SignInManager() {
+    public interface LogoutListener {
+        void onSuccessfulLogout();
+    }
+
+    public SignInManager() {
     }
 
     public boolean userLoggedIn() {
@@ -30,8 +34,9 @@ public class SignInManager {
         return fbAuthInstance.getUid();
     }
 
-    public void signOut(GoogleSignInClient googleSignInClient) {
+    public void signOut(GoogleSignInClient googleSignInClient, LogoutListener logoutListener) {
         fbAuthInstance.signOut();
-        googleSignInClient.signOut();
+        googleSignInClient.signOut().addOnSuccessListener(
+                aVoid -> logoutListener.onSuccessfulLogout());
     }
 }

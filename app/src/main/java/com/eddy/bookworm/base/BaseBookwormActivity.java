@@ -26,7 +26,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import timber.log.Timber;
 
-public abstract class BaseBookwormActivity extends AppCompatActivity {
+public abstract class BaseBookwormActivity extends AppCompatActivity implements SignInManager.LogoutListener {
 
     private GoogleSignInClient googleSignInClient;
     private static final int SIGN_IN_REQUEST_CODE = 12;
@@ -44,9 +44,11 @@ public abstract class BaseBookwormActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         SignInManager signInManager = SignInManager.getInstance();
+        MenuInflater menuInflater = new MenuInflater(this);
+        menuInflater.inflate(R.menu.user_sign_menu, menu);
+
         if (signInManager.userLoggedIn()) {
-            MenuInflater menuInflater = new MenuInflater(this);
-            menuInflater.inflate(R.menu.user_sign_menu, menu);
+            menu.removeItem(R.id.signin_menu_item);
         } else {
             menu.removeItem(R.id.logout_menu_item);
         }
@@ -56,22 +58,28 @@ public abstract class BaseBookwormActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == R.id.logout_menu_item) {
-            SignInManager signInManager = SignInManager.getInstance();
-            if (signInManager.userLoggedIn()) {
-                String displayName = signInManager.getCurrentUserName();
-                signInManager.signOut(googleSignInClient);
+        switch (item.getItemId()){
+            case R.id.signin_menu_item:
+                signInWithFirebase();
+                return true;
 
-                Snackbar.make(findViewById(android.R.id.content),
-                        getString(R.string.logged_out_user, displayName),
-                        Snackbar.LENGTH_SHORT)
-                        .show();
+            case R.id.logout_menu_item:
+                SignInManager signInManager = SignInManager.getInstance();
+                if (signInManager.userLoggedIn()) {
+                    String displayName = signInManager.getCurrentUserName();
+                    signInManager.signOut(googleSignInClient, this);
 
-                // Make sure logout option does not appear in the menu
-                invalidateOptionsMenu();
-            }
-            return true;
+                    Snackbar.make(findViewById(android.R.id.content),
+                            getString(R.string.logged_out_user, displayName),
+                            Snackbar.LENGTH_SHORT)
+                            .show();
+
+                    // Make sure logout option does not appear in the menu
+                    invalidateOptionsMenu();
+                }
+                return true;
         }
+
         return super.onOptionsItemSelected(item);
     }
 
@@ -168,4 +176,7 @@ public abstract class BaseBookwormActivity extends AppCompatActivity {
     protected abstract void onCompleteSignIn();
 
     protected abstract void onBeginSignIn();
+
+    @Override
+    public void onSuccessfulLogout() { }
 }

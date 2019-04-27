@@ -133,4 +133,7 @@
     <string name="bookmarks_description">bookmarks</string>
     <string name="no_internet_connection">No internet connection</string>
     <string name="no_internet_connection_message">No Internet connection.\n\nConnect to Internet then refresh</string>
+    <string name="sigin">Sign in</string>
+    <string name="menu_signin">sign in</string>
+    <string name="sign_in_for_bookmark_message">Kindly sign in to access your bookmarks</string>
 </resources>

@@ -134,4 +134,10 @@ public class BookmarksListActivity extends BaseBookwormActivity implements
             startActivity(intent);
         }
     }
+
+    @Override
+    public void onSuccessfulLogout() {
+        super.onSuccessfulLogout();
+        finish();
+    }
 }
