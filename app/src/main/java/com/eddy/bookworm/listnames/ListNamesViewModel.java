@@ -5,7 +5,7 @@ import android.os.Handler;
 import android.os.Looper;
 
 import com.eddy.data.models.ListName;
-import com.eddy.domain.Library;
+import com.eddy.data.repository.CategoriesRepository;
 
 import java.util.List;
 import java.util.concurrent.Executor;
@@ -28,7 +28,8 @@ public class ListNamesViewModel extends AndroidViewModel {
 
         Executor executor = Executors.newFixedThreadPool(3);
         executor.execute(() -> {
-            List<ListName> listNames = Library.fetchCategories();
+            CategoriesRepository categoriesRepository = new CategoriesRepository();
+            List<ListName> listNames = categoriesRepository.fetchCategories();
             Handler handler = new Handler(Looper.getMainLooper());
             handler.post(() -> listNamesLiveData.setValue(listNames));
         });

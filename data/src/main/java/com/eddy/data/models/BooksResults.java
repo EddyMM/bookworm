@@ -10,9 +10,9 @@ public class BooksResults {
     String bestsellersDate;
 
     @SerializedName("books")
-    List<BookEntity> books;
+    List<Book> books;
 
-    public List<BookEntity> getBooks() {
+    public List<Book> getBooks() {
         return books;
     }
 

@@ -11,6 +11,7 @@ import com.eddy.bookworm.R;
 import com.eddy.bookworm.Utils;
 import com.eddy.bookworm.base.BaseBookwormActivity;
 import com.eddy.bookworm.base.BookwormSwipeRefreshLayout;
+import com.eddy.bookworm.bookslist.BookmarksListActivity;
 import com.eddy.bookworm.bookslist.BooksListActivity;
 import com.eddy.data.models.ListName;
 
@@ -65,7 +66,7 @@ public class ListNamesActivity extends BaseBookwormActivity implements
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.bookmark_menu_item) {
-            Intent intent = new Intent(this, BooksListActivity.class);
+            Intent intent = new Intent(this, BookmarksListActivity.class);
             startActivity(intent);
 
             return true;

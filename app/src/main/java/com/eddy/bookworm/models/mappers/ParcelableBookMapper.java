@@ -1,7 +1,7 @@
 package com.eddy.bookworm.models.mappers;
 
 import com.eddy.bookworm.models.ParcelableBook;
-import com.eddy.domain.Book;
+import com.eddy.data.models.Book;
 
 
 import java.util.ArrayList;
@@ -10,7 +10,7 @@ import java.util.List;
 
 public class ParcelableBookMapper {
 
-    public ParcelableBook transform(Book book) {
+    private ParcelableBook transform(Book book) {
         ParcelableBook parcelableBook = new ParcelableBook();
         parcelableBook.setKey(book.getKey());
         parcelableBook.setTitle(book.getTitle());
@@ -25,13 +25,15 @@ public class ParcelableBookMapper {
         return parcelableBook;
     }
 
-    public List<ParcelableBook> transform(Collection<Book> bookEntities) {
+    public List<ParcelableBook> transform(Collection<Book> books) {
         List<ParcelableBook> parcelableBooks = new ArrayList<>();
 
-        for(Book book: bookEntities) {
-            ParcelableBook parcelableBook = transform(book);
-            if (parcelableBook != null) {
-                parcelableBooks.add(parcelableBook);
+        if (books != null) {
+            for(Book book: books) {
+                ParcelableBook parcelableBook = transform(book);
+                if (parcelableBook != null) {
+                    parcelableBooks.add(parcelableBook);
+                }
             }
         }
 

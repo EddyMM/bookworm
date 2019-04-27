@@ -15,7 +15,7 @@ import com.eddy.bookworm.base.BaseBookwormActivity;
 import com.eddy.bookworm.firebase.SignInManager;
 import com.eddy.bookworm.models.ParcelableBook;
 import com.eddy.data.Constants;
-import com.eddy.data.models.BookEntity;
+import com.eddy.data.models.Book;
 import com.google.android.material.appbar.CollapsingToolbarLayout;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
@@ -130,8 +130,8 @@ public class BookDetailActivity extends BaseBookwormActivity implements View.OnC
                 if (dataSnapshot.getChildrenCount() <= 0) {
                     saveBook();
                 } else {
-                    BookEntity book = Utils.toList(dataSnapshot.getChildren()).get(0);
-                    Timber.d("BookEntity: %s", book);
+                    Book book = Utils.toList(dataSnapshot.getChildren()).get(0);
+                    Timber.d("Book: %s", book);
                     deleteBook(book);
                 }
 
@@ -178,7 +178,7 @@ public class BookDetailActivity extends BaseBookwormActivity implements View.OnC
         }
     }
 
-    private void deleteBook(BookEntity bookmarkedBook) {
+    private void deleteBook(Book bookmarkedBook) {
         try {
             FirebaseDatabaseManager firebaseDatabaseManager = FirebaseDatabaseManager.getInstance();
             DatabaseReference databaseReference =firebaseDatabaseManager.getDatabaseReference()

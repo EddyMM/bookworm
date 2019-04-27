@@ -4,7 +4,7 @@ package com.eddy.data.models;
 import com.google.gson.annotations.SerializedName;
 
 
-public class BookEntity {
+public class Book {
 
     String key;
 
@@ -33,7 +33,7 @@ public class BookEntity {
     Integer weeksOnList;
 
 
-    public BookEntity() {}
+    public Book() {}
 
     public String getKey() {
         return key;
@@ -109,7 +109,7 @@ public class BookEntity {
 
     @Override
     public String toString() {
-        return "BookEntity{" +
+        return "Book{" +
                 "title='" + title + '\'' +
                 ", author='" + author + '\'' +
                 ", description='" + description + '\'' +

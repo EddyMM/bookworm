@@ -28,6 +28,17 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".listnames.ListNamesActivity"/>
         </activity>
+
+        <activity
+            android:name=".bookslist.BookmarksListActivity"
+            android:launchMode="singleTop"
+            android:parentActivityName=".listnames.ListNamesActivity"
+            tools:targetApi="jelly_bean">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".listnames.ListNamesActivity"/>
+        </activity>
+
         <activity
             android:name=".bookdetail.BookDetailActivity"
             android:label="@string/title_activity_book_detail"

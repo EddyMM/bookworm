@@ -3,7 +3,6 @@ package com.eddy.bookworm.bookslist;
 import android.app.ActivityOptions;
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
 import android.widget.ImageView;
 
 import com.eddy.bookworm.R;
@@ -11,32 +10,29 @@ import com.eddy.bookworm.Utils;
 import com.eddy.bookworm.base.BaseBookwormActivity;
 import com.eddy.bookworm.base.BookwormSwipeRefreshLayout;
 import com.eddy.bookworm.bookdetail.BookDetailActivity;
+import com.eddy.bookworm.firebase.SignInManager;
 import com.eddy.bookworm.models.ParcelableBook;
+import com.eddy.bookworm.models.mappers.ParcelableBookMapper;
+import com.eddy.data.models.Book;
+
+import com.google.firebase.database.DataSnapshot;
 
 import java.util.List;
 
 import androidx.annotation.Nullable;
 import androidx.constraintlayout.widget.Group;
 import androidx.lifecycle.LiveData;
-import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import timber.log.Timber;
 
-public class BooksListActivity extends BaseBookwormActivity implements
+public class BookmarksListActivity extends BaseBookwormActivity implements
         BooksAdapter.BooksListListener, SwipeRefreshLayout.OnRefreshListener {
 
-    public static final String LIST_NAME_ENCODED_EXTRA = "LIST_NAME_ENCODED_EXTRA";
-    public static final String DISPLAY_NAME_ENCODED_EXTRA = "DISPLAY_NAME_ENCODED_EXTRA";
-
-    private String encodedListName;
-
     private BooksAdapter booksAdapter;
-    private BooksListViewModel booksListViewModel;
 
     @BindView(R.id.books_list_rv)
     RecyclerView booksRecyclerView;
@@ -54,17 +50,11 @@ public class BooksListActivity extends BaseBookwormActivity implements
 
         ButterKnife.bind(this);
 
-        Intent intent = getIntent();
-        if (intent != null) {
-            encodedListName = intent.getStringExtra(LIST_NAME_ENCODED_EXTRA);
-            String displayListName = intent.getStringExtra(DISPLAY_NAME_ENCODED_EXTRA);
-
+        // User is opening bookmarks
+        setTitle(R.string.bookmarks);
+        if (SignInManager.getInstance().userLoggedIn()) {
             setUpBooksListUI();
-
-            if (encodedListName != null) {
-                setTitle(displayListName);
-                setUpBooksListViewModel();
-            }
+            setUpBookmarksViewModel();
         }
     }
 
@@ -79,10 +69,28 @@ public class BooksListActivity extends BaseBookwormActivity implements
         swipeRefreshBookListLayout.setOnRefreshListener(this);
     }
 
-    private void setUpBooksListViewModel() {
-        booksListViewModel = ViewModelProviders.of(this)
-                .get(BooksListViewModel.class);
-        refresh(booksListViewModel.getBooksLiveData(encodedListName));
+    private void setUpBookmarksViewModel() {
+        BookmarksViewModel booksListViewModel = ViewModelProviders
+                .of(this)
+                .get(BookmarksViewModel.class);
+
+        refresh(booksListViewModel.getDataSnapshotLiveData());
+    }
+
+    private void refresh(LiveData<DataSnapshot> dataSnapshotLiveData) {
+        showProgressBar();
+
+        dataSnapshotLiveData.observe(this, dataSnapshot -> {
+            List<Book> books = Utils.toList(dataSnapshot.getChildren());
+
+            if (books != null) {
+                List<ParcelableBook> parcelableBooks = new ParcelableBookMapper()
+                        .transform(books);
+                booksAdapter.setBooks(parcelableBooks);
+            }
+
+            hideProgressBar();
+        });
     }
 
     protected void hideProgressBar() {
@@ -93,33 +101,9 @@ public class BooksListActivity extends BaseBookwormActivity implements
         swipeRefreshBookListLayout.setRefreshing(true);
     }
 
-    private void refresh(LiveData<List<ParcelableBook>> bookLiveData) {
-        if (!Utils.isConnected(this)) {
-            showNoInternetUI();
-        } else {
-            showBooksList();
-        }
-        showProgressBar();
+    @Override
+    public void onRefresh() {
 
-        bookLiveData.observe(this, books -> {
-                    if (books != null) {
-                        booksAdapter.setBooks(books);
-                    } else {
-                        Timber.d("No list names fetched");
-                    }
-
-                    hideProgressBar();
-                });
-    }
-
-    private void showNoInternetUI() {
-        booksRecyclerView.setVisibility(View.GONE);
-        noInternetWidgets.setVisibility(View.VISIBLE);
-    }
-
-    private void showBooksList() {
-        booksRecyclerView.setVisibility(View.VISIBLE);
-        noInternetWidgets.setVisibility(View.GONE);
     }
 
     @Override
@@ -151,14 +135,5 @@ public class BooksListActivity extends BaseBookwormActivity implements
         } else {
             startActivity(intent);
         }
-    }
-
-    @Override
-    public void onRefresh() {
-        LiveData<List<ParcelableBook>> booksLiveData = new MutableLiveData<>();
-        if (encodedListName != null) {
-            booksLiveData = booksListViewModel.getBooksLiveData(encodedListName);
-        }
-        refresh(booksLiveData);
     }
 }

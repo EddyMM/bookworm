@@ -30,12 +30,12 @@ public class GetRandomBookIntentService extends IntentService {
     private void getRandomBook(String listName) {
         AppDataManager appDataManager = new AppDataManager();
 
-//        List<BookEntity> bookList = appDataManager.getCategoriesSync(listName);
+//        List<Book> bookList = appDataManager.getCategoriesSync(listName);
 
 //        if (bookList != null) {
 //            int randomBookPosition = (int) Math.floor(Math.random() * bookList.size());
 //
-//            BookEntity widgetBook = bookList.get(randomBookPosition);
+//            Book widgetBook = bookList.get(randomBookPosition);
 //            AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(this);
 //            int[] appWidgetIds = appWidgetManager.getAppWidgetIds(
 //                    new ComponentName(getApplicationContext(), BookwormRandomBestSellerWidget.class));

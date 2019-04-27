@@ -1,6 +1,6 @@
 package com.eddy.data;
 
-import com.eddy.data.models.BookEntity;
+import com.eddy.data.models.Book;
 import com.eddy.data.models.BooksResponse;
 import com.eddy.data.models.BooksResults;
 import com.eddy.data.models.ListName;
@@ -34,11 +34,11 @@ public class AppDataManager implements DataManager {
     }
 
     @Override
-    public List<BookEntity> getBooks(String encodedListName) {
+    public List<Book> getBooks(String encodedListName) {
         BooksApiService booksApiService = BooksApi.getInstance();
         Call<BooksResponse> booksResponseCall = booksApiService.listBooks(encodedListName);
 
-        List<BookEntity> books = null;
+        List<Book> books = null;
 
         try {
             Response<BooksResponse> response = booksResponseCall.execute();

@@ -47,6 +47,7 @@
         android:id="@+id/no_internet_widgets"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:visibility="gone"
         app:constraint_referenced_ids="no_internet_tv,no_internet_iv"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
