@@ -5,13 +5,16 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
 
 import com.eddy.bookworm.R;
+import com.eddy.bookworm.Utils;
 import com.eddy.bookworm.base.BaseBookwormActivity;
 import com.eddy.bookworm.base.BookwormSwipeRefreshLayout;
 import com.eddy.bookworm.bookslist.BooksListActivity;
 import com.eddy.data.models.ListName;
 
+import androidx.constraintlayout.widget.Group;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -30,6 +33,9 @@ public class ListNamesActivity extends BaseBookwormActivity implements
 
     @BindView(R.id.swipe_refresh_list_names)
     BookwormSwipeRefreshLayout swipeRefreshListNamesLayout;
+
+    @BindView(R.id.no_internet_widgets)
+    Group noInternetWidgets;
 
     ListNamesAdapter listNamesAdapter;
 
@@ -82,19 +88,35 @@ public class ListNamesActivity extends BaseBookwormActivity implements
         refresh();
     }
 
+    private void showNoInternetUI() {
+        listNamesRecyclerView.setVisibility(View.GONE);
+        noInternetWidgets.setVisibility(View.VISIBLE);
+    }
+
+    private void showBooksList() {
+        listNamesRecyclerView.setVisibility(View.VISIBLE);
+        noInternetWidgets.setVisibility(View.GONE);
+    }
+
     private void refresh() {
+        if (!Utils.isConnected(this)) {
+            showNoInternetUI();
+        } else {
+            showBooksList();
+        }
+
         showProgressBar();
 
         listNamesViewModel.getListNamesLiveData().observe(this, listNames -> {
             if (listNames != null) {
                 listNamesAdapter.setListNames(listNames);
-            }
-            else {
+            } else {
                 Timber.d("No list names fetched");
             }
 
             hideProgressBar();
         });
+
     }
 
     protected void hideProgressBar() {

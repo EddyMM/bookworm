@@ -3,16 +3,27 @@ package com.eddy.bookworm.bookslist;
 import android.app.ActivityOptions;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.ImageView;
 
 import com.eddy.bookworm.R;
+import com.eddy.bookworm.Utils;
 import com.eddy.bookworm.base.BaseBookwormActivity;
 import com.eddy.bookworm.base.BookwormSwipeRefreshLayout;
 import com.eddy.bookworm.bookdetail.BookDetailActivity;
 import com.eddy.bookworm.firebase.SignInManager;
 import com.eddy.bookworm.models.ParcelableBook;
+import com.eddy.bookworm.models.mappers.ParcelableBookMapper;
+import com.eddy.data.models.BookEntity;
+import com.eddy.domain.Book;
+import com.eddy.domain.mappers.BookMapper;
+import com.google.android.material.snackbar.Snackbar;
+
+import java.util.List;
 
 import androidx.annotation.Nullable;
+import androidx.constraintlayout.widget.Group;
+import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
@@ -37,6 +48,9 @@ public class BooksListActivity extends BaseBookwormActivity implements
 
     @BindView(R.id.swipe_refresh_book_list)
     BookwormSwipeRefreshLayout swipeRefreshBookListLayout;
+
+    @BindView(R.id.no_internet_widgets)
+    Group noInternetWidgets;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -70,24 +84,7 @@ public class BooksListActivity extends BaseBookwormActivity implements
                 .of(this)
                 .get(BookmarksViewModel.class);
 
-        showProgressBar();
-
-        booksListViewModel.getDataSnapshotLiveData().observe(this, dataSnapshot -> {
-//            List<Book> books = Utils.toList(dataSnapshot.getChildren());
-
-//            if (books != null) {
-//                List<ParcelableBook> parcelableBooks = new ParcelableBookMapper()
-//                        .transform(books);
-//                booksAdapter.setBooks(parcelableBooks);
-//            }
-//            else {
-//                Snackbar.make(findViewById(android.R.id.content),
-//                        "No bookmarks found",
-//                        Snackbar.LENGTH_LONG)
-//                        .show();
-//            }
-//            hideProgressBar();
-        });
+        refresh(booksListViewModel.getDataSnapshotLiveData(this));
     }
 
     private void setUpBooksListUI() {
@@ -104,7 +101,7 @@ public class BooksListActivity extends BaseBookwormActivity implements
     private void setUpBooksListViewModel() {
         booksListViewModel = ViewModelProviders.of(this)
                 .get(BooksListViewModel.class);
-        refresh();
+        refresh(booksListViewModel.getBooksLiveData(encodedListName));
     }
 
     protected void hideProgressBar() {
@@ -115,20 +112,33 @@ public class BooksListActivity extends BaseBookwormActivity implements
         swipeRefreshBookListLayout.setRefreshing(true);
     }
 
-    private void refresh() {
+    private void refresh(LiveData<List<ParcelableBook>> bookLiveData) {
+        if (!Utils.isConnected(this)) {
+            showNoInternetUI();
+        } else {
+            showBooksList();
+        }
         showProgressBar();
 
-        booksListViewModel.getBooksLiveData(encodedListName)
-                .observe(this, books -> {
+        bookLiveData.observe(this, books -> {
                     if (books != null) {
                         booksAdapter.setBooks(books);
-                    }
-                    else {
+                    } else {
                         Timber.d("No list names fetched");
                     }
 
                     hideProgressBar();
                 });
+    }
+
+    private void showNoInternetUI() {
+        booksRecyclerView.setVisibility(View.GONE);
+        noInternetWidgets.setVisibility(View.VISIBLE);
+    }
+
+    private void showBooksList() {
+        booksRecyclerView.setVisibility(View.VISIBLE);
+        noInternetWidgets.setVisibility(View.GONE);
     }
 
     @Override
@@ -164,6 +174,15 @@ public class BooksListActivity extends BaseBookwormActivity implements
 
     @Override
     public void onRefresh() {
-        refresh();
+        LiveData<List<ParcelableBook>> booksLiveData;
+        if (encodedListName != null) {
+            booksLiveData = booksListViewModel.getBooksLiveData(encodedListName);
+        } else {
+            BookmarksViewModel booksListViewModel = ViewModelProviders
+                    .of(this)
+                    .get(BookmarksViewModel.class);
+            booksLiveData = booksListViewModel.getDataSnapshotLiveData(BooksListActivity.this);
+        }
+        refresh(booksLiveData);
     }
 }

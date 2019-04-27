@@ -27,10 +27,12 @@ public class BookMapper {
     public List<Book> transform(Collection<BookEntity> bookEntities) {
         List<Book> books = new ArrayList<>();
 
-        for(BookEntity bookEntity: bookEntities) {
-            Book book = transform(bookEntity);
-            if (book != null) {
-                books.add(book);
+        if (bookEntities != null) {
+            for(BookEntity bookEntity: bookEntities) {
+                Book book = transform(bookEntity);
+                if (book != null) {
+                    books.add(book);
+                }
             }
         }
 

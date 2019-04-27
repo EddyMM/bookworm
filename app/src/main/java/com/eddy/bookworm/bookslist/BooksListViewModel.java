@@ -39,5 +39,4 @@ public class BooksListViewModel extends AndroidViewModel {
 
         return booksLiveData;
     }
-
 }
