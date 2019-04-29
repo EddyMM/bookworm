@@ -3,6 +3,8 @@ package com.eddy.data.models;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.util.List;
+
 
 public class Book {
 
@@ -19,6 +21,18 @@ public class Book {
 
     @SerializedName("book_image")
     String bookImageUrl;
+
+    @SerializedName("book_image_width")
+    Integer bookImageWidth;
+
+    @SerializedName("book_image_height")
+    Integer bookImageHeight;
+
+    @SerializedName("buy_links")
+    List<BuyLink> buyLinks;
+
+    @SerializedName("book_review_link")
+    String reviewUrl;
 
     @SerializedName("publisher")
     String publisher;
@@ -75,6 +89,22 @@ public class Book {
         this.bookImageUrl = bookImageUrl;
     }
 
+    public Integer getBookImageWidth() {
+        return bookImageWidth;
+    }
+
+    public void setBookImageWidth(Integer bookImageWidth) {
+        this.bookImageWidth = bookImageWidth;
+    }
+
+    public Integer getBookImageHeight() {
+        return bookImageHeight;
+    }
+
+    public void setBookImageHeight(Integer bookImageHeight) {
+        this.bookImageHeight = bookImageHeight;
+    }
+
     public String getPublisher() {
         return publisher;
     }
@@ -105,6 +135,22 @@ public class Book {
 
     public void setWeeksOnList(Integer weeksOnList) {
         this.weeksOnList = weeksOnList;
+    }
+
+    public List<BuyLink> getBuyLinks() {
+        return buyLinks;
+    }
+
+    public void setBuyLinks(List<BuyLink> buyLinks) {
+        this.buyLinks = buyLinks;
+    }
+
+    public String getReviewUrl() {
+        return reviewUrl;
+    }
+
+    public void setReviewUrl(String reviewUrl) {
+        this.reviewUrl = reviewUrl;
     }
 
     @Override

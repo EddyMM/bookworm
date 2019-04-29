@@ -16,11 +16,16 @@ public class ParcelableBookMapper {
         parcelableBook.setTitle(book.getTitle());
         parcelableBook.setAuthor(book.getAuthor());
         parcelableBook.setBookImageUrl(book.getBookImageUrl());
+        parcelableBook.setBookImageWidth(book.getBookImageWidth());
+        parcelableBook.setBookImageHeight(book.getBookImageHeight());
         parcelableBook.setDescription(book.getDescription());
         parcelableBook.setPublisher(book.getPublisher());
         parcelableBook.setRankLastWeek(book.getRankLastWeek());
         parcelableBook.setRankThisWeek(book.getRankThisWeek());
         parcelableBook.setWeeksOnList(book.getWeeksOnList());
+        parcelableBook.setReviewsUrl(book.getReviewUrl());
+        parcelableBook.setBuyingLinks(
+                new ParcelableBuyLinkMapper().transform(book.getBuyLinks()));
 
         return parcelableBook;
     }

@@ -8,6 +8,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.eddy.bookworm.R;
+import com.eddy.bookworm.base.DynamicHeightImageView;
 import com.eddy.bookworm.models.ParcelableBook;
 import com.squareup.picasso.Picasso;
 
@@ -64,7 +65,7 @@ class BooksAdapter extends RecyclerView.Adapter<BooksAdapter.BooksViewHolder> {
     class BooksViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         @BindView(R.id.book_list_item_iv)
-        ImageView bookImageView;
+        DynamicHeightImageView bookImageView;
 
         @BindView(R.id.book_item_title_tv)
         TextView titleTextView;
@@ -79,6 +80,11 @@ class BooksAdapter extends RecyclerView.Adapter<BooksAdapter.BooksViewHolder> {
         }
 
         void bind(ParcelableBook book) {
+            float aspectRatio = book.getBookImageWidth() / book.getBookImageHeight();
+            if (aspectRatio > 0) {
+                bookImageView.setAspectRatio(aspectRatio);
+            }
+
             Picasso.get()
                     .load(book.getBookImageUrl())
                     .placeholder(R.drawable.ic_image_grey_24dp)

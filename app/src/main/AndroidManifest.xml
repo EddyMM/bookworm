@@ -28,7 +28,6 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".listnames.ListNamesActivity"/>
         </activity>
-
         <activity
             android:name=".bookslist.BookmarksListActivity"
             android:launchMode="singleTop"
@@ -38,18 +37,20 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".listnames.ListNamesActivity"/>
         </activity>
-
         <activity
             android:name=".bookdetail.BookDetailActivity"
             android:label="@string/title_activity_book_detail"
             android:parentActivityName=".bookslist.BooksListActivity"
             android:theme="@style/AppTheme.NoActionBar"
+            android:launchMode="singleTop"
             tools:targetApi="jelly_bean">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.eddy.bookworm.bookslist.BooksListActivity"/>
         </activity>
-        <activity android:name=".IntroActivity" android:theme="@style/AppThemeNoActionBar">
+        <activity
+            android:name=".IntroActivity"
+            android:theme="@style/AppThemeNoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
 
@@ -72,7 +73,16 @@
                 <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE"/>
             </intent-filter>
         </activity>
+
         <service android:name=".widget.GetRandomBookIntentService"/>
+
+        <activity android:name=".ReviewsActivity"
+                  android:parentActivityName=".bookdetail.BookDetailActivity"
+                  tools:ignore="UnusedAttribute">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.eddy.bookworm.bookdetail.BookDetailActivity"/>
+        </activity>
     </application>
 
 </manifest>

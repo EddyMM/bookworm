@@ -8,10 +8,11 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.eddy.bookworm.firebase.FirebaseDatabaseManager;
 import com.eddy.bookworm.R;
+import com.eddy.bookworm.ReviewsActivity;
 import com.eddy.bookworm.Utils;
 import com.eddy.bookworm.base.BaseBookwormActivity;
+import com.eddy.bookworm.firebase.FirebaseDatabaseManager;
 import com.eddy.bookworm.firebase.SignInManager;
 import com.eddy.bookworm.models.ParcelableBook;
 import com.eddy.data.Constants;
@@ -30,6 +31,9 @@ import java.util.Objects;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.Toolbar;
+import androidx.cardview.widget.CardView;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import timber.log.Timber;
@@ -68,6 +72,12 @@ public class BookDetailActivity extends BaseBookwormActivity implements View.OnC
     @BindView(R.id.sign_in_pb)
     ProgressBar signInProgressBar;
 
+    @BindView(R.id.buying_links_recycler_view)
+    RecyclerView buyingLinksRecyclerView;
+
+    @BindView(R.id.book_reviews_section)
+    CardView bookReviewsSectionCardView;
+
     @BindView(R.id.fab)
     FloatingActionButton fab;
     private ParcelableBook book;
@@ -100,22 +110,47 @@ public class BookDetailActivity extends BaseBookwormActivity implements View.OnC
         if (intent != null) {
             book = intent.getParcelableExtra(BOOK_DETAIL_EXTRA);
 
-            if (book != null) {
-                showBookmarkState();
+            updateUI(book);
+        }
+    }
 
-                Picasso.get()
-                        .load(book.getBookImageUrl())
-                        .into(bookImageView);
+    private void updateUI(ParcelableBook book) {
+        if (book != null) {
+            showBookmarkState();
 
-                collapsingToolbarLayout.setTitle(book.getTitle());
-                bookDescription.setText(book.getDescription());
-                bookAuthor.setText(book.getAuthor());
-                bookPublisher.setText(book.getPublisher());
-                rankThisWeekTextView.setText(String.valueOf(book.getRankThisWeek()));
-                rankLastWeekTextView.setText(String.valueOf(book.getRankLastWeek()));
-                weeksOnListTextView.setText(String.valueOf(book.getWeeksOnList()));
+            Picasso.get()
+                    .load(book.getBookImageUrl())
+                    .into(bookImageView);
+
+            collapsingToolbarLayout.setTitle(book.getTitle());
+            bookDescription.setText(book.getDescription());
+            bookAuthor.setText(book.getAuthor());
+            bookPublisher.setText(book.getPublisher());
+            rankThisWeekTextView.setText(String.valueOf(book.getRankThisWeek()));
+            rankLastWeekTextView.setText(String.valueOf(book.getRankLastWeek()));
+            weeksOnListTextView.setText(String.valueOf(book.getWeeksOnList()));
+
+            BuyingLinksAdapter buyingLinksAdapter = new BuyingLinksAdapter(
+                    this, book.getBuyingLinks());
+            buyingLinksRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+            buyingLinksRecyclerView.setAdapter(buyingLinksAdapter);
+
+            String reviewsUrl = book.getReviewsUrl();
+            if (TextUtils.isEmpty(reviewsUrl)) {
+                // Hide book reviews section if no Review URL available
+                bookReviewsSectionCardView.setVisibility(View.GONE);
+            } else {
+                bookReviewsSectionCardView.setOnClickListener(
+                        v -> openReviewActivity(
+                                book.getTitle(),
+                                book.getReviewsUrl()));
             }
         }
+    }
+
+    private void openReviewActivity(String bookTitle, String reviewUrl) {
+        Intent intent = ReviewsActivity.getIntent(this, bookTitle, reviewUrl);
+        startActivity(intent);
     }
 
     private void determineFabAction() {

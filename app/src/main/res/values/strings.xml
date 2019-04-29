@@ -136,4 +136,7 @@
     <string name="sigin">Sign in</string>
     <string name="menu_signin">sign in</string>
     <string name="sign_in_for_bookmark_message">Kindly sign in to access your bookmarks</string>
+    <string name="buying_links_section">Buying Links</string>
+    <string name="buying_link">&lt;a href=\'%s\'>%s&lt;/a></string>
+    <string name="check_out_the_reviews">Check out the reviews</string>
 </resources>
