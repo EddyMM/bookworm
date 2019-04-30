@@ -1,4 +1,4 @@
-package com.eddy.bookworm.bookdetail;
+package com.eddy.bookworm.books.detail;
 
 import android.content.Intent;
 import android.net.Uri;

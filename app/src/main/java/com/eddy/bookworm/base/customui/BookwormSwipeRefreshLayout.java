@@ -1,4 +1,4 @@
-package com.eddy.bookworm.base;
+package com.eddy.bookworm.base.customui;
 
 import android.content.Context;
 import android.util.AttributeSet;

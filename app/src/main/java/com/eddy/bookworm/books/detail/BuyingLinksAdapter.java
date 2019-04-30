@@ -1,4 +1,4 @@
-package com.eddy.bookworm.bookdetail;
+package com.eddy.bookworm.books.detail;
 
 import android.content.Context;
 import android.text.Html;

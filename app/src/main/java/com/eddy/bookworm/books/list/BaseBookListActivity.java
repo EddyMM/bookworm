@@ -1,10 +1,10 @@
-package com.eddy.bookworm.bookslist;
+package com.eddy.bookworm.books.list;
 
 import android.os.Bundle;
 
 import com.eddy.bookworm.R;
 import com.eddy.bookworm.base.BaseBookwormActivity;
-import com.eddy.bookworm.base.BookwormSwipeRefreshLayout;
+import com.eddy.bookworm.base.customui.BookwormSwipeRefreshLayout;
 
 import androidx.annotation.Nullable;
 import androidx.constraintlayout.widget.Group;

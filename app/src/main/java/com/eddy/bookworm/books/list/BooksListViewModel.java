@@ -1,4 +1,4 @@
-package com.eddy.bookworm.bookslist;
+package com.eddy.bookworm.books.list;
 
 import android.app.Application;
 import android.os.Handler;

@@ -31,6 +31,18 @@ android {
             signingConfig signingConfigs.config
         }
     }
+
+    sourceSets {
+        main {
+            res.srcDirs = [
+                    'src/main/res/layouts/books/list',
+                    'src/main/res/layouts/books/detail',
+                    'src/main/res/layouts/categories',
+                    'src/main/res'
+            ]
+        }
+    }
+
     compileOptions {
         sourceCompatibility 1.8
         targetCompatibility 1.8

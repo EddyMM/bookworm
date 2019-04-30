@@ -1,4 +1,4 @@
-package com.eddy.bookworm.listnames;
+package com.eddy.bookworm.categories;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -10,9 +10,9 @@ import android.view.View;
 import com.eddy.bookworm.R;
 import com.eddy.bookworm.Utils;
 import com.eddy.bookworm.base.BaseBookwormActivity;
-import com.eddy.bookworm.base.BookwormSwipeRefreshLayout;
-import com.eddy.bookworm.bookslist.BookmarksListActivity;
-import com.eddy.bookworm.bookslist.BooksListActivity;
+import com.eddy.bookworm.base.customui.BookwormSwipeRefreshLayout;
+import com.eddy.bookworm.books.list.BookmarksListActivity;
+import com.eddy.bookworm.books.list.BooksListActivity;
 import com.eddy.bookworm.firebase.SignInManager;
 import com.eddy.data.models.ListName;
 import com.google.android.material.snackbar.Snackbar;

@@ -6,8 +6,9 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.ProgressBar;
 
+import com.eddy.bookworm.R;
 import com.eddy.bookworm.base.BaseBookwormActivity;
-import com.eddy.bookworm.listnames.ListNamesActivity;
+import com.eddy.bookworm.categories.ListNamesActivity;
 import com.eddy.bookworm.firebase.SignInManager;
 
 import butterknife.BindView;

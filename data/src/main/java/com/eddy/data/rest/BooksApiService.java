@@ -1,4 +1,4 @@
-package com.eddy.data;
+package com.eddy.data.rest;
 
 import com.eddy.data.models.BooksResponse;
 import com.eddy.data.models.ListNamesResponse;

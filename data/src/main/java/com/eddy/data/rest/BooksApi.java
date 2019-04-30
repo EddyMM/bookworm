@@ -1,4 +1,6 @@
-package com.eddy.data;
+package com.eddy.data.rest;
+
+import com.eddy.data.Constants;
 
 import okhttp3.HttpUrl;
 import okhttp3.OkHttpClient;

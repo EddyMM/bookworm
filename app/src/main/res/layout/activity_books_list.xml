@@ -6,7 +6,7 @@
 
     <include layout="@layout/no_internet"/>
 
-    <com.eddy.bookworm.base.BookwormSwipeRefreshLayout
+    <com.eddy.bookworm.base.customui.BookwormSwipeRefreshLayout
         android:id="@+id/swipe_refresh_book_list"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -20,5 +20,5 @@
             android:layout_marginEnd="8dp"
             android:layout_marginRight="8dp"/>
 
-    </com.eddy.bookworm.base.BookwormSwipeRefreshLayout>
+    </com.eddy.bookworm.base.customui.BookwormSwipeRefreshLayout>
 </FrameLayout>

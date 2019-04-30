@@ -1,4 +1,4 @@
-package com.eddy.bookworm.bookslist;
+package com.eddy.bookworm.books.list;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;

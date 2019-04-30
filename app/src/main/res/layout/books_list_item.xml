@@ -17,7 +17,7 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <com.eddy.bookworm.base.DynamicHeightImageView
+        <com.eddy.bookworm.base.customui.DynamicHeightImageView
             android:id="@+id/book_list_item_iv"
             android:transitionName="@string/book_item_to_detail_transition"
             android:contentDescription="@string/book_list_item_image"

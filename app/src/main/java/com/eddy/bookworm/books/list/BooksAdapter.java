@@ -1,4 +1,4 @@
-package com.eddy.bookworm.bookslist;
+package com.eddy.bookworm.books.list;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -8,7 +8,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.eddy.bookworm.R;
-import com.eddy.bookworm.base.DynamicHeightImageView;
+import com.eddy.bookworm.base.customui.DynamicHeightImageView;
 import com.eddy.bookworm.models.ParcelableBook;
 import com.squareup.picasso.Picasso;
 
@@ -80,7 +80,7 @@ class BooksAdapter extends RecyclerView.Adapter<BooksAdapter.BooksViewHolder> {
         }
 
         void bind(ParcelableBook book) {
-            Integer width = book.getBookImageWidth(); marvel HD
+            Integer width = book.getBookImageWidth();
             Integer height = book.getBookImageHeight();
             if (width != null && height != null) {
                 float aspectRatio = width / height;

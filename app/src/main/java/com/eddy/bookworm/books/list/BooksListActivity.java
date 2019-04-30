@@ -1,4 +1,4 @@
-package com.eddy.bookworm.bookslist;
+package com.eddy.bookworm.books.list;
 
 import android.app.ActivityOptions;
 import android.content.Intent;
@@ -7,7 +7,7 @@ import android.view.View;
 import android.widget.ImageView;
 
 import com.eddy.bookworm.Utils;
-import com.eddy.bookworm.bookdetail.BookDetailActivity;
+import com.eddy.bookworm.books.detail.BookDetailActivity;
 import com.eddy.bookworm.models.ParcelableBook;
 
 import java.util.List;
