@@ -136,11 +136,11 @@ public class BookDetailActivity extends BaseBookwormActivity implements View.OnC
             buyingLinksRecyclerView.setAdapter(buyingLinksAdapter);
 
             String reviewsUrl = book.getReviewsUrl();
-            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(reviewsUrl));
             if (TextUtils.isEmpty(reviewsUrl)) {
                 // Hide book reviews section if no Review URL available
                 bookReviewsSectionCardView.setVisibility(View.GONE);
             } else {
+                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(reviewsUrl));
                 bookReviewsSectionCardView.setOnClickListener(
                         v -> startActivity(intent));
             }
