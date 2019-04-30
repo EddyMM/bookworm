@@ -80,9 +80,13 @@ class BooksAdapter extends RecyclerView.Adapter<BooksAdapter.BooksViewHolder> {
         }
 
         void bind(ParcelableBook book) {
-            float aspectRatio = book.getBookImageWidth() / book.getBookImageHeight();
-            if (aspectRatio > 0) {
-                bookImageView.setAspectRatio(aspectRatio);
+            Integer width = book.getBookImageWidth(); marvel HD
+            Integer height = book.getBookImageHeight();
+            if (width != null && height != null) {
+                float aspectRatio = width / height;
+                if (aspectRatio > 0) {
+                    bookImageView.setAspectRatio(aspectRatio);
+                }
             }
 
             Picasso.get()
