@@ -4,6 +4,7 @@ import android.app.Application;
 import android.os.Handler;
 import android.os.Looper;
 
+import com.eddy.bookworm.BuildConfig;
 import com.eddy.bookworm.models.ParcelableBook;
 import com.eddy.bookworm.models.mappers.ParcelableBookMapper;
 import com.eddy.data.models.entities.Book;
@@ -31,7 +32,8 @@ public class BooksListViewModel extends AndroidViewModel {
         Executor executor = Executors.newFixedThreadPool(3);
         executor.execute(() -> {
             BooksListRepository booksListRepository = new BooksListRepository();
-            List<Book> books = booksListRepository.fetchBooks(encodedListName);
+            List<Book> books = booksListRepository
+                    .fetchBooks(encodedListName, BuildConfig.NEW_YORK_TIMES_API_KEY);
             List<ParcelableBook> parcelableBooks = new ParcelableBookMapper()
                     .transform(books);
             Handler handler = new Handler(Looper.getMainLooper());

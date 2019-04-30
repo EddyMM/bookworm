@@ -6,6 +6,6 @@ import java.util.List;
 
 public interface ICategoriesRepository {
 
-    List<Category> fetchCategories();
+    List<Category> fetchCategories(String apiKey);
 
 }

@@ -21,6 +21,7 @@ android {
             useSupportLibrary = true
         }
     }
+
     buildTypes {
         debug {
             applicationIdSuffix ".debug"
@@ -31,6 +32,11 @@ android {
             signingConfig signingConfigs.config
         }
     }
+
+    buildTypes.each {
+        it.buildConfigField 'String', 'NEW_YORK_TIMES_API_KEY', NEW_YORK_TIMES_API_KEY
+    }
+
 
     sourceSets {
         main {

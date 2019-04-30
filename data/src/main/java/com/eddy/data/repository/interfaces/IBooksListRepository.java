@@ -6,6 +6,6 @@ import java.util.List;
 
 public interface IBooksListRepository {
 
-    List<Book> fetchBooks(String categoryCode);
+    List<Book> fetchBooks(String categoryCode, String apiKey);
 
 }

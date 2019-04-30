@@ -12,7 +12,7 @@ public class BooksApi {
 
     private BooksApi() {}
 
-    public static BooksApiService getInstance() {
+    public static BooksApiService getInstance(String apiKey) {
         Retrofit retrofit;
 
         // Build a client with an interceptor to add the API key
@@ -23,7 +23,7 @@ public class BooksApi {
 
                     HttpUrl modifiedHttpUrl = initialHttpUrl.newBuilder()
                             .addQueryParameter(Constants.API_KEY_REQUEST_KEY,
-                                    Constants.NEW_YORK_TIMES_API_KEY)
+                                    apiKey)
                             .build();
                     Request modifiedRequest = initialRequest.newBuilder()
                             .url(modifiedHttpUrl)

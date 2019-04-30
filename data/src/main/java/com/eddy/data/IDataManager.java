@@ -7,8 +7,8 @@ import java.util.List;
 
 public interface IDataManager {
 
-    List<Category> getListNames();
+    List<Category> getListNames(String apiKey);
 
-    List<Book> getBooks(String encodedListName);
+    List<Book> getBooks(String encodedListName, String apiKey);
 
 }

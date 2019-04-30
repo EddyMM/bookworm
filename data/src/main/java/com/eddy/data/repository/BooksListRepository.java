@@ -8,8 +8,8 @@ import java.util.List;
 
 public class BooksListRepository implements IBooksListRepository {
     @Override
-    public List<Book> fetchBooks(String categoryCode) {
+    public List<Book> fetchBooks(String categoryCode, String apiKey) {
         DataManager dataManager = new DataManager();
-        return dataManager.getBooks(categoryCode);
+        return dataManager.getBooks(categoryCode, apiKey);
     }
 }
