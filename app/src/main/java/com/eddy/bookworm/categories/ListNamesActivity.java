@@ -14,7 +14,7 @@ import com.eddy.bookworm.base.customui.BookwormSwipeRefreshLayout;
 import com.eddy.bookworm.books.list.BookmarksListActivity;
 import com.eddy.bookworm.books.list.BooksListActivity;
 import com.eddy.bookworm.firebase.SignInManager;
-import com.eddy.data.models.ListName;
+import com.eddy.data.models.entities.Category;
 import com.google.android.material.snackbar.Snackbar;
 
 import androidx.constraintlayout.widget.Group;
@@ -124,7 +124,7 @@ public class ListNamesActivity extends BaseBookwormActivity implements
 
         listNamesViewModel.getListNamesLiveData().observe(this, listNames -> {
             if (listNames != null) {
-                listNamesAdapter.setListNames(listNames);
+                listNamesAdapter.setCategories(listNames);
             } else {
                 Timber.d("No list names fetched");
             }
@@ -153,15 +153,15 @@ public class ListNamesActivity extends BaseBookwormActivity implements
     }
 
     @Override
-    public void onClick(ListName listName) {
+    public void onClick(Category category) {
         Intent intent = new Intent(this, BooksListActivity.class);
         intent.putExtra(
                 BooksListActivity.LIST_NAME_ENCODED_EXTRA,
-                listName.getListNameEncoded()
+                category.getListNameEncoded()
         );
         intent.putExtra(
                 BooksListActivity.DISPLAY_NAME_ENCODED_EXTRA,
-                listName.getDisplayName()
+                category.getDisplayName()
         );
 
         startActivity(intent);

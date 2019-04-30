@@ -1,10 +1,10 @@
 package com.eddy.data;
 
-import com.eddy.data.models.Book;
-import com.eddy.data.models.BooksResponse;
-import com.eddy.data.models.BooksResults;
-import com.eddy.data.models.ListName;
-import com.eddy.data.models.ListNamesResponse;
+import com.eddy.data.models.entities.Book;
+import com.eddy.data.models.rest.BooksResponse;
+import com.eddy.data.models.rest.BooksResults;
+import com.eddy.data.models.entities.Category;
+import com.eddy.data.models.rest.CategoriesResponse;
 import com.eddy.data.rest.BooksApi;
 import com.eddy.data.rest.BooksApiService;
 
@@ -18,21 +18,21 @@ import retrofit2.Response;
 public class DataManager implements IDataManager {
 
     @Override
-    public List<ListName> getListNames() {
+    public List<Category> getListNames() {
         BooksApiService booksApiService = BooksApi.getInstance();
-        Call<ListNamesResponse> listNameResponseCall = booksApiService.listNames();
+        Call<CategoriesResponse> listNameResponseCall = booksApiService.listNames();
 
-        List<ListName> listNames = null;
+        List<Category> categories = null;
 
         try {
-            Response<ListNamesResponse>  response = listNameResponseCall.execute();
-            ListNamesResponse listNamesResponse = response.body();
-            listNames = Objects.requireNonNull(listNamesResponse).getListNames();
+            Response<CategoriesResponse>  response = listNameResponseCall.execute();
+            CategoriesResponse categoriesResponse = response.body();
+            categories = Objects.requireNonNull(categoriesResponse).getCategories();
         } catch (IOException e) {
 //            Timber.e(e);
         }
 
-        return listNames;
+        return categories;
     }
 
     @Override

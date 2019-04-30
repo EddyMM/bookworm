@@ -1,7 +1,7 @@
 package com.eddy.bookworm.models.mappers;
 
 import com.eddy.bookworm.models.ParcelableBuyLink;
-import com.eddy.data.models.BuyLink;
+import com.eddy.data.models.entities.BuyLink;
 
 import java.util.ArrayList;
 import java.util.Collection;

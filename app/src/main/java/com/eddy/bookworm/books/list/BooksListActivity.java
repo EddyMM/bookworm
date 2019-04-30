@@ -8,6 +8,8 @@ import android.widget.ImageView;
 
 import com.eddy.bookworm.Utils;
 import com.eddy.bookworm.books.detail.BookDetailActivity;
+import com.eddy.bookworm.books.list.base.BaseBookListActivity;
+import com.eddy.bookworm.books.list.viewmodel.BooksListViewModel;
 import com.eddy.bookworm.models.ParcelableBook;
 
 import java.util.List;
@@ -21,7 +23,7 @@ import butterknife.ButterKnife;
 import timber.log.Timber;
 
 public class BooksListActivity extends BaseBookListActivity implements
-        BooksAdapter.BooksListListener, SwipeRefreshLayout.OnRefreshListener {
+        BooksListAdapter.BooksListListener, SwipeRefreshLayout.OnRefreshListener {
 
     public static final String LIST_NAME_ENCODED_EXTRA = "LIST_NAME_ENCODED_EXTRA";
     public static final String DISPLAY_NAME_ENCODED_EXTRA = "DISPLAY_NAME_ENCODED_EXTRA";
@@ -66,7 +68,7 @@ public class BooksListActivity extends BaseBookListActivity implements
 
         bookLiveData.observe(this, books -> {
                     if (books != null) {
-                        booksAdapter.setBooks(books);
+                        booksListAdapter.setBooks(books);
                     } else {
                         Timber.d("No list names fetched");
                     }

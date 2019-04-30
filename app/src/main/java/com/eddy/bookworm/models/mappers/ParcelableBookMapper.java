@@ -1,7 +1,7 @@
 package com.eddy.bookworm.models.mappers;
 
 import com.eddy.bookworm.models.ParcelableBook;
-import com.eddy.data.models.Book;
+import com.eddy.data.models.entities.Book;
 
 
 import java.util.ArrayList;

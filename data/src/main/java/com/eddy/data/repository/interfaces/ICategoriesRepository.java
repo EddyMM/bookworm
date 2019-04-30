@@ -1,11 +1,11 @@
 package com.eddy.data.repository.interfaces;
 
-import com.eddy.data.models.ListName;
+import com.eddy.data.models.entities.Category;
 
 import java.util.List;
 
 public interface ICategoriesRepository {
 
-    List<ListName> fetchCategories();
+    List<Category> fetchCategories();
 
 }

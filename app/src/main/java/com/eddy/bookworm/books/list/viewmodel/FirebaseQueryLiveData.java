@@ -1,4 +1,4 @@
-package com.eddy.bookworm.books.list;
+package com.eddy.bookworm.books.list.viewmodel;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -15,7 +15,7 @@ public class FirebaseQueryLiveData extends LiveData<DataSnapshot> {
     private final Query query;
     private final BooksEventListener listener = new BooksEventListener();
 
-    FirebaseQueryLiveData(DatabaseReference ref) {
+    public FirebaseQueryLiveData(DatabaseReference ref) {
         this.query = ref.orderByKey();
     }
 

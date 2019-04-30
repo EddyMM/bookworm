@@ -8,10 +8,12 @@ import android.widget.ImageView;
 import com.eddy.bookworm.R;
 import com.eddy.bookworm.Utils;
 import com.eddy.bookworm.books.detail.BookDetailActivity;
+import com.eddy.bookworm.books.list.base.BaseBookListActivity;
+import com.eddy.bookworm.books.list.viewmodel.BookmarksViewModel;
 import com.eddy.bookworm.firebase.SignInManager;
 import com.eddy.bookworm.models.ParcelableBook;
 import com.eddy.bookworm.models.mappers.ParcelableBookMapper;
-import com.eddy.data.models.Book;
+import com.eddy.data.models.entities.Book;
 
 import java.util.List;
 
@@ -21,7 +23,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import butterknife.ButterKnife;
 
 public class BookmarksListActivity extends BaseBookListActivity implements
-        BooksAdapter.BooksListListener, SwipeRefreshLayout.OnRefreshListener {
+        BooksListAdapter.BooksListListener, SwipeRefreshLayout.OnRefreshListener {
 
     private BookmarksViewModel booksListViewModel;
 
@@ -55,7 +57,7 @@ public class BookmarksListActivity extends BaseBookListActivity implements
             if (books != null) {
                 List<ParcelableBook> parcelableBooks = new ParcelableBookMapper()
                         .transform(books);
-                booksAdapter.setBooks(parcelableBooks);
+                booksListAdapter.setBooks(parcelableBooks);
             }
 
             hideProgressBar();

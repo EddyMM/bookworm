@@ -4,7 +4,7 @@ import android.app.Application;
 import android.os.Handler;
 import android.os.Looper;
 
-import com.eddy.data.models.ListName;
+import com.eddy.data.models.entities.Category;
 import com.eddy.data.repository.CategoriesRepository;
 
 import java.util.List;
@@ -23,15 +23,15 @@ public class ListNamesViewModel extends AndroidViewModel {
         super(application);
     }
 
-    public LiveData<List<ListName>> getListNamesLiveData () {
-        MutableLiveData<List<ListName>> listNamesLiveData = new MutableLiveData<>();
+    public LiveData<List<Category>> getListNamesLiveData () {
+        MutableLiveData<List<Category>> listNamesLiveData = new MutableLiveData<>();
 
         Executor executor = Executors.newFixedThreadPool(3);
         executor.execute(() -> {
             CategoriesRepository categoriesRepository = new CategoriesRepository();
-            List<ListName> listNames = categoriesRepository.fetchCategories();
+            List<Category> categories = categoriesRepository.fetchCategories();
             Handler handler = new Handler(Looper.getMainLooper());
-            handler.post(() -> listNamesLiveData.setValue(listNames));
+            handler.post(() -> listNamesLiveData.setValue(categories));
         });
 
         return listNamesLiveData;

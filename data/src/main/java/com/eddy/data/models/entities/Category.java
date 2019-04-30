@@ -1,4 +1,4 @@
-package com.eddy.data.models;
+package com.eddy.data.models.entities;
 
 import com.google.gson.annotations.SerializedName;
 
@@ -6,7 +6,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-public class ListName {
+public class Category {
 
     String key;
 
@@ -60,7 +60,7 @@ public class ListName {
 
     @Override
     public String toString() {
-        return "ListName{" +
+        return "Category{" +
                 "displayName='" + displayName + '\'' +
                 ", listName='" + listName + '\'' +
                 ", listNameEncoded='" + listNameEncoded + '\'' +

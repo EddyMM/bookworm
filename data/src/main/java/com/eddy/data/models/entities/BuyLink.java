@@ -1,4 +1,4 @@
-package com.eddy.data.models;
+package com.eddy.data.models.entities;
 
 import com.google.gson.annotations.SerializedName;
 

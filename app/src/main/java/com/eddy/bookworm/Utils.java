@@ -4,7 +4,7 @@ import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 
-import com.eddy.data.models.Book;
+import com.eddy.data.models.entities.Book;
 import com.google.firebase.database.DataSnapshot;
 
 import java.util.ArrayList;

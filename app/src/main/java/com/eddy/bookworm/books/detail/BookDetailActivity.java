@@ -16,7 +16,7 @@ import com.eddy.bookworm.firebase.FirebaseDatabaseManager;
 import com.eddy.bookworm.firebase.SignInManager;
 import com.eddy.bookworm.models.ParcelableBook;
 import com.eddy.data.Constants;
-import com.eddy.data.models.Book;
+import com.eddy.data.models.entities.Book;
 import com.google.android.material.appbar.CollapsingToolbarLayout;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;

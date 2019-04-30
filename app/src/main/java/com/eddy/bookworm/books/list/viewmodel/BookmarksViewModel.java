@@ -1,4 +1,4 @@
-package com.eddy.bookworm.books.list;
+package com.eddy.bookworm.books.list.viewmodel;
 
 import android.app.Application;
 
@@ -21,7 +21,7 @@ public class BookmarksViewModel extends AndroidViewModel {
     }
 
     @NonNull
-    FirebaseQueryLiveData getDataSnapshotLiveData() {
+    public FirebaseQueryLiveData getDataSnapshotLiveData() {
         return liveData;
     }
 }

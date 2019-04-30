@@ -19,14 +19,14 @@ import androidx.recyclerview.widget.RecyclerView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-class BooksAdapter extends RecyclerView.Adapter<BooksAdapter.BooksViewHolder> {
+public class BooksListAdapter extends RecyclerView.Adapter<BooksListAdapter.BooksViewHolder> {
 
     private List<ParcelableBook> books;
     private Context context;
 
     private BooksListListener booksListListener;
 
-    BooksAdapter(Context context, BooksListListener booksListListener) {
+    public BooksListAdapter(Context context, BooksListListener booksListListener) {
         this.context = context;
         this.booksListListener = booksListListener;
     }
@@ -35,7 +35,7 @@ class BooksAdapter extends RecyclerView.Adapter<BooksAdapter.BooksViewHolder> {
         void onClick(ParcelableBook book, ImageView imageView);
     }
 
-    void setBooks(List<ParcelableBook> books) {
+    public void setBooks(List<ParcelableBook> books) {
         this.books = books;
         notifyDataSetChanged();
     }

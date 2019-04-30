@@ -1,4 +1,4 @@
-package com.eddy.bookworm.books.list;
+package com.eddy.bookworm.books.list.viewmodel;
 
 import android.app.Application;
 import android.os.Handler;
@@ -6,7 +6,7 @@ import android.os.Looper;
 
 import com.eddy.bookworm.models.ParcelableBook;
 import com.eddy.bookworm.models.mappers.ParcelableBookMapper;
-import com.eddy.data.models.Book;
+import com.eddy.data.models.entities.Book;
 import com.eddy.data.repository.BooksListRepository;
 
 import java.util.List;
@@ -24,7 +24,7 @@ public class BooksListViewModel extends AndroidViewModel {
         super(application);
     }
 
-    LiveData<List<ParcelableBook>> getBooksLiveData(String encodedListName) {
+    public LiveData<List<ParcelableBook>> getBooksLiveData(String encodedListName) {
 
         MutableLiveData<List<ParcelableBook>> booksLiveData = new MutableLiveData<>();
 

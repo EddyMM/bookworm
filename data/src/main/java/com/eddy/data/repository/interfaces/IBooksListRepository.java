@@ -1,6 +1,6 @@
 package com.eddy.data.repository.interfaces;
 
-import com.eddy.data.models.Book;
+import com.eddy.data.models.entities.Book;
 
 import java.util.List;
 

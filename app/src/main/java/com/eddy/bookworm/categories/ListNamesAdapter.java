@@ -8,7 +8,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.eddy.bookworm.R;
-import com.eddy.data.models.ListName;
+import com.eddy.data.models.entities.Category;
 
 import java.util.List;
 
@@ -21,7 +21,7 @@ import timber.log.Timber;
 public class ListNamesAdapter extends RecyclerView.Adapter<ListNamesAdapter.ListNamesViewHolder> {
 
     private Context context;
-    private List<ListName> listNames;
+    private List<Category> categories;
     private  ListNameListener listNameListener;
 
     public ListNamesAdapter(Context context, ListNameListener listNameListener) {
@@ -30,7 +30,7 @@ public class ListNamesAdapter extends RecyclerView.Adapter<ListNamesAdapter.List
     }
 
     public interface ListNameListener {
-        void onClick(ListName listName);
+        void onClick(Category category);
     }
 
     @NonNull
@@ -43,20 +43,20 @@ public class ListNamesAdapter extends RecyclerView.Adapter<ListNamesAdapter.List
 
     @Override
     public void onBindViewHolder(@NonNull ListNamesViewHolder holder, int position) {
-        holder.bind(listNames.get(position));
+        holder.bind(categories.get(position));
     }
 
     @Override
     public int getItemCount() {
-        if(listNames != null) {
-            return listNames.size();
+        if(categories != null) {
+            return categories.size();
         }
 
         return 0;
     }
 
-    public void setListNames(List<ListName> listNames) {
-        this.listNames = listNames;
+    public void setCategories(List<Category> categories) {
+        this.categories = categories;
 
         notifyDataSetChanged();
     }
@@ -77,12 +77,12 @@ public class ListNamesAdapter extends RecyclerView.Adapter<ListNamesAdapter.List
             itemView.setOnClickListener(this);
         }
 
-        void bind(ListName listName) {
-            listNameTextView.setText(listName.getDisplayName());
+        void bind(Category category) {
+            listNameTextView.setText(category.getDisplayName());
             latestPublishDate.setText(context.getString(
-                    R.string.newest_published_on, listName.getFormattedDate()));
+                    R.string.newest_published_on, category.getFormattedDate()));
 
-            String updateFrequency = listName.getUpdateFrequency();
+            String updateFrequency = category.getUpdateFrequency();
             updateFrequencyTextView.setText(updateFrequency);
 
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -98,7 +98,7 @@ public class ListNamesAdapter extends RecyclerView.Adapter<ListNamesAdapter.List
 
         @Override
         public void onClick(View v) {
-            listNameListener.onClick(listNames.get(getAdapterPosition()));
+            listNameListener.onClick(categories.get(getAdapterPosition()));
         }
     }
 }

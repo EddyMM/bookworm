@@ -1,5 +1,6 @@
-package com.eddy.data.models;
+package com.eddy.data.models.rest;
 
+import com.eddy.data.models.entities.Book;
 import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
