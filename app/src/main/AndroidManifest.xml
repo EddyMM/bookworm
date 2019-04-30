@@ -76,13 +76,6 @@
 
         <service android:name=".widget.GetRandomBookIntentService"/>
 
-        <activity android:name=".ReviewsActivity"
-                  android:parentActivityName=".bookdetail.BookDetailActivity"
-                  tools:ignore="UnusedAttribute">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.eddy.bookworm.bookdetail.BookDetailActivity"/>
-        </activity>
     </application>
 
 </manifest>

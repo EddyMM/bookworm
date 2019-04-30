@@ -1,6 +1,7 @@
 package com.eddy.bookworm.bookdetail;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
@@ -9,7 +10,6 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.eddy.bookworm.R;
-import com.eddy.bookworm.ReviewsActivity;
 import com.eddy.bookworm.Utils;
 import com.eddy.bookworm.base.BaseBookwormActivity;
 import com.eddy.bookworm.firebase.FirebaseDatabaseManager;
@@ -136,21 +136,15 @@ public class BookDetailActivity extends BaseBookwormActivity implements View.OnC
             buyingLinksRecyclerView.setAdapter(buyingLinksAdapter);
 
             String reviewsUrl = book.getReviewsUrl();
+            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(reviewsUrl));
             if (TextUtils.isEmpty(reviewsUrl)) {
                 // Hide book reviews section if no Review URL available
                 bookReviewsSectionCardView.setVisibility(View.GONE);
             } else {
                 bookReviewsSectionCardView.setOnClickListener(
-                        v -> openReviewActivity(
-                                book.getTitle(),
-                                book.getReviewsUrl()));
+                        v -> startActivity(intent));
             }
         }
-    }
-
-    private void openReviewActivity(String bookTitle, String reviewUrl) {
-        Intent intent = ReviewsActivity.getIntent(this, bookTitle, reviewUrl);
-        startActivity(intent);
     }
 
     private void determineFabAction() {
