@@ -8,8 +8,8 @@ import java.util.List;
 
 public class CategoriesRepository implements ICategoriesRepository {
     @Override
-    public List<Category> fetchCategories(String apiKey) {
+    public List<Category> fetchCategories() {
         DataManager dataManager = new DataManager();
-        return dataManager.getListNames(apiKey);
+        return dataManager.getListNames();
     }
 }

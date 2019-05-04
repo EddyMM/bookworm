@@ -4,7 +4,6 @@ import android.app.Application;
 import android.os.Handler;
 import android.os.Looper;
 
-import com.eddy.bookworm.BuildConfig;
 import com.eddy.data.models.entities.Category;
 import com.eddy.data.repository.CategoriesRepository;
 
@@ -31,7 +30,7 @@ public class ListNamesViewModel extends AndroidViewModel {
         executor.execute(() -> {
             CategoriesRepository categoriesRepository = new CategoriesRepository();
             List<Category> categories = categoriesRepository
-                    .fetchCategories(BuildConfig.NEW_YORK_TIMES_API_KEY);
+                    .fetchCategories();
             Handler handler = new Handler(Looper.getMainLooper());
             handler.post(() -> listNamesLiveData.setValue(categories));
         });

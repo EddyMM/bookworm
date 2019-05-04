@@ -33,7 +33,7 @@ public class BooksListViewModel extends AndroidViewModel {
         executor.execute(() -> {
             BooksListRepository booksListRepository = new BooksListRepository();
             List<Book> books = booksListRepository
-                    .fetchBooks(encodedListName, BuildConfig.NEW_YORK_TIMES_API_KEY);
+                    .fetchBooks(encodedListName);
             List<ParcelableBook> parcelableBooks = new ParcelableBookMapper()
                     .transform(books);
             Handler handler = new Handler(Looper.getMainLooper());

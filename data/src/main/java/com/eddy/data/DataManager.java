@@ -14,12 +14,13 @@ import java.util.Objects;
 
 import retrofit2.Call;
 import retrofit2.Response;
+import timber.log.Timber;
 
 public class DataManager implements IDataManager {
 
     @Override
-    public List<Category> getListNames(String apiKey) {
-        BooksApiService booksApiService = BooksApi.getInstance(apiKey);
+    public List<Category> getListNames() {
+        BooksApiService booksApiService = BooksApi.getInstance();
         Call<CategoriesResponse> listNameResponseCall = booksApiService.listNames();
 
         List<Category> categories = null;
@@ -36,8 +37,8 @@ public class DataManager implements IDataManager {
     }
 
     @Override
-    public List<Book> getBooks(String encodedListName, String apiKey) {
-        BooksApiService booksApiService = BooksApi.getInstance(apiKey);
+    public List<Book> getBooks(String encodedListName) {
+        BooksApiService booksApiService = BooksApi.getInstance();
         Call<BooksResponse> booksResponseCall = booksApiService.listBooks(encodedListName);
 
         List<Book> books = null;

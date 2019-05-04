@@ -1,3 +1,7 @@
+data/src/main/native/*
+*/.externalNativeBuild/
+
+
 google-services.json
 
 # Firebase
