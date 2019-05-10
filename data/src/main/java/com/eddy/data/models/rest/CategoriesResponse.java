@@ -14,6 +14,10 @@ public class CategoriesResponse {
         return categories;
     }
 
+    public CategoriesResponse(List<Category> categories) {
+        this.categories = categories;
+    }
+
     @Override
     public String toString() {
         return "CategoriesResponse{" +

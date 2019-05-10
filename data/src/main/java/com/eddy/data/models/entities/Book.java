@@ -4,6 +4,7 @@ package com.eddy.data.models.entities;
 import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
+import java.util.Objects;
 
 
 public class Book {
@@ -48,6 +49,21 @@ public class Book {
 
 
     public Book() {}
+
+    public Book(String title, String author, String description, String bookImageUrl, Integer bookImageWidth, Integer bookImageHeight, List<BuyLink> buyLinks, String reviewUrl, String publisher, Integer rankThisWeek, Integer rankLastWeek, Integer weeksOnList) {
+        this.title = title;
+        this.author = author;
+        this.description = description;
+        this.bookImageUrl = bookImageUrl;
+        this.bookImageWidth = bookImageWidth;
+        this.bookImageHeight = bookImageHeight;
+        this.buyLinks = buyLinks;
+        this.reviewUrl = reviewUrl;
+        this.publisher = publisher;
+        this.rankThisWeek = rankThisWeek;
+        this.rankLastWeek = rankLastWeek;
+        this.weeksOnList = weeksOnList;
+    }
 
     public String getKey() {
         return key;
@@ -162,5 +178,30 @@ public class Book {
                 ", bookImageUrl='" + bookImageUrl + '\'' +
                 ", publisher='" + publisher + '\'' +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Book book = (Book) o;
+        return Objects.equals(title, book.title) &&
+                Objects.equals(author, book.author) &&
+                Objects.equals(description, book.description) &&
+                Objects.equals(bookImageUrl, book.bookImageUrl) &&
+                Objects.equals(bookImageWidth, book.bookImageWidth) &&
+                Objects.equals(bookImageHeight, book.bookImageHeight) &&
+                Objects.equals(buyLinks, book.buyLinks) &&
+                Objects.equals(reviewUrl, book.reviewUrl) &&
+                Objects.equals(publisher, book.publisher) &&
+                Objects.equals(rankThisWeek, book.rankThisWeek) &&
+                Objects.equals(rankLastWeek, book.rankLastWeek) &&
+                Objects.equals(weeksOnList, book.weeksOnList);
+    }
+
+    @Override
+    public int hashCode() {
+
+        return Objects.hash(title, author, description, bookImageUrl, bookImageWidth, bookImageHeight, buyLinks, reviewUrl, publisher, rankThisWeek, rankLastWeek, weeksOnList);
     }
 }

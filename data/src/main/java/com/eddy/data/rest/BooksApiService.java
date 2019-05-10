@@ -10,9 +10,9 @@ import retrofit2.http.Path;
 public interface BooksApiService {
 
     @GET("lists/names.json")
-    Call<CategoriesResponse> listNames();
+    Call<CategoriesResponse> categories();
 
     @GET("lists/current/{list_name}")
-    Call<BooksResponse> listBooks(@Path("list_name") String listName);
+    Call<BooksResponse> listBooks(@Path("list_name") String category);
 
 }

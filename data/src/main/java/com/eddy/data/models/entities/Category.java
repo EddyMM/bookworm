@@ -46,6 +46,14 @@ public class Category {
         }
     }
 
+    public Category(String displayName, String listName, String listNameEncoded, String newestPublishedDate, String updateFrequency) {
+        this.displayName = displayName;
+        this.listName = listName;
+        this.listNameEncoded = listNameEncoded;
+        this.newestPublishedDate = newestPublishedDate;
+        this.updateFrequency = updateFrequency;
+    }
+
     public String getKey() {
         return key;
     }
@@ -65,5 +73,17 @@ public class Category {
                 ", listName='" + listName + '\'' +
                 ", listNameEncoded='" + listNameEncoded + '\'' +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Category category = (Category) o;
+        return (displayName.equals(category.displayName)) &&
+                (listName.equals(category.listName)) &&
+                (listNameEncoded.equals(category.listNameEncoded)) &&
+                (newestPublishedDate.equals(category.newestPublishedDate)) &&
+                (updateFrequency.equals(category.updateFrequency));
     }
 }
