@@ -9,7 +9,7 @@ import android.widget.TextView;
 
 import com.eddy.bookworm.R;
 import com.eddy.bookworm.base.customui.DynamicHeightImageView;
-import com.eddy.bookworm.models.ParcelableBook;
+import com.eddy.data.models.entities.Book;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
@@ -21,7 +21,7 @@ import butterknife.ButterKnife;
 
 public class BooksListAdapter extends RecyclerView.Adapter<BooksListAdapter.BooksViewHolder> {
 
-    private List<ParcelableBook> books;
+    private List<Book> books;
     private Context context;
 
     private BooksListListener booksListListener;
@@ -32,10 +32,10 @@ public class BooksListAdapter extends RecyclerView.Adapter<BooksListAdapter.Book
     }
 
     public interface BooksListListener {
-        void onClick(ParcelableBook book, ImageView imageView);
+        void onClick(Book book, ImageView imageView);
     }
 
-    public void setBooks(List<ParcelableBook> books) {
+    public void setBooks(List<Book> books) {
         this.books = books;
         notifyDataSetChanged();
     }
@@ -79,7 +79,7 @@ public class BooksListAdapter extends RecyclerView.Adapter<BooksListAdapter.Book
             itemView.setOnClickListener(this);
         }
 
-        void bind(ParcelableBook book) {
+        void bind(Book book) {
             Integer width = book.getBookImageWidth();
             Integer height = book.getBookImageHeight();
             if (width != null && height != null) {
@@ -100,7 +100,7 @@ public class BooksListAdapter extends RecyclerView.Adapter<BooksListAdapter.Book
 
         @Override
         public void onClick(View v) {
-            ParcelableBook book = books.get(getAdapterPosition());
+            Book book = books.get(getAdapterPosition());
             booksListListener.onClick(book, bookImageView);
         }
     }

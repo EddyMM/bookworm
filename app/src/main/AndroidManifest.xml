@@ -16,26 +16,26 @@
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
         <activity
-            android:name=".categories.ListNamesActivity"
+            android:name=".categories.CategoriesActivity"
             android:launchMode="singleTop">
         </activity>
         <activity
             android:name=".books.list.BooksListActivity"
             android:launchMode="singleTop"
-            android:parentActivityName=".categories.ListNamesActivity"
+            android:parentActivityName=".categories.CategoriesActivity"
             tools:targetApi="jelly_bean">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".categories.ListNamesActivity"/>
+                android:value=".categories.CategoriesActivity"/>
         </activity>
         <activity
             android:name=".books.list.BookmarksListActivity"
             android:launchMode="singleTop"
-            android:parentActivityName=".categories.ListNamesActivity"
+            android:parentActivityName=".categories.CategoriesActivity"
             tools:targetApi="jelly_bean">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".categories.ListNamesActivity"/>
+                android:value=".categories.CategoriesActivity"/>
         </activity>
         <activity
             android:name=".books.detail.BookDetailActivity"

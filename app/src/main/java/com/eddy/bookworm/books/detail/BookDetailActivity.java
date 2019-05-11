@@ -14,7 +14,7 @@ import com.eddy.bookworm.Utils;
 import com.eddy.bookworm.base.BaseBookwormActivity;
 import com.eddy.bookworm.firebase.FirebaseDatabaseManager;
 import com.eddy.bookworm.firebase.SignInManager;
-import com.eddy.bookworm.models.ParcelableBook;
+
 import com.eddy.data.Constants;
 import com.eddy.data.models.entities.Book;
 import com.google.android.material.appbar.CollapsingToolbarLayout;
@@ -80,7 +80,7 @@ public class BookDetailActivity extends BaseBookwormActivity implements View.OnC
 
     @BindView(R.id.fab)
     FloatingActionButton fab;
-    private ParcelableBook book;
+    private Book book;
     private boolean signInForBookmarkAction; // Flag used to determine whether action to
     // perform on successful sign in is bookmarking or not
 
@@ -114,7 +114,7 @@ public class BookDetailActivity extends BaseBookwormActivity implements View.OnC
         }
     }
 
-    private void updateUI(ParcelableBook book) {
+    private void updateUI(Book book) {
         if (book != null) {
             showBookmarkState();
 
@@ -131,11 +131,11 @@ public class BookDetailActivity extends BaseBookwormActivity implements View.OnC
             weeksOnListTextView.setText(String.valueOf(book.getWeeksOnList()));
 
             BuyingLinksAdapter buyingLinksAdapter = new BuyingLinksAdapter(
-                    this, book.getBuyingLinks());
+                    this, book.getBuyLinks());
             buyingLinksRecyclerView.setLayoutManager(new LinearLayoutManager(this));
             buyingLinksRecyclerView.setAdapter(buyingLinksAdapter);
 
-            String reviewsUrl = book.getReviewsUrl();
+            String reviewsUrl = book.getReviewUrl();
             if (TextUtils.isEmpty(reviewsUrl)) {
                 // Hide book reviews section if no Review URL available
                 bookReviewsSectionCardView.setVisibility(View.GONE);
@@ -211,24 +211,24 @@ public class BookDetailActivity extends BaseBookwormActivity implements View.OnC
 
     private void deleteBook(Book bookmarkedBook) {
         try {
-            FirebaseDatabaseManager firebaseDatabaseManager = FirebaseDatabaseManager.getInstance();
-            DatabaseReference databaseReference =firebaseDatabaseManager.getDatabaseReference()
-                    .child(Constants.BOOKMARKS_DB_REF);
-
-            if (!TextUtils.isEmpty(bookmarkedBook.getKey())) {
-                databaseReference.child(bookmarkedBook.getKey())
-                        .removeValue()
-                        .addOnCompleteListener(task -> {
-                            fab.setImageResource(R.drawable.ic_bookmark_border_black_24dp);
-                            refreshFab();
-
-                            Snackbar.make(findViewById(android.R.id.content),
-                                    getString(R.string.removed_bookmark_message),
-                                    Snackbar.LENGTH_LONG)
-                                    .show();
-                            finish();
-                        });
-            }
+//            FirebaseDatabaseManager firebaseDatabaseManager = FirebaseDatabaseManager.getInstance();
+//            DatabaseReference databaseReference =firebaseDatabaseManager.getDatabaseReference()
+//                    .child(Constants.BOOKMARKS_DB_REF);
+//
+//            if (!TextUtils.isEmpty(bookmarkedBook.getKey())) {
+//                databaseReference.child(bookmarkedBook.getKey())
+//                        .removeValue()
+//                        .addOnCompleteListener(task -> {
+//                            fab.setImageResource(R.drawable.ic_bookmark_border_black_24dp);
+//                            refreshFab();
+//
+//                            Snackbar.make(findViewById(android.R.id.content),
+//                                    getString(R.string.removed_bookmark_message),
+//                                    Snackbar.LENGTH_LONG)
+//                                    .show();
+//                            finish();
+//                        });
+//            }
         } catch (Exception e) {
             Timber.e(e);
             Snackbar.make(findViewById(android.R.id.content),
@@ -280,23 +280,23 @@ public class BookDetailActivity extends BaseBookwormActivity implements View.OnC
         SignInManager signInManager = SignInManager.getInstance();
 
         try {
-            FirebaseDatabaseManager firebaseDatabaseManager = FirebaseDatabaseManager.getInstance();
-            DatabaseReference databaseReference =firebaseDatabaseManager.getDatabaseReference()
-                    .child(Constants.BOOKMARKS_DB_REF);
-
-            if (TextUtils.isEmpty(book.getKey())) {
-                book.setKey(databaseReference.push().getKey());
-            }
-
-            databaseReference.child(book.getKey()).setValue(book);
-
-            Snackbar.make(findViewById(android.R.id.content),
-                    getString(R.string.saving_bookmark_for_user,
-                            signInManager.getCurrentUserName()),
-                    Snackbar.LENGTH_LONG)
-                    .show();
-            fab.setImageResource(R.drawable.ic_bookmark_black_24dp);
-            refreshFab();
+//            FirebaseDatabaseManager firebaseDatabaseManager = FirebaseDatabaseManager.getInstance();
+//            DatabaseReference databaseReference =firebaseDatabaseManager.getDatabaseReference()
+//                    .child(Constants.BOOKMARKS_DB_REF);
+//
+//            if (TextUtils.isEmpty(book.getKey())) {
+//                book.setKey(databaseReference.push().getKey());
+//            }
+//
+//            databaseReference.child(book.getKey()).setValue(book);
+//
+//            Snackbar.make(findViewById(android.R.id.content),
+//                    getString(R.string.saving_bookmark_for_user,
+//                            signInManager.getCurrentUserName()),
+//                    Snackbar.LENGTH_LONG)
+//                    .show();
+//            fab.setImageResource(R.drawable.ic_bookmark_black_24dp);
+//            refreshFab();
         } catch (Exception e) {
             Snackbar.make(findViewById(android.R.id.content),
                     getString(R.string.error_saving_bookmark),

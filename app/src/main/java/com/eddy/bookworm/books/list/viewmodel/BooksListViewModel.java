@@ -4,9 +4,7 @@ import android.app.Application;
 import android.os.Handler;
 import android.os.Looper;
 
-import com.eddy.bookworm.BuildConfig;
-import com.eddy.bookworm.models.ParcelableBook;
-import com.eddy.bookworm.models.mappers.ParcelableBookMapper;
+import com.eddy.data.InjectorUtils;
 import com.eddy.data.models.entities.Book;
 import com.eddy.data.repository.BooksListRepository;
 
@@ -25,19 +23,17 @@ public class BooksListViewModel extends AndroidViewModel {
         super(application);
     }
 
-    public LiveData<List<ParcelableBook>> getBooksLiveData(String encodedListName) {
+    public LiveData<List<Book>> getBooksLiveData(String encodedListName) {
 
-        MutableLiveData<List<ParcelableBook>> booksLiveData = new MutableLiveData<>();
+        MutableLiveData<List<Book>> booksLiveData = new MutableLiveData<>();
 
         Executor executor = Executors.newFixedThreadPool(3);
         executor.execute(() -> {
-            BooksListRepository booksListRepository = new BooksListRepository();
+            BooksListRepository booksListRepository = InjectorUtils.getBooksListRepository(getApplication());
             List<Book> books = booksListRepository
                     .fetchBooks(encodedListName);
-            List<ParcelableBook> parcelableBooks = new ParcelableBookMapper()
-                    .transform(books);
             Handler handler = new Handler(Looper.getMainLooper());
-            handler.post(() -> booksLiveData.setValue(parcelableBooks));
+            handler.post(() -> booksLiveData.setValue(books));
         });
 
         return booksLiveData;

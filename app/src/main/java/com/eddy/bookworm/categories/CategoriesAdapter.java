@@ -18,13 +18,13 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import timber.log.Timber;
 
-public class ListNamesAdapter extends RecyclerView.Adapter<ListNamesAdapter.ListNamesViewHolder> {
+public class CategoriesAdapter extends RecyclerView.Adapter<CategoriesAdapter.CategoriesViewHolder> {
 
     private Context context;
     private List<Category> categories;
     private  ListNameListener listNameListener;
 
-    public ListNamesAdapter(Context context, ListNameListener listNameListener) {
+    public CategoriesAdapter(Context context, ListNameListener listNameListener) {
         this.context = context;
         this.listNameListener = listNameListener;
     }
@@ -35,14 +35,14 @@ public class ListNamesAdapter extends RecyclerView.Adapter<ListNamesAdapter.List
 
     @NonNull
     @Override
-    public ListNamesViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public CategoriesViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(context)
                 .inflate(R.layout.list_name_item, parent, false);
-        return new ListNamesViewHolder(view);
+        return new CategoriesViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ListNamesViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull CategoriesViewHolder holder, int position) {
         holder.bind(categories.get(position));
     }
 
@@ -61,7 +61,7 @@ public class ListNamesAdapter extends RecyclerView.Adapter<ListNamesAdapter.List
         notifyDataSetChanged();
     }
 
-    class ListNamesViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+    class CategoriesViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         @BindView(R.id.list_name_tv)
         TextView listNameTextView;
 
@@ -71,7 +71,7 @@ public class ListNamesAdapter extends RecyclerView.Adapter<ListNamesAdapter.List
         @BindView(R.id.update_frequency_tv)
         TextView updateFrequencyTextView;
 
-        ListNamesViewHolder(@NonNull View itemView) {
+        CategoriesViewHolder(@NonNull View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
             itemView.setOnClickListener(this);

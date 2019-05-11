@@ -10,7 +10,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.eddy.bookworm.R;
-import com.eddy.bookworm.models.ParcelableBuyLink;
+import com.eddy.data.models.entities.BuyLink;
 
 import java.util.List;
 
@@ -21,10 +21,10 @@ import butterknife.ButterKnife;
 
 public class BuyingLinksAdapter extends RecyclerView.Adapter<BuyingLinksAdapter.BuyingLinksViewHolder> {
 
-    private List<ParcelableBuyLink> buyLinks;
+    private List<BuyLink> buyLinks;
     private Context context;
 
-    BuyingLinksAdapter(Context context, List<ParcelableBuyLink> buyLinkList) {
+    BuyingLinksAdapter(Context context, List<BuyLink> buyLinkList) {
         this.context = context;
         this.buyLinks = buyLinkList;
     }
@@ -61,7 +61,7 @@ public class BuyingLinksAdapter extends RecyclerView.Adapter<BuyingLinksAdapter.
             ButterKnife.bind(this, itemView);
         }
 
-        void bind(ParcelableBuyLink buyLink) {
+        void bind(BuyLink buyLink) {
             buyingLinkTextView.setMovementMethod(LinkMovementMethod.getInstance());
             Spanned html = Html.fromHtml(
                     context.getString(R.string.buying_link,

@@ -10,7 +10,7 @@ import com.eddy.bookworm.Utils;
 import com.eddy.bookworm.books.detail.BookDetailActivity;
 import com.eddy.bookworm.books.list.base.BaseBookListActivity;
 import com.eddy.bookworm.books.list.viewmodel.BooksListViewModel;
-import com.eddy.bookworm.models.ParcelableBook;
+import com.eddy.data.models.entities.Book;
 
 import java.util.List;
 
@@ -58,7 +58,7 @@ public class BooksListActivity extends BaseBookListActivity implements
         refresh(booksListViewModel.getBooksLiveData(encodedListName));
     }
 
-    private void refresh(LiveData<List<ParcelableBook>> bookLiveData) {
+    private void refresh(LiveData<List<Book>> bookLiveData) {
         if (!Utils.isConnected(this)) {
             showNoInternetUI();
         } else {
@@ -98,7 +98,7 @@ public class BooksListActivity extends BaseBookListActivity implements
     }
 
     @Override
-    public void onClick(ParcelableBook book, ImageView bookImageView) {
+    public void onClick(Book book, ImageView bookImageView) {
         Intent intent = new Intent(this, BookDetailActivity.class);
         intent.putExtra(BookDetailActivity.BOOK_DETAIL_EXTRA, book);
 
@@ -120,7 +120,7 @@ public class BooksListActivity extends BaseBookListActivity implements
 
     @Override
     public void onRefresh() {
-        LiveData<List<ParcelableBook>> booksLiveData = new MutableLiveData<>();
+        LiveData<List<Book>> booksLiveData = new MutableLiveData<>();
         if (encodedListName != null) {
             booksLiveData = booksListViewModel.getBooksLiveData(encodedListName);
         }

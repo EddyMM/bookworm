@@ -26,10 +26,10 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import timber.log.Timber;
 
-public class ListNamesActivity extends BaseBookwormActivity implements
-        ListNamesAdapter.ListNameListener, SwipeRefreshLayout.OnRefreshListener {
+public class CategoriesActivity extends BaseBookwormActivity implements
+        CategoriesAdapter.ListNameListener, SwipeRefreshLayout.OnRefreshListener {
 
-    private ListNamesViewModel listNamesViewModel;
+    private CategoriesViewModel categoriesViewModel;
 
     @BindView(R.id.list_names_rv)
     RecyclerView listNamesRecyclerView;
@@ -40,7 +40,7 @@ public class ListNamesActivity extends BaseBookwormActivity implements
     @BindView(R.id.no_internet_widgets)
     Group noInternetWidgets;
 
-    ListNamesAdapter listNamesAdapter;
+    CategoriesAdapter categoriesAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -89,17 +89,17 @@ public class ListNamesActivity extends BaseBookwormActivity implements
     }
 
     private void setUpListNamesUI() {
-        listNamesAdapter = new ListNamesAdapter(this, this);
+        categoriesAdapter = new CategoriesAdapter(this, this);
 
         listNamesRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-        listNamesRecyclerView.setAdapter(listNamesAdapter);
+        listNamesRecyclerView.setAdapter(categoriesAdapter);
 
         swipeRefreshListNamesLayout.setOnRefreshListener(this);
     }
 
     private void setUpViewModel() {
-       listNamesViewModel = ViewModelProviders.of(this).get(
-                ListNamesViewModel.class);
+       categoriesViewModel = ViewModelProviders.of(this).get(
+                CategoriesViewModel.class);
         refresh();
     }
 
@@ -114,17 +114,20 @@ public class ListNamesActivity extends BaseBookwormActivity implements
     }
 
     private void refresh() {
-        if (!Utils.isConnected(this)) {
-            showNoInternetUI();
-        } else {
-            showBooksList();
-        }
+        categoriesViewModel.syncNeeded()
+            .observe(this, (syncNeeded) -> {
+                if (!Utils.isConnected(this) && syncNeeded) {
+                    showNoInternetUI();
+                } else {
+                    showBooksList();
+                }
+            });
 
         showProgressBar();
 
-        listNamesViewModel.getListNamesLiveData().observe(this, listNames -> {
-            if (listNames != null) {
-                listNamesAdapter.setCategories(listNames);
+        categoriesViewModel.getCategoriesLiveData().observe(this, categories -> {
+            if (categories != null) {
+                categoriesAdapter.setCategories(categories);
             } else {
                 Timber.d("No list names fetched");
             }
@@ -157,7 +160,7 @@ public class ListNamesActivity extends BaseBookwormActivity implements
         Intent intent = new Intent(this, BooksListActivity.class);
         intent.putExtra(
                 BooksListActivity.LIST_NAME_ENCODED_EXTRA,
-                category.getListNameEncoded()
+                category.getCategoryCode()
         );
         intent.putExtra(
                 BooksListActivity.DISPLAY_NAME_ENCODED_EXTRA,

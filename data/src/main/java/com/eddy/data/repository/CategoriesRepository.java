@@ -1,43 +1,58 @@
 package com.eddy.data.repository;
 
+import com.eddy.data.CategoriesDataSource;
+import com.eddy.data.dao.CategoryDao;
 import com.eddy.data.models.entities.Category;
-import com.eddy.data.models.rest.CategoriesResponse;
-import com.eddy.data.repository.interfaces.ICategoriesRepository;
-import com.eddy.data.rest.BooksApiService;
 
-import java.io.IOException;
 import java.util.List;
-import java.util.Objects;
+import java.util.concurrent.Executors;
 
-import retrofit2.Call;
-import retrofit2.Response;
+import androidx.lifecycle.LiveData;
 import timber.log.Timber;
 
-public class CategoriesRepository implements ICategoriesRepository {
+public class CategoriesRepository {
 
-    private BooksApiService booksApiService;
+    private static final Object LOCK = new Object();
+    private static CategoriesRepository CATEGORIES_REPOSITORY;
+    private final CategoriesDataSource categoriesDataSource;
+    private final CategoryDao categoryDao;
+    private LiveData<List<Category>> categoriesLiveData;
 
-    public CategoriesRepository(BooksApiService booksApiService) {
-        this.booksApiService = booksApiService;
-    }
-
-    @Override
-    public List<Category> fetchCategories() {
-        return fetchOnline();
-    }
-
-    private List<Category> fetchOnline() {
-        Call<CategoriesResponse> listNameResponseCall = booksApiService.categories();
-        List<Category> categories = null;
-
-        try {
-            Response<CategoriesResponse> response = listNameResponseCall.execute();
-            CategoriesResponse categoriesResponse = response.body();
-            categories = Objects.requireNonNull(categoriesResponse).getCategories();
-        } catch (IOException e) {
-            Timber.e(e);
+    public synchronized static CategoriesRepository getInstance(
+            CategoriesDataSource categoriesDataSource, CategoryDao categoryDao) {
+        if (CATEGORIES_REPOSITORY == null) {
+            synchronized (LOCK) {
+                CATEGORIES_REPOSITORY = new CategoriesRepository(categoriesDataSource, categoryDao);
+            }
         }
 
-        return categories;
+        return CATEGORIES_REPOSITORY;
+    }
+
+    private CategoriesRepository(CategoriesDataSource categoriesDataSource, CategoryDao categoryDao) {
+        this.categoriesDataSource = categoriesDataSource;
+        this.categoryDao = categoryDao;
+
+        categoriesLiveData = categoriesDataSource.getFetchedCategories();
+        categoriesLiveData.observeForever((categories) -> {
+            Timber.d("Categories from API: %s", categories.toString());
+            Executors.newFixedThreadPool(1).execute(() ->
+                    categoryDao.addCategories(categories));
+        });
+    }
+
+    public boolean fetchNeeded() {
+        return categoryDao.countCategories() <= 0;
+    }
+
+    public LiveData<List<Category>> getCategories() {
+        Executors.newFixedThreadPool(1).execute(() -> {
+            if (fetchNeeded()) {
+                Timber.d("Fetching data afresh");
+                categoriesDataSource.syncCategories();
+            }
+        });
+
+        return categoryDao.getCategories();
     }
 }

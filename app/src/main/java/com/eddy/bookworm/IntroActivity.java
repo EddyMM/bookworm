@@ -6,9 +6,8 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.ProgressBar;
 
-import com.eddy.bookworm.R;
 import com.eddy.bookworm.base.BaseBookwormActivity;
-import com.eddy.bookworm.categories.ListNamesActivity;
+import com.eddy.bookworm.categories.CategoriesActivity;
 import com.eddy.bookworm.firebase.SignInManager;
 
 import butterknife.BindView;
@@ -68,7 +67,7 @@ public class IntroActivity extends BaseBookwormActivity {
     }
 
     private void openCategoriesList() {
-        Intent intent = new Intent(this, ListNamesActivity.class);
+        Intent intent = new Intent(this, CategoriesActivity.class);
         startActivity(intent);
         finish();
     }

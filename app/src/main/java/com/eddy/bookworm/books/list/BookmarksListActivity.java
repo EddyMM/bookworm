@@ -11,8 +11,6 @@ import com.eddy.bookworm.books.detail.BookDetailActivity;
 import com.eddy.bookworm.books.list.base.BaseBookListActivity;
 import com.eddy.bookworm.books.list.viewmodel.BookmarksViewModel;
 import com.eddy.bookworm.firebase.SignInManager;
-import com.eddy.bookworm.models.ParcelableBook;
-import com.eddy.bookworm.models.mappers.ParcelableBookMapper;
 import com.eddy.data.models.entities.Book;
 
 import java.util.List;
@@ -55,9 +53,7 @@ public class BookmarksListActivity extends BaseBookListActivity implements
             List<Book> books = Utils.toList(dataSnapshot.getChildren());
 
             if (books != null) {
-                List<ParcelableBook> parcelableBooks = new ParcelableBookMapper()
-                        .transform(books);
-                booksListAdapter.setBooks(parcelableBooks);
+                booksListAdapter.setBooks(books);
             }
 
             hideProgressBar();
@@ -80,7 +76,7 @@ public class BookmarksListActivity extends BaseBookListActivity implements
     }
 
     @Override
-    public void onClick(ParcelableBook book, ImageView bookImageView) {
+    public void onClick(Book book, ImageView bookImageView) {
         Intent intent = new Intent(this, BookDetailActivity.class);
         intent.putExtra(BookDetailActivity.BOOK_DETAIL_EXTRA, book);
 
