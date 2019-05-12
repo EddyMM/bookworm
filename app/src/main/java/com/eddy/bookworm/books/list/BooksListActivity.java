@@ -10,7 +10,8 @@ import com.eddy.bookworm.Utils;
 import com.eddy.bookworm.books.detail.BookDetailActivity;
 import com.eddy.bookworm.books.list.base.BaseBookListActivity;
 import com.eddy.bookworm.books.list.viewmodel.BooksListViewModel;
-import com.eddy.data.models.entities.Book;
+import com.eddy.data.models.BookWithBuyLinks;
+import com.eddy.data.models.entities.Category;
 
 import java.util.List;
 
@@ -25,10 +26,9 @@ import timber.log.Timber;
 public class BooksListActivity extends BaseBookListActivity implements
         BooksListAdapter.BooksListListener, SwipeRefreshLayout.OnRefreshListener {
 
-    public static final String LIST_NAME_ENCODED_EXTRA = "LIST_NAME_ENCODED_EXTRA";
-    public static final String DISPLAY_NAME_ENCODED_EXTRA = "DISPLAY_NAME_ENCODED_EXTRA";
+    public static final String CATEGORY_EXTRA = "category";
 
-    private String encodedListName;
+    private Category category;
 
     private BooksListViewModel booksListViewModel;
 
@@ -40,12 +40,12 @@ public class BooksListActivity extends BaseBookListActivity implements
 
         Intent intent = getIntent();
         if (intent != null) {
-            encodedListName = intent.getStringExtra(LIST_NAME_ENCODED_EXTRA);
-            String displayListName = intent.getStringExtra(DISPLAY_NAME_ENCODED_EXTRA);
+            category = intent.getParcelableExtra(CATEGORY_EXTRA);
+            String displayListName = category.getDisplayName();
 
             setUpBooksListUI(this, this);
 
-            if (encodedListName != null) {
+            if (category != null) {
                 setTitle(displayListName);
                 setUpBooksListViewModel();
             }
@@ -55,10 +55,10 @@ public class BooksListActivity extends BaseBookListActivity implements
     private void setUpBooksListViewModel() {
         booksListViewModel = ViewModelProviders.of(this)
                 .get(BooksListViewModel.class);
-        refresh(booksListViewModel.getBooksLiveData(encodedListName));
+        refresh(booksListViewModel.getBooksLiveData(category));
     }
 
-    private void refresh(LiveData<List<Book>> bookLiveData) {
+    private void refresh(LiveData<List<BookWithBuyLinks>> bookLiveData) {
         if (!Utils.isConnected(this)) {
             showNoInternetUI();
         } else {
@@ -66,15 +66,16 @@ public class BooksListActivity extends BaseBookListActivity implements
         }
         showProgressBar();
 
-        bookLiveData.observe(this, books -> {
-                    if (books != null) {
-                        booksListAdapter.setBooks(books);
-                    } else {
-                        Timber.d("No list names fetched");
-                    }
+        bookLiveData.observe(this, bookWithBuyLinks -> {
+            if (bookWithBuyLinks != null) {
+                booksListAdapter.setBooks(bookWithBuyLinks);
+                Timber.d("Books from DB: %s", bookWithBuyLinks);
+            } else {
+                Timber.d("No list names fetched");
+            }
 
-                    hideProgressBar();
-                });
+            hideProgressBar();
+        });
     }
 
     private void showNoInternetUI() {
@@ -98,9 +99,9 @@ public class BooksListActivity extends BaseBookListActivity implements
     }
 
     @Override
-    public void onClick(Book book, ImageView bookImageView) {
+    public void onClick(BookWithBuyLinks bookWithBuyLinks, ImageView bookImageView) {
         Intent intent = new Intent(this, BookDetailActivity.class);
-        intent.putExtra(BookDetailActivity.BOOK_DETAIL_EXTRA, book);
+        intent.putExtra(BookDetailActivity.BOOK_WITH_BUY_LINKS_DETAIL_EXTRA, bookWithBuyLinks);
 
         if (bookImageView != null) {
             if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
@@ -120,9 +121,9 @@ public class BooksListActivity extends BaseBookListActivity implements
 
     @Override
     public void onRefresh() {
-        LiveData<List<Book>> booksLiveData = new MutableLiveData<>();
-        if (encodedListName != null) {
-            booksLiveData = booksListViewModel.getBooksLiveData(encodedListName);
+        LiveData<List<BookWithBuyLinks>> booksLiveData = new MutableLiveData<>();
+        if (category != null) {
+            booksLiveData = booksListViewModel.getBooksLiveData(category);
         }
         refresh(booksLiveData);
     }

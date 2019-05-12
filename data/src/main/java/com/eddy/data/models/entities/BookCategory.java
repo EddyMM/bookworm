@@ -24,7 +24,7 @@ public class BookCategory {
     @ColumnInfo(name = "category_code")
     String categoryCode;
 
-    public BookCategory(Integer bookId, String categoryCode) {
+    public BookCategory(long bookId, String categoryCode) {
         this.bookId = bookId;
         this.categoryCode = categoryCode;
     }
@@ -45,5 +45,13 @@ public class BookCategory {
 
     public void setCategoryCode(@NonNull String categoryCode) {
         this.categoryCode = categoryCode;
+    }
+
+    @Override
+    public String toString() {
+        return "BookCategory{" +
+                "bookId=" + bookId +
+                ", categoryCode='" + categoryCode + '\'' +
+                '}';
     }
 }

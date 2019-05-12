@@ -16,6 +16,7 @@ import com.eddy.bookworm.firebase.FirebaseDatabaseManager;
 import com.eddy.bookworm.firebase.SignInManager;
 
 import com.eddy.data.Constants;
+import com.eddy.data.models.BookWithBuyLinks;
 import com.eddy.data.models.entities.Book;
 import com.google.android.material.appbar.CollapsingToolbarLayout;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -40,7 +41,7 @@ import timber.log.Timber;
 
 public class BookDetailActivity extends BaseBookwormActivity implements View.OnClickListener {
 
-    public static final String BOOK_DETAIL_EXTRA = "BOOK_DETAIL_EXTRA";
+    public static final String BOOK_WITH_BUY_LINKS_DETAIL_EXTRA = "BOOK_WITH_BUY_LINKS_DETAIL_EXTRA";
 
     @BindView(R.id.book_detail_photo_iv)
     ImageView bookImageView;
@@ -80,7 +81,7 @@ public class BookDetailActivity extends BaseBookwormActivity implements View.OnC
 
     @BindView(R.id.fab)
     FloatingActionButton fab;
-    private Book book;
+    private BookWithBuyLinks bookWithBuyLinks;
     private boolean signInForBookmarkAction; // Flag used to determine whether action to
     // perform on successful sign in is bookmarking or not
 
@@ -108,15 +109,17 @@ public class BookDetailActivity extends BaseBookwormActivity implements View.OnC
 
         Intent intent = getIntent();
         if (intent != null) {
-            book = intent.getParcelableExtra(BOOK_DETAIL_EXTRA);
+            bookWithBuyLinks = intent.getParcelableExtra(BOOK_WITH_BUY_LINKS_DETAIL_EXTRA);
 
-            updateUI(book);
+            updateUI(bookWithBuyLinks);
         }
     }
 
-    private void updateUI(Book book) {
-        if (book != null) {
+    private void updateUI(BookWithBuyLinks bookWithBuyLinks) {
+        if (bookWithBuyLinks != null) {
             showBookmarkState();
+
+            Book book = bookWithBuyLinks.getBook();
 
             Picasso.get()
                     .load(book.getBookImageUrl())
@@ -131,13 +134,13 @@ public class BookDetailActivity extends BaseBookwormActivity implements View.OnC
             weeksOnListTextView.setText(String.valueOf(book.getWeeksOnList()));
 
             BuyingLinksAdapter buyingLinksAdapter = new BuyingLinksAdapter(
-                    this, book.getBuyLinks());
+                    this, bookWithBuyLinks.getBuyLinks());
             buyingLinksRecyclerView.setLayoutManager(new LinearLayoutManager(this));
             buyingLinksRecyclerView.setAdapter(buyingLinksAdapter);
 
             String reviewsUrl = book.getReviewUrl();
             if (TextUtils.isEmpty(reviewsUrl)) {
-                // Hide book reviews section if no Review URL available
+                // Hide bookWithBuyLinks reviews section if no Review URL available
                 bookReviewsSectionCardView.setVisibility(View.GONE);
             } else {
                 Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(reviewsUrl));
@@ -153,7 +156,7 @@ public class BookDetailActivity extends BaseBookwormActivity implements View.OnC
                 .child(Constants.BOOKMARKS_DB_REF);
 
         Query query = databaseReference.orderByChild(getString(R.string.db_child_title))
-                .equalTo(book.getTitle());
+                .equalTo(bookWithBuyLinks.getBook().getTitle());
 
         query.addValueEventListener(new ValueEventListener() {
             @Override
@@ -183,7 +186,7 @@ public class BookDetailActivity extends BaseBookwormActivity implements View.OnC
 
             Query query = databaseReference
                     .orderByChild(getString(R.string.db_child_title))
-                    .equalTo(book.getTitle());
+                    .equalTo(bookWithBuyLinks.getBook().getTitle());
 
             query.addValueEventListener(new ValueEventListener() {
                 @Override
@@ -261,7 +264,7 @@ public class BookDetailActivity extends BaseBookwormActivity implements View.OnC
     @Override
     protected void onSuccessfulSignIn() {
         if (signInForBookmarkAction) {
-            // Ensure we save the book only if user was signing in to save bookmark
+            // Ensure we save the bookWithBuyLinks only if user was signing in to save bookmark
             // then deactivate flag by setting it to false
             signInForBookmarkAction = false;
             determineFabAction();
@@ -274,7 +277,7 @@ public class BookDetailActivity extends BaseBookwormActivity implements View.OnC
     }
 
     /*
-     * Saves the bookmarked book to Firebase Realtime DB
+     * Saves the bookmarked bookWithBuyLinks to Firebase Realtime DB
      */
     private void saveBook() {
         SignInManager signInManager = SignInManager.getInstance();
@@ -284,11 +287,11 @@ public class BookDetailActivity extends BaseBookwormActivity implements View.OnC
 //            DatabaseReference databaseReference =firebaseDatabaseManager.getDatabaseReference()
 //                    .child(Constants.BOOKMARKS_DB_REF);
 //
-//            if (TextUtils.isEmpty(book.getKey())) {
-//                book.setKey(databaseReference.push().getKey());
+//            if (TextUtils.isEmpty(bookWithBuyLinks.getKey())) {
+//                bookWithBuyLinks.setKey(databaseReference.push().getKey());
 //            }
 //
-//            databaseReference.child(book.getKey()).setValue(book);
+//            databaseReference.child(bookWithBuyLinks.getKey()).setValue(bookWithBuyLinks);
 //
 //            Snackbar.make(findViewById(android.R.id.content),
 //                    getString(R.string.saving_bookmark_for_user,

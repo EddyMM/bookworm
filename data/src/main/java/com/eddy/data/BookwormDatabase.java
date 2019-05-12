@@ -7,13 +7,15 @@ import com.eddy.data.dao.BookDao;
 import com.eddy.data.dao.CategoryDao;
 import com.eddy.data.models.entities.Book;
 import com.eddy.data.models.entities.BookCategory;
+import com.eddy.data.models.entities.BuyLink;
 import com.eddy.data.models.entities.Category;
 
 import androidx.room.Database;
 import androidx.room.Room;
 import androidx.room.RoomDatabase;
 
-@Database(entities = {Book.class, Category.class, BookCategory.class}, version = 1)
+@Database(entities = {Book.class, Category.class, BuyLink.class, BookCategory.class},
+        version = 1)
 public abstract class BookwormDatabase extends RoomDatabase {
 
     private static final Object LOCK = new Object();

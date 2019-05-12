@@ -158,14 +158,7 @@ public class CategoriesActivity extends BaseBookwormActivity implements
     @Override
     public void onClick(Category category) {
         Intent intent = new Intent(this, BooksListActivity.class);
-        intent.putExtra(
-                BooksListActivity.LIST_NAME_ENCODED_EXTRA,
-                category.getCategoryCode()
-        );
-        intent.putExtra(
-                BooksListActivity.DISPLAY_NAME_ENCODED_EXTRA,
-                category.getDisplayName()
-        );
+        intent.putExtra(BooksListActivity.CATEGORY_EXTRA, category);
 
         startActivity(intent);
     }

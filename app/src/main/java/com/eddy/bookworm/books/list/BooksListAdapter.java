@@ -9,7 +9,7 @@ import android.widget.TextView;
 
 import com.eddy.bookworm.R;
 import com.eddy.bookworm.base.customui.DynamicHeightImageView;
-import com.eddy.data.models.entities.Book;
+import com.eddy.data.models.BookWithBuyLinks;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
@@ -21,7 +21,7 @@ import butterknife.ButterKnife;
 
 public class BooksListAdapter extends RecyclerView.Adapter<BooksListAdapter.BooksViewHolder> {
 
-    private List<Book> books;
+    private List<BookWithBuyLinks> books;
     private Context context;
 
     private BooksListListener booksListListener;
@@ -32,10 +32,10 @@ public class BooksListAdapter extends RecyclerView.Adapter<BooksListAdapter.Book
     }
 
     public interface BooksListListener {
-        void onClick(Book book, ImageView imageView);
+        void onClick(BookWithBuyLinks bookWithBuyLinks, ImageView imageView);
     }
 
-    public void setBooks(List<Book> books) {
+    public void setBooks(List<BookWithBuyLinks> books) {
         this.books = books;
         notifyDataSetChanged();
     }
@@ -79,9 +79,9 @@ public class BooksListAdapter extends RecyclerView.Adapter<BooksListAdapter.Book
             itemView.setOnClickListener(this);
         }
 
-        void bind(Book book) {
-            Integer width = book.getBookImageWidth();
-            Integer height = book.getBookImageHeight();
+        void bind(BookWithBuyLinks bookWithBuyLinks) {
+            Integer width = bookWithBuyLinks.getBook().getBookImageWidth();
+            Integer height = bookWithBuyLinks.getBook().getBookImageHeight();
             if (width != null && height != null) {
                 float aspectRatio = width / height;
                 if (aspectRatio > 0) {
@@ -90,18 +90,18 @@ public class BooksListAdapter extends RecyclerView.Adapter<BooksListAdapter.Book
             }
 
             Picasso.get()
-                    .load(book.getBookImageUrl())
+                    .load(bookWithBuyLinks.getBook().getBookImageUrl())
                     .placeholder(R.drawable.ic_image_grey_24dp)
                     .error(R.drawable.ic_broken_image_grey_24dp)
                     .into(bookImageView);
-            titleTextView.setText(book.getTitle());
-            authorTextView.setText(book.getAuthor());
+            titleTextView.setText(bookWithBuyLinks.getBook().getTitle());
+            authorTextView.setText(bookWithBuyLinks.getBook().getAuthor());
         }
 
         @Override
         public void onClick(View v) {
-            Book book = books.get(getAdapterPosition());
-            booksListListener.onClick(book, bookImageView);
+            BookWithBuyLinks bookWithBuyLinks = books.get(getAdapterPosition());
+            booksListListener.onClick(bookWithBuyLinks, bookImageView);
         }
     }
 

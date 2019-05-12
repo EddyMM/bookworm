@@ -1,69 +1,74 @@
 package com.eddy.data.repository;
 
-import android.content.Context;
-
 import com.eddy.data.BooksListDataSource;
+import com.eddy.data.dao.BookCategoryDao;
 import com.eddy.data.dao.BookDao;
+import com.eddy.data.models.BookWithBuyLinks;
 import com.eddy.data.models.entities.Book;
-import com.eddy.data.models.rest.BooksResponse;
-import com.eddy.data.models.rest.BooksResults;
-import com.eddy.data.repository.interfaces.IBooksListRepository;
-import com.eddy.data.rest.BooksApi;
+import com.eddy.data.models.entities.BookCategory;
+import com.eddy.data.models.entities.Category;
 
-import java.io.IOException;
 import java.util.List;
-import java.util.Objects;
+import java.util.concurrent.Executors;
 
-import retrofit2.Call;
-import retrofit2.Response;
-import timber.log.Timber;
+import androidx.lifecycle.LiveData;
 
-public class BooksListRepository implements IBooksListRepository {
+public class BooksListRepository {
 
     private static BooksListRepository BOOKS_LIST_REPOSITORY;
     private static final Object LOCK = new Object();
     private BooksListDataSource booksListDataSource;
     private BookDao bookDao;
 
-    public BooksListRepository(BooksListDataSource booksListDataSource, BookDao bookDao) {
+    public BooksListRepository(BooksListDataSource booksListDataSource, BookDao bookDao,
+                               BookCategoryDao bookCategoryDao) {
         this.booksListDataSource = booksListDataSource;
         this.bookDao = bookDao;
+
+        booksListDataSource.getBooksLiveData()
+            .observeForever((categoryWithBooks) -> Executors.newSingleThreadExecutor()
+                .execute(() -> {
+                    List<Book> books = categoryWithBooks.getBooks();
+                    String categoryCode = categoryWithBooks.getCategory().getCategoryCode();
+                    long[] bookIds = bookDao.addBooks(books);
+
+                    for (int n = 0; n < bookIds.length; n++) {
+                        BookCategory bookCategory = new BookCategory(bookIds[n], categoryCode);
+                        bookCategoryDao.addBookCategory(bookCategory);
+
+                        bookDao.addBuyLinks(bookIds[n], books.get(n).getBuyLinks());
+                    }
+                }));
     }
 
     public synchronized static BooksListRepository getInstance(
-            Context context, BooksListDataSource booksListDataSource, BookDao bookDao) {
+            BooksListDataSource booksListDataSource, BookDao bookWithBuyLinksDao,
+            BookCategoryDao bookCategoryDao) {
         if (BOOKS_LIST_REPOSITORY == null) {
             synchronized (LOCK) {
-                BOOKS_LIST_REPOSITORY = new BooksListRepository(booksListDataSource, bookDao);
+                BOOKS_LIST_REPOSITORY = new BooksListRepository(
+                        booksListDataSource, bookWithBuyLinksDao, bookCategoryDao);
             }
         }
 
         return BOOKS_LIST_REPOSITORY;
     }
 
-    @Override
-    public List<Book> fetchBooks(String categoryCode) {
-
-        Call<BooksResponse> booksResponseCall = BooksApi.getInstance()
-                .listBooks(categoryCode);
-
-        List<Book> books = null;
-
-        try {
-            Response<BooksResponse> response = booksResponseCall.execute();
-            BooksResponse booksResponse = response.body();
-            BooksResults booksResults = Objects.requireNonNull(booksResponse)
-                    .getBooksResults();
-
-            books =  booksResults.getBooks();
-        } catch (IOException e) {
-            Timber.e(e);
-        }
-
-        return books;
+    private boolean fetchNeeded(Category category) {
+        return (bookDao.countBooksByCategoryCode(category.getCategoryCode()) <= 0);
     }
 
-    private boolean fetchNeeded(String categoryCode) {
-        return bookDao.countBooksByCategoryCode(categoryCode);
+    public LiveData<List<BookWithBuyLinks>> getBooksListLiveData(Category category) {
+        initializeData(category);
+        return bookDao.getBooksByCategoryCode(category.getCategoryCode());
+    }
+
+    private void initializeData(Category category) {
+        Executors.newSingleThreadExecutor()
+            .execute(() -> {
+                if (fetchNeeded(category)) {
+                    booksListDataSource.startSyncingBooks(category);
+                }
+            });
     }
 }

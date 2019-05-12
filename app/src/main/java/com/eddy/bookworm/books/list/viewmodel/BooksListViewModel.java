@@ -1,16 +1,13 @@
 package com.eddy.bookworm.books.list.viewmodel;
 
 import android.app.Application;
-import android.os.Handler;
-import android.os.Looper;
 
 import com.eddy.data.InjectorUtils;
-import com.eddy.data.models.entities.Book;
+import com.eddy.data.models.BookWithBuyLinks;
+import com.eddy.data.models.entities.Category;
 import com.eddy.data.repository.BooksListRepository;
 
 import java.util.List;
-import java.util.concurrent.Executor;
-import java.util.concurrent.Executors;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
@@ -23,18 +20,15 @@ public class BooksListViewModel extends AndroidViewModel {
         super(application);
     }
 
-    public LiveData<List<Book>> getBooksLiveData(String encodedListName) {
+    public LiveData<List<BookWithBuyLinks>> getBooksLiveData(Category category) {
 
-        MutableLiveData<List<Book>> booksLiveData = new MutableLiveData<>();
+        LiveData<List<BookWithBuyLinks>> booksLiveData = new MutableLiveData<>();
 
-        Executor executor = Executors.newFixedThreadPool(3);
-        executor.execute(() -> {
-            BooksListRepository booksListRepository = InjectorUtils.getBooksListRepository(getApplication());
-            List<Book> books = booksListRepository
-                    .fetchBooks(encodedListName);
-            Handler handler = new Handler(Looper.getMainLooper());
-            handler.post(() -> booksLiveData.setValue(books));
-        });
+        BooksListRepository booksListRepository = InjectorUtils.getBooksListRepository(getApplication());
+
+        if (booksListRepository != null) {
+            booksLiveData = booksListRepository.getBooksListLiveData(category);
+        }
 
         return booksLiveData;
     }

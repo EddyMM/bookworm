@@ -10,9 +10,11 @@ import java.util.Objects;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.ForeignKey;
+import androidx.room.Index;
 import androidx.room.PrimaryKey;
 
 @Entity(tableName = "buy_link",
+        indices = {@Index(value = "book_id")},
         foreignKeys = {
             @ForeignKey(entity = Book.class, parentColumns = "id", childColumns = "book_id")
         })
@@ -28,7 +30,7 @@ public class BuyLink implements Parcelable {
     String url;
 
     @ColumnInfo(name = "book_id")
-    String bookId;
+    long bookId;
 
     public BuyLink() {}
 
@@ -36,7 +38,7 @@ public class BuyLink implements Parcelable {
         id = in.readLong();
         name = in.readString();
         url = in.readString();
-        bookId = in.readString();
+        bookId = in.readLong();
     }
 
     @Override
@@ -44,7 +46,7 @@ public class BuyLink implements Parcelable {
         dest.writeLong(id);
         dest.writeString(name);
         dest.writeString(url);
-        dest.writeString(bookId);
+        dest.writeLong(bookId);
     }
 
     @Override
@@ -88,11 +90,11 @@ public class BuyLink implements Parcelable {
         this.url = url;
     }
 
-    public String getBookId() {
+    public long getBookId() {
         return bookId;
     }
 
-    public void setBookId(String bookId) {
+    public void setBookId(long bookId) {
         this.bookId = bookId;
     }
 

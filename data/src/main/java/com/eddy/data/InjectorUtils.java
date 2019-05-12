@@ -18,7 +18,11 @@ public abstract class InjectorUtils {
     }
 
     public static BooksListRepository getBooksListRepository(Context context) {
-//        return BooksListRepository.getInstance(context);
-        return null;
+        BookwormDatabase bookwormDatabase = BookwormDatabase.getInstance(context);
+
+        BooksListDataSource booksListDataSource = BooksListDataSource.getInstance(context);
+        return BooksListRepository.getInstance(booksListDataSource,
+                bookwormDatabase.booksDao(),
+                bookwormDatabase.bookCategoryDao());
     }
 }
