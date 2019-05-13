@@ -64,20 +64,20 @@ public class BooksListActivity extends BaseBookListActivity implements
                 showNoInternetUI();
             } else {
                 showBooksList();
-
-                showProgressBar();
-
-                bookLiveData.observe(this, bookWithBuyLinks -> {
-                    if (bookWithBuyLinks != null) {
-                        booksListAdapter.setBooks(bookWithBuyLinks);
-                        Timber.d("Books from DB: %s", bookWithBuyLinks);
-                    } else {
-                        Timber.d("No list names fetched");
-                    }
-
-                    hideProgressBar();
-                });
             }
+        });
+
+        showProgressBar();
+
+        bookLiveData.observe(this, bookWithBuyLinks -> {
+            if (bookWithBuyLinks != null) {
+                booksListAdapter.setBooks(bookWithBuyLinks);
+                Timber.d("Books from DB: %s", bookWithBuyLinks);
+            } else {
+                Timber.d("No list names fetched");
+            }
+
+            hideProgressBar();
         });
     }
 
