@@ -16,6 +16,8 @@ import androidx.lifecycle.MutableLiveData;
 
 public class BooksListViewModel extends AndroidViewModel {
 
+    private BooksListRepository booksListRepository;
+
     public BooksListViewModel(@NonNull Application application) {
         super(application);
     }
@@ -24,12 +26,16 @@ public class BooksListViewModel extends AndroidViewModel {
 
         LiveData<List<BookWithBuyLinks>> booksLiveData = new MutableLiveData<>();
 
-        BooksListRepository booksListRepository = InjectorUtils.getBooksListRepository(getApplication());
+        booksListRepository = InjectorUtils.getBooksListRepository(getApplication());
 
         if (booksListRepository != null) {
             booksLiveData = booksListRepository.getBooksListLiveData(category);
         }
 
         return booksLiveData;
+    }
+
+    public LiveData<Boolean> syncNeeded(Category category) {
+        return booksListRepository.syncNeeded(category);
     }
 }

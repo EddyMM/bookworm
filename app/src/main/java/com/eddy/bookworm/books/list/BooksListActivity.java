@@ -59,22 +59,25 @@ public class BooksListActivity extends BaseBookListActivity implements
     }
 
     private void refresh(LiveData<List<BookWithBuyLinks>> bookLiveData) {
-        if (!Utils.isConnected(this)) {
-            showNoInternetUI();
-        } else {
-            showBooksList();
-        }
-        showProgressBar();
-
-        bookLiveData.observe(this, bookWithBuyLinks -> {
-            if (bookWithBuyLinks != null) {
-                booksListAdapter.setBooks(bookWithBuyLinks);
-                Timber.d("Books from DB: %s", bookWithBuyLinks);
+        booksListViewModel.syncNeeded(category).observe(this, (syncNeeded) -> {
+            if (!Utils.isConnected(this) && syncNeeded) {
+                showNoInternetUI();
             } else {
-                Timber.d("No list names fetched");
-            }
+                showBooksList();
 
-            hideProgressBar();
+                showProgressBar();
+
+                bookLiveData.observe(this, bookWithBuyLinks -> {
+                    if (bookWithBuyLinks != null) {
+                        booksListAdapter.setBooks(bookWithBuyLinks);
+                        Timber.d("Books from DB: %s", bookWithBuyLinks);
+                    } else {
+                        Timber.d("No list names fetched");
+                    }
+
+                    hideProgressBar();
+                });
+            }
         });
     }
 

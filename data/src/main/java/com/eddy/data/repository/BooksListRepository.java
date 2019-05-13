@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.concurrent.Executors;
 
 import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
 
 public class BooksListRepository {
 
@@ -70,5 +71,16 @@ public class BooksListRepository {
                     booksListDataSource.startSyncingBooks(category);
                 }
             });
+    }
+
+    public LiveData<Boolean> syncNeeded(Category category) {
+        MutableLiveData<Boolean> syncNeededLiveData = new MutableLiveData<>();
+
+        Executors.newSingleThreadExecutor().execute(() -> {
+            boolean syncNeeded = (bookDao.countBooksByCategoryCode(category.getCategoryCode()) <= 0);
+            syncNeededLiveData.postValue(syncNeeded);
+        });
+
+        return syncNeededLiveData;
     }
 }
