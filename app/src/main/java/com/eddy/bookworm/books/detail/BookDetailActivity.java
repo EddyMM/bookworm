@@ -71,8 +71,6 @@ public class BookDetailActivity extends AppCompatActivity {
     @BindView(R.id.fab)
     FloatingActionButton fab;
     private BookWithBuyLinks bookWithBuyLinks;
-    private boolean signInForBookmarkAction; // Flag used to determine whether action to
-    // perform on successful sign in is bookmarking or not
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -157,13 +155,5 @@ public class BookDetailActivity extends AppCompatActivity {
         // Refresh FAA
         fab.hide();
         fab.show();
-    }
-
-    protected void hideProgressBar() {
-        signInProgressBar.setVisibility(View.GONE);
-    }
-
-    protected void showProgressBar() {
-        signInProgressBar.setVisibility(View.VISIBLE);
     }
 }
