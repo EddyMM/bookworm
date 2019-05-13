@@ -29,15 +29,6 @@
                 android:value=".categories.CategoriesActivity"/>
         </activity>
         <activity
-            android:name=".books.list.BookmarksListActivity"
-            android:launchMode="singleTop"
-            android:parentActivityName=".categories.CategoriesActivity"
-            tools:targetApi="jelly_bean">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".categories.CategoriesActivity"/>
-        </activity>
-        <activity
             android:name=".books.detail.BookDetailActivity"
             android:label="@string/title_activity_book_detail"
             android:parentActivityName=".books.list.BooksListActivity"

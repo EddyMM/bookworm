@@ -91,16 +91,6 @@ public class BooksListActivity extends BaseBookListActivity implements
     }
 
     @Override
-    protected void onCompleteSignIn() {
-        hideProgressBar();
-    }
-
-    @Override
-    protected void onBeginSignIn() {
-        showProgressBar();
-    }
-
-    @Override
     public void onClick(BookWithBuyLinks bookWithBuyLinks, ImageView bookImageView) {
         Intent intent = new Intent(this, BookDetailActivity.class);
         intent.putExtra(BookDetailActivity.BOOK_WITH_BUY_LINKS_DETAIL_EXTRA, bookWithBuyLinks);

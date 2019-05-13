@@ -3,18 +3,18 @@ package com.eddy.bookworm.books.list.base;
 import android.os.Bundle;
 
 import com.eddy.bookworm.R;
-import com.eddy.bookworm.base.BaseBookwormActivity;
 import com.eddy.bookworm.base.customui.BookwormSwipeRefreshLayout;
 import com.eddy.bookworm.books.list.BooksListAdapter;
 
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.Group;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import butterknife.BindView;
 
-public abstract class BaseBookListActivity extends BaseBookwormActivity {
+public abstract class BaseBookListActivity extends AppCompatActivity {
 
     @BindView(R.id.books_list_rv)
     public RecyclerView booksRecyclerView;
@@ -31,16 +31,6 @@ public abstract class BaseBookListActivity extends BaseBookwormActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_books_list);
-    }
-
-    @Override
-    protected void onCompleteSignIn() {
-
-    }
-
-    @Override
-    protected void onBeginSignIn() {
-
     }
 
     protected void setUpBooksListUI(BooksListAdapter.BooksListListener booksListListener,

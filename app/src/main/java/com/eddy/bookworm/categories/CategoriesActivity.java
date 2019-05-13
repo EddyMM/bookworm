@@ -9,14 +9,11 @@ import android.view.View;
 
 import com.eddy.bookworm.R;
 import com.eddy.bookworm.Utils;
-import com.eddy.bookworm.base.BaseBookwormActivity;
 import com.eddy.bookworm.base.customui.BookwormSwipeRefreshLayout;
-import com.eddy.bookworm.books.list.BookmarksListActivity;
 import com.eddy.bookworm.books.list.BooksListActivity;
-import com.eddy.bookworm.firebase.SignInManager;
 import com.eddy.data.models.entities.Category;
-import com.google.android.material.snackbar.Snackbar;
 
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.Group;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -26,7 +23,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import timber.log.Timber;
 
-public class CategoriesActivity extends BaseBookwormActivity implements
+public class CategoriesActivity extends AppCompatActivity implements
         CategoriesAdapter.ListNameListener, SwipeRefreshLayout.OnRefreshListener {
 
     private CategoriesViewModel categoriesViewModel;
@@ -68,20 +65,6 @@ public class CategoriesActivity extends BaseBookwormActivity implements
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.bookmark_menu_item) {
-
-            SignInManager signInManager = new SignInManager();
-            if (signInManager.userLoggedIn()) {
-                Intent intent = new Intent(this, BookmarksListActivity.class);
-                startActivity(intent);
-            } else {
-                Snackbar.make(findViewById(android.R.id.content),
-                            getString(R.string.sign_in_for_bookmark_message),
-                            Snackbar.LENGTH_LONG)
-                        .setAction(getString(R.string.sigin),
-                                view -> signInWithFirebase())
-                        .show();
-            }
-
             return true;
         }
 
@@ -143,16 +126,6 @@ public class CategoriesActivity extends BaseBookwormActivity implements
 
     protected void showProgressBar() {
         swipeRefreshListNamesLayout.setRefreshing(true);
-    }
-
-    @Override
-    protected void onCompleteSignIn() {
-        hideProgressBar();
-    }
-
-    @Override
-    protected void onBeginSignIn() {
-        showProgressBar();
     }
 
     @Override

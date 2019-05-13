@@ -10,36 +10,23 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.eddy.bookworm.R;
-import com.eddy.bookworm.Utils;
-import com.eddy.bookworm.base.BaseBookwormActivity;
-import com.eddy.bookworm.firebase.FirebaseDatabaseManager;
-import com.eddy.bookworm.firebase.SignInManager;
-
-import com.eddy.data.Constants;
 import com.eddy.data.models.BookWithBuyLinks;
 import com.eddy.data.models.entities.Book;
 import com.google.android.material.appbar.CollapsingToolbarLayout;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.snackbar.Snackbar;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.Query;
-import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 
 import java.util.Objects;
 
-import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import timber.log.Timber;
 
-public class BookDetailActivity extends BaseBookwormActivity implements View.OnClickListener {
+public class BookDetailActivity extends AppCompatActivity {
 
     public static final String BOOK_WITH_BUY_LINKS_DETAIL_EXTRA = "BOOK_WITH_BUY_LINKS_DETAIL_EXTRA";
 
@@ -94,15 +81,7 @@ public class BookDetailActivity extends BaseBookwormActivity implements View.OnC
         setSupportActionBar(toolbar);
 
         fab.setOnClickListener((view) -> {
-            SignInManager signInManager = SignInManager.getInstance();
-
-            if(signInManager.userLoggedIn()) {
-                determineFabAction();
-            } else {
-                Snackbar.make(view, getString(R.string.not_signed_message), Snackbar.LENGTH_LONG)
-                        .setAction(getString(R.string.snackbar_sigin), BookDetailActivity.this)
-                        .show();
-            }
+            // Add bookmark tag
         });
 
         Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
@@ -151,95 +130,11 @@ public class BookDetailActivity extends BaseBookwormActivity implements View.OnC
     }
 
     private void determineFabAction() {
-        FirebaseDatabaseManager firebaseDatabaseManager = FirebaseDatabaseManager.getInstance();
-        DatabaseReference databaseReference =firebaseDatabaseManager.getDatabaseReference()
-                .child(Constants.BOOKMARKS_DB_REF);
-
-        Query query = databaseReference.orderByChild(getString(R.string.db_child_title))
-                .equalTo(bookWithBuyLinks.getBook().getTitle());
-
-        query.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                if (dataSnapshot.getChildrenCount() <= 0) {
-                    saveBook();
-                } else {
-                    Book book = Utils.toList(dataSnapshot.getChildren()).get(0);
-                    Timber.d("Book: %s", book);
-                    deleteBook(book);
-                }
-
-                query.removeEventListener(this);
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) { }
-        });
+        // ON or OFF?
     }
 
     private void showBookmarkState() {
-        SignInManager signInManager = SignInManager.getInstance();
-        if (signInManager.userLoggedIn()) {
-            FirebaseDatabaseManager firebaseDatabaseManager = FirebaseDatabaseManager.getInstance();
-            DatabaseReference databaseReference = firebaseDatabaseManager.getDatabaseReference()
-                    .child(Constants.BOOKMARKS_DB_REF);
-
-            Query query = databaseReference
-                    .orderByChild(getString(R.string.db_child_title))
-                    .equalTo(bookWithBuyLinks.getBook().getTitle());
-
-            query.addValueEventListener(new ValueEventListener() {
-                @Override
-                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                    if (dataSnapshot.getValue() == null) {
-                        fab.setImageResource(R.drawable.ic_bookmark_border_black_24dp);
-                    } else {
-                        fab.setImageResource(R.drawable.ic_bookmark_black_24dp);
-                    }
-
-                    query.removeEventListener(this);
-                }
-
-                @Override
-                public void onCancelled(@NonNull DatabaseError databaseError) {
-                }
-            });
-        } else {
-            Snackbar.make(findViewById(android.R.id.content),
-                    getString(R.string.snackbar_sigin_for_bookmark), Snackbar.LENGTH_LONG)
-                    .setAction(getString(R.string.snackbar_sigin), BookDetailActivity.this)
-                    .show();
-        }
-    }
-
-    private void deleteBook(Book bookmarkedBook) {
-        try {
-//            FirebaseDatabaseManager firebaseDatabaseManager = FirebaseDatabaseManager.getInstance();
-//            DatabaseReference databaseReference =firebaseDatabaseManager.getDatabaseReference()
-//                    .child(Constants.BOOKMARKS_DB_REF);
-//
-//            if (!TextUtils.isEmpty(bookmarkedBook.getKey())) {
-//                databaseReference.child(bookmarkedBook.getKey())
-//                        .removeValue()
-//                        .addOnCompleteListener(task -> {
-//                            fab.setImageResource(R.drawable.ic_bookmark_border_black_24dp);
-//                            refreshFab();
-//
-//                            Snackbar.make(findViewById(android.R.id.content),
-//                                    getString(R.string.removed_bookmark_message),
-//                                    Snackbar.LENGTH_LONG)
-//                                    .show();
-//                            finish();
-//                        });
-//            }
-        } catch (Exception e) {
-            Timber.e(e);
-            Snackbar.make(findViewById(android.R.id.content),
-                    getString(R.string.error_removing_bookmark_message),
-                    Snackbar.LENGTH_LONG)
-                    .show();
-        }
-
+        // Bookmarked or Not?
     }
 
     private void refreshFab() {
@@ -254,63 +149,5 @@ public class BookDetailActivity extends BaseBookwormActivity implements View.OnC
 
     protected void showProgressBar() {
         signInProgressBar.setVisibility(View.VISIBLE);
-    }
-
-    @Override
-    protected void onBeginSignIn() {
-        showProgressBar();
-    }
-
-    @Override
-    protected void onSuccessfulSignIn() {
-        if (signInForBookmarkAction) {
-            // Ensure we save the bookWithBuyLinks only if user was signing in to save bookmark
-            // then deactivate flag by setting it to false
-            signInForBookmarkAction = false;
-            determineFabAction();
-        }
-    }
-
-    @Override
-    protected void onCompleteSignIn() {
-        hideProgressBar();
-    }
-
-    /*
-     * Saves the bookmarked bookWithBuyLinks to Firebase Realtime DB
-     */
-    private void saveBook() {
-        SignInManager signInManager = SignInManager.getInstance();
-
-        try {
-//            FirebaseDatabaseManager firebaseDatabaseManager = FirebaseDatabaseManager.getInstance();
-//            DatabaseReference databaseReference =firebaseDatabaseManager.getDatabaseReference()
-//                    .child(Constants.BOOKMARKS_DB_REF);
-//
-//            if (TextUtils.isEmpty(bookWithBuyLinks.getKey())) {
-//                bookWithBuyLinks.setKey(databaseReference.push().getKey());
-//            }
-//
-//            databaseReference.child(bookWithBuyLinks.getKey()).setValue(bookWithBuyLinks);
-//
-//            Snackbar.make(findViewById(android.R.id.content),
-//                    getString(R.string.saving_bookmark_for_user,
-//                            signInManager.getCurrentUserName()),
-//                    Snackbar.LENGTH_LONG)
-//                    .show();
-//            fab.setImageResource(R.drawable.ic_bookmark_black_24dp);
-//            refreshFab();
-        } catch (Exception e) {
-            Snackbar.make(findViewById(android.R.id.content),
-                    getString(R.string.error_saving_bookmark),
-                    Snackbar.LENGTH_LONG)
-                    .show();
-        }
-    }
-
-    @Override
-    public void onClick(View v) {
-        signInForBookmarkAction = true;
-        super.signInWithFirebase();
     }
 }
