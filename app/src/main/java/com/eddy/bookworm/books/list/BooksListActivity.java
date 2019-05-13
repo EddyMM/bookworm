@@ -20,11 +20,10 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
-import butterknife.ButterKnife;
 import timber.log.Timber;
 
-public class BooksListActivity extends BaseBookListActivity implements
-        BooksListAdapter.BooksListListener, SwipeRefreshLayout.OnRefreshListener {
+public class BooksListActivity extends BaseBookListActivity
+        implements SwipeRefreshLayout.OnRefreshListener {
 
     public static final String CATEGORY_EXTRA = "category";
 
@@ -34,8 +33,6 @@ public class BooksListActivity extends BaseBookListActivity implements
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        ButterKnife.bind(this);
 
         Intent intent = getIntent();
         if (intent != null) {
@@ -78,16 +75,6 @@ public class BooksListActivity extends BaseBookListActivity implements
 
             hideProgressBar();
         });
-    }
-
-    private void showNoInternetUI() {
-        booksRecyclerView.setVisibility(View.GONE);
-        noInternetWidgets.setVisibility(View.VISIBLE);
-    }
-
-    private void showBooksList() {
-        booksRecyclerView.setVisibility(View.VISIBLE);
-        noInternetWidgets.setVisibility(View.GONE);
     }
 
     @Override

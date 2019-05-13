@@ -11,12 +11,13 @@ import androidx.room.Dao;
 import androidx.room.Insert;
 import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
+import androidx.room.Update;
 
 @Dao
 public abstract class BookDao {
 
-    @Query("SELECT * FROM book where is_bookmarked=1")
-    public abstract LiveData<List<Book>> getBookmarkedBooks();
+    @Query("SELECT * FROM book WHERE book.is_bookmarked=1")
+    public abstract LiveData<List<BookWithBuyLinks>> getBookmarkedBooks();
 
     @Query("SELECT * FROM book INNER JOIN book_category " +
             "ON book.id=book_category.book_id " +
@@ -30,6 +31,9 @@ public abstract class BookDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     public abstract long[] addBooks(List<Book> books);
+
+    @Update
+    public abstract int updateBook(Book book);
 
     public void addBuyLinks(long bookId, List<BuyLink> buyLinks) {
         for (BuyLink buyLink: buyLinks) {

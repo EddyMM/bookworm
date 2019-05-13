@@ -1,10 +1,16 @@
 package com.eddy.bookworm.books.list.base;
 
+import android.app.ActivityOptions;
+import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.ImageView;
 
 import com.eddy.bookworm.R;
 import com.eddy.bookworm.base.customui.BookwormSwipeRefreshLayout;
+import com.eddy.bookworm.books.detail.BookDetailActivity;
 import com.eddy.bookworm.books.list.BooksListAdapter;
+import com.eddy.data.models.BookWithBuyLinks;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -13,8 +19,10 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import butterknife.BindView;
+import butterknife.ButterKnife;
 
-public abstract class BaseBookListActivity extends AppCompatActivity {
+public abstract class BaseBookListActivity extends AppCompatActivity implements
+        BooksListAdapter.BooksListListener {
 
     @BindView(R.id.books_list_rv)
     public RecyclerView booksRecyclerView;
@@ -31,6 +39,8 @@ public abstract class BaseBookListActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_books_list);
+
+        ButterKnife.bind(this);
     }
 
     protected void setUpBooksListUI(BooksListAdapter.BooksListListener booksListListener,
@@ -53,5 +63,40 @@ public abstract class BaseBookListActivity extends AppCompatActivity {
 
     protected void showProgressBar() {
         swipeRefreshBookListLayout.setRefreshing(true);
+    }
+
+    public void onClick(BookWithBuyLinks bookWithBuyLinks, ImageView imageView) {
+        Intent intent = new Intent(this, BookDetailActivity.class);
+        intent.putExtra(BookDetailActivity.BOOK_WITH_BUY_LINKS_DETAIL_EXTRA, bookWithBuyLinks);
+
+        if (imageView != null) {
+            Bundle bundle = getBookTransition(imageView);
+            startActivity(intent, bundle);
+        } else {
+            startActivity(intent);
+        }
+    }
+
+    private Bundle getBookTransition(View view) {
+        Bundle bundle = null;
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
+            bundle = ActivityOptions
+                    .makeSceneTransitionAnimation(
+                            this,
+                            view,
+                            view.getTransitionName())
+                    .toBundle();
+        }
+        return bundle;
+    }
+
+    protected void showNoInternetUI() {
+        booksRecyclerView.setVisibility(View.GONE);
+        noInternetWidgets.setVisibility(View.VISIBLE);
+    }
+
+    protected void showBooksList() {
+        booksRecyclerView.setVisibility(View.VISIBLE);
+        noInternetWidgets.setVisibility(View.GONE);
     }
 }

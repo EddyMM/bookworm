@@ -10,8 +10,10 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.eddy.bookworm.R;
+import com.eddy.data.InjectorUtils;
 import com.eddy.data.models.BookWithBuyLinks;
 import com.eddy.data.models.entities.Book;
+import com.eddy.data.repository.BooksListRepository;
 import com.google.android.material.appbar.CollapsingToolbarLayout;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.squareup.picasso.Picasso;
@@ -81,7 +83,12 @@ public class BookDetailActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         fab.setOnClickListener((view) -> {
-            // Add bookmark tag
+            // Toggle bookmark tag
+            Book book = bookWithBuyLinks.getBook();
+            book.setBookmarked(!book.isBookmarked());
+
+            updateBook(book);
+            showBookmarkState();
         });
 
         Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
@@ -92,6 +99,12 @@ public class BookDetailActivity extends AppCompatActivity {
 
             updateUI(bookWithBuyLinks);
         }
+    }
+
+    private void updateBook(Book book) {
+        BooksListRepository booksListRepository = InjectorUtils
+                .getBooksListRepository(this);
+        booksListRepository.updateBook(book);
     }
 
     private void updateUI(BookWithBuyLinks bookWithBuyLinks) {
@@ -129,12 +142,15 @@ public class BookDetailActivity extends AppCompatActivity {
         }
     }
 
-    private void determineFabAction() {
-        // ON or OFF?
-    }
-
     private void showBookmarkState() {
-        // Bookmarked or Not?
+        Book book = bookWithBuyLinks.getBook();
+        if (book.isBookmarked()) {
+            fab.setImageResource(R.drawable.ic_bookmark_black_24dp);
+        } else {
+            fab.setImageResource(R.drawable.ic_bookmark_border_black_24dp);
+        }
+
+        refreshFab();
     }
 
     private void refreshFab() {

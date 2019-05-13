@@ -83,4 +83,12 @@ public class BooksListRepository {
 
         return syncNeededLiveData;
     }
+
+    public void updateBook(Book book) {
+        Executors.newSingleThreadExecutor().execute(() -> bookDao.updateBook(book));
+    }
+
+    public LiveData<List<BookWithBuyLinks>> getBookmarkedBooks() {
+        return bookDao.getBookmarkedBooks();
+    }
 }
