@@ -29,7 +29,6 @@ public class BooksListActivity extends BaseBookListActivity implements
     public static final String CATEGORY_EXTRA = "category";
 
     private Category category;
-
     private BooksListViewModel booksListViewModel;
 
     @Override
@@ -107,19 +106,24 @@ public class BooksListActivity extends BaseBookListActivity implements
         intent.putExtra(BookDetailActivity.BOOK_WITH_BUY_LINKS_DETAIL_EXTRA, bookWithBuyLinks);
 
         if (bookImageView != null) {
-            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
-                Bundle bundle = ActivityOptions
-                        .makeSceneTransitionAnimation(
-                                this,
-                                bookImageView,
-                                bookImageView.getTransitionName())
-                        .toBundle();
-
-                startActivity(intent, bundle);
-            }
+            Bundle bundle = getBookTransition(bookImageView);
+            startActivity(intent, bundle);
         } else {
             startActivity(intent);
         }
+    }
+
+    private Bundle getBookTransition(View view) {
+        Bundle bundle = null;
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
+            bundle = ActivityOptions
+                    .makeSceneTransitionAnimation(
+                            this,
+                            view,
+                            view.getTransitionName())
+                    .toBundle();
+        }
+        return bundle;
     }
 
     @Override
