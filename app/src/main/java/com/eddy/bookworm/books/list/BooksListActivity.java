@@ -13,11 +13,7 @@ import com.eddy.bookworm.books.list.viewmodel.BooksListViewModel;
 import com.eddy.data.models.BookWithBuyLinks;
 import com.eddy.data.models.entities.Category;
 
-import java.util.List;
-
 import androidx.annotation.Nullable;
-import androidx.lifecycle.LiveData;
-import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import timber.log.Timber;
@@ -51,30 +47,35 @@ public class BooksListActivity extends BaseBookListActivity
     private void setUpBooksListViewModel() {
         booksListViewModel = ViewModelProviders.of(this)
                 .get(BooksListViewModel.class);
-        refresh(booksListViewModel.getBooksLiveData(category));
+        refresh(false);
     }
 
-    private void refresh(LiveData<List<BookWithBuyLinks>> bookLiveData) {
+    private void refresh(boolean forceFetchOnline) {
         booksListViewModel.syncNeeded(category).observe(this, (syncNeeded) -> {
-            if (!Utils.isConnected(this) && syncNeeded) {
+            if (!Utils.isConnected(this) && (syncNeeded || forceFetchOnline)) {
                 showNoInternetUI();
             } else {
                 showBooksList();
             }
         });
 
+        if (forceFetchOnline) {
+            booksListAdapter.setBooks(null);
+        }
+
         showProgressBar();
 
-        bookLiveData.observe(this, bookWithBuyLinks -> {
-            if (bookWithBuyLinks != null) {
-                booksListAdapter.setBooks(bookWithBuyLinks);
-                Timber.d("Books from DB: %s", bookWithBuyLinks);
-            } else {
-                Timber.d("No list names fetched");
-            }
+        booksListViewModel.getBooksLiveData(category, forceFetchOnline)
+            .observe(this, bookWithBuyLinks -> {
+                if (bookWithBuyLinks != null) {
+                    booksListAdapter.setBooks(bookWithBuyLinks);
+                    Timber.d("Books from DB: %s", bookWithBuyLinks);
+                } else {
+                    Timber.d("No list names fetched");
+                }
 
-            hideProgressBar();
-        });
+                hideProgressBar();
+            });
     }
 
     @Override
@@ -105,10 +106,6 @@ public class BooksListActivity extends BaseBookListActivity
 
     @Override
     public void onRefresh() {
-        LiveData<List<BookWithBuyLinks>> booksLiveData = new MutableLiveData<>();
-        if (category != null) {
-            booksLiveData = booksListViewModel.getBooksLiveData(category);
-        }
-        refresh(booksLiveData);
+        refresh(true);
     }
 }

@@ -87,7 +87,7 @@ public class CategoriesActivity extends AppCompatActivity implements
     private void setUpViewModel() {
        categoriesViewModel = ViewModelProviders.of(this).get(
                 CategoriesViewModel.class);
-        refresh();
+        refresh(false);
     }
 
     private void showNoInternetUI() {
@@ -100,27 +100,32 @@ public class CategoriesActivity extends AppCompatActivity implements
         noInternetWidgets.setVisibility(View.GONE);
     }
 
-    private void refresh() {
+    private void refresh(boolean forceFetchOnline) {
         categoriesViewModel.syncNeeded()
             .observe(this, (syncNeeded) -> {
-                if (!Utils.isConnected(this) && syncNeeded) {
+                if (!Utils.isConnected(this) && (syncNeeded || forceFetchOnline)) {
                     showNoInternetUI();
                 } else {
                     showBooksList();
                 }
             });
 
+        if (forceFetchOnline) {
+            categoriesAdapter.setCategories(null);
+        }
+
         showProgressBar();
 
-        categoriesViewModel.getCategoriesLiveData().observe(this, categories -> {
-            if (categories != null) {
-                categoriesAdapter.setCategories(categories);
-            } else {
-                Timber.d("No list names fetched");
-            }
+        categoriesViewModel.getCategoriesLiveData(forceFetchOnline)
+                .observe(this, categories -> {
+                    if (categories != null) {
+                        categoriesAdapter.setCategories(categories);
+                    } else {
+                        Timber.d("No list names fetched");
+                    }
 
-            hideProgressBar();
-        });
+                    hideProgressBar();
+                });
 
     }
 
@@ -142,7 +147,7 @@ public class CategoriesActivity extends AppCompatActivity implements
 
     @Override
     public void onRefresh() {
-        refresh();
+        refresh(true);
     }
 
 }

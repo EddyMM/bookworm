@@ -20,12 +20,12 @@ public class CategoriesViewModel extends AndroidViewModel {
         super(application);
     }
 
-    public LiveData<List<Category>> getCategoriesLiveData() {
+    public LiveData<List<Category>> getCategoriesLiveData(boolean forceFetchOnline) {
         LiveData<List<Category>> categoriesLiveData;
 
         CategoriesRepository categoriesRepository = InjectorUtils
                 .getCategoriesRepository(getApplication());
-        categoriesLiveData = categoriesRepository.getCategories();
+        categoriesLiveData = categoriesRepository.getCategories(forceFetchOnline);
 
         return categoriesLiveData;
     }

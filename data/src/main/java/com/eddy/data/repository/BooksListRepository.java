@@ -59,18 +59,19 @@ public class BooksListRepository {
         return (bookDao.countBooksByCategoryCode(category.getCategoryCode()) <= 0);
     }
 
-    public LiveData<List<BookWithBuyLinks>> getBooksListLiveData(Category category) {
-        initializeData(category);
+    public LiveData<List<BookWithBuyLinks>> getBooksListLiveData(Category category, boolean forceFetchOnline) {
+        Executors.newSingleThreadExecutor()
+            .execute(() -> {
+                if (fetchNeeded(category) || forceFetchOnline) {
+                    initializeData(category);
+                }
+        });
+
         return bookDao.getBooksByCategoryCode(category.getCategoryCode());
     }
 
     private void initializeData(Category category) {
-        Executors.newSingleThreadExecutor()
-            .execute(() -> {
-                if (fetchNeeded(category)) {
-                    booksListDataSource.startSyncingBooks(category);
-                }
-            });
+        booksListDataSource.startSyncingBooks(category);
     }
 
     public LiveData<Boolean> syncNeeded(Category category) {
