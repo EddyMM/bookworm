@@ -6,4 +6,11 @@
         android:enabled="true"
         android:contentDescription="@string/bookmarks_description"
         android:orderInCategory="1" />
+
+    <item
+        android:id="@+id/about_menu_item"
+        android:title="@string/about_title"
+        android:enabled="true"
+        android:contentDescription="@string/bookmarks_description"
+        android:orderInCategory="1" />
 </menu>

@@ -7,6 +7,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 
+import com.eddy.bookworm.AboutActivity;
 import com.eddy.bookworm.R;
 import com.eddy.bookworm.Utils;
 import com.eddy.bookworm.base.customui.BookwormSwipeRefreshLayout;
@@ -65,11 +66,15 @@ public class CategoriesActivity extends AppCompatActivity implements
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == R.id.bookmark_menu_item) {
-            Intent intent = new Intent(this, BookmarksActivity.class);
-            startActivity(intent);
-
-            return true;
+        switch (item.getItemId()) {
+            case R.id.bookmark_menu_item:
+                Intent booksintent = new Intent(this, BookmarksActivity.class);
+                startActivity(booksintent);
+                return true;
+            case R.id.about_menu_item:
+                Intent aboutIntent = new Intent(this, AboutActivity.class);
+                startActivity(aboutIntent);
+                return true;
         }
 
         return super.onOptionsItemSelected(item);

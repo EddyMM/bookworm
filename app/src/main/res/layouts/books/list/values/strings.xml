@@ -1,2 +1,10 @@
 <resources>
+    <string name="about_title">About</string>
+    <string name="app_description">
+        &lt;b>Description&lt;/b>&lt;p>This application provides information about the best selling books based on New York Times ratings.&lt;/p>&lt;p>&lt;b>Features&lt;/b>&lt;p>There are a range of categories to choose from and each category contains a list of books. Each book contains various details along with a list of link of sites from which to buy the book from.&lt;/p>&lt;p>Categories and books once loaded are cached on the phone for faster loading. Swiping down to refresh would fetch a fresh list of categories or books.&lt;/p>&lt;p>One can also bookmark books for viewing later outside of the various category lists.
+    </string>
+    <string name="credit_books_api">This application was built using the &lt;a href=\'\'>New York Times Books API&lt;/a></string>
+    <string name="credit_flat_icon">
+        &lt;div>Icons made by &lt;a href=\'https://www.freepik.com/\' title=\'Freepik\'>Freepik&lt;/a> from &lt;a href=\'https://www.flaticon.com/\' title=\'Flaticon\'>www.flaticon.com&lt;/a> is licensed by &lt;a href=\'http://creativecommons.org/licenses/by/3.0/\' title=\'Creative Commons BY 3.0\' target=\'_blank\'>CC 3.0 BY&lt;/a>&lt;/div>
+    </string>
 </resources>
