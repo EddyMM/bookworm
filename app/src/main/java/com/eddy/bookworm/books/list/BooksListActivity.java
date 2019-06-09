@@ -69,12 +69,11 @@ public class BooksListActivity extends BaseBookListActivity
             .observe(this, bookWithBuyLinks -> {
                 if (bookWithBuyLinks != null) {
                     booksListAdapter.setBooks(bookWithBuyLinks);
+                    hideProgressBar();
                     Timber.d("Books from DB: %s", bookWithBuyLinks);
                 } else {
-                    Timber.d("No list names fetched");
+                    Timber.d("No books fetched");
                 }
-
-                hideProgressBar();
             });
     }
 

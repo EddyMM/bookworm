@@ -15,6 +15,10 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
+        <meta-data
+            android:name="firebase_crashlytics_collection_enabled"
+            android:value="false"/>
+
         <activity
             android:name=".categories.CategoriesActivity"
             android:launchMode="singleTop">
@@ -63,6 +67,10 @@
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".categories.CategoriesActivity"/>
+        </activity>
+        <activity android:name=".AllowUsageReportsActivity">
+        </activity>
+        <activity android:name=".PrivacyPolicyActivity">
         </activity>
     </application>
 

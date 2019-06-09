@@ -1,3 +1,6 @@
 <resources>
     <string name="app_name">data</string>
+    <string name="usage_report_pref_key">allow_usage_report</string>
+    <string name="usage_report_pref_title">Allow usage report</string>
+    <string name="usage_report_asked_once_key">usage_report_asked_once</string>
 </resources>

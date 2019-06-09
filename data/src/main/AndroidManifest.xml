@@ -4,5 +4,7 @@
     <application>
         <service android:name=".SyncCategoriesIntentService"/>
         <service android:name=".SyncBooksIntentService"/>
+
+        <activity android:name=".SettingsActivity"/>
     </application>
 </manifest>

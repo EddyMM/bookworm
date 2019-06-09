@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <SwitchPreference
+        app:key="@string/usage_report_pref_key"
+        app:title="@string/usage_report_pref_title"
+        app:defaultValue="false"
+        app:summaryOn="Enabled"
+        app:summaryOff="Disabled"/>
+
+</PreferenceScreen>

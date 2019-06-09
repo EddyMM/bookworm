@@ -7,6 +7,7 @@ import android.os.Looper;
 import android.view.View;
 
 import com.eddy.bookworm.categories.CategoriesActivity;
+import com.eddy.data.repository.UsageReportsRepository;
 
 import java.util.concurrent.Executors;
 
@@ -37,16 +38,25 @@ public class IntroActivity extends AppCompatActivity {
 
                 Looper looper = Looper.getMainLooper();
                 Handler handler = new Handler(looper);
-                handler.post(this::openCategoriesList);
+                handler.post(this::startAllowUsageReportsActivity);
             } catch (InterruptedException e) {
                 Timber.e(e);
             }
         });
     }
 
-    private void openCategoriesList() {
-        Intent intent = new Intent(this, CategoriesActivity.class);
-        startActivity(intent);
-        finish();
+    private void startAllowUsageReportsActivity() {
+        UsageReportsRepository usageReportsRepository = UsageReportsRepository
+                .getInstance(this);
+
+        if (usageReportsRepository.askedOnce()) {
+            Intent intent = new Intent(this, CategoriesActivity.class);
+            startActivity(intent);
+            finish();
+        } else {
+            Intent intent = new Intent(this, AllowUsageReportsActivity.class);
+            startActivity(intent);
+            finish();
+        }
     }
 }

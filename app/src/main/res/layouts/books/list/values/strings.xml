@@ -7,4 +7,15 @@
     <string name="credit_flat_icon">
         &lt;div>Icons made by &lt;a href=\'https://www.freepik.com/\' title=\'Freepik\'>Freepik&lt;/a> from &lt;a href=\'https://www.flaticon.com/\' title=\'Flaticon\'>www.flaticon.com&lt;/a> is licensed by &lt;a href=\'http://creativecommons.org/licenses/by/3.0/\' title=\'Creative Commons BY 3.0\' target=\'_blank\'>CC 3.0 BY&lt;/a>&lt;/div>
     </string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="settings_title">Settings</string>
+    <string name="settings_description">Settings</string>
+    <string name="allow_usage_reports_explanation">Bookworm needs to keep track of usage and error reports in order to improve the quality of the application.</string>
+    <string name="deny">Deny</string>
+    <string name="allow">Allow</string>
+    <string name="read_more_in_the_privacy_policy">Read more in the privacy policy.</string>
+    <string name="privacy_policy"><![CDATA[<p><b>Last updated:</b> 8th June, 2019</p><b>Information collection and use:</b><p>Bookworm collects usage and error reports. These reports consist of:<ul><li>Device Name and Type</li><li>Device OS</li><li>Error or usage summary</li><li>Location data</li><li>Device identifier</li></ul></p><p>This information allows us to improve the quality of the application. The information is shared with third-party service providers (Crashlytics by Google).</p>]]></string>
+    <string name="privacy_policy_title">Privacy Policy</string>
 </resources>

@@ -1,5 +1,6 @@
 package com.eddy.bookworm.categories;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
@@ -8,11 +9,13 @@ import android.view.MenuItem;
 import android.view.View;
 
 import com.eddy.bookworm.AboutActivity;
+import com.eddy.bookworm.PrivacyPolicyActivity;
 import com.eddy.bookworm.R;
 import com.eddy.bookworm.Utils;
 import com.eddy.bookworm.base.customui.BookwormSwipeRefreshLayout;
 import com.eddy.bookworm.books.list.BookmarksActivity;
 import com.eddy.bookworm.books.list.BooksListActivity;
+import com.eddy.data.SettingsActivity;
 import com.eddy.data.models.entities.Category;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -40,6 +43,10 @@ public class CategoriesActivity extends AppCompatActivity implements
     Group noInternetWidgets;
 
     CategoriesAdapter categoriesAdapter;
+
+    public static Intent getStartIntent(Context context) {
+        return new Intent(context, CategoriesActivity.class);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,6 +81,14 @@ public class CategoriesActivity extends AppCompatActivity implements
             case R.id.about_menu_item:
                 Intent aboutIntent = new Intent(this, AboutActivity.class);
                 startActivity(aboutIntent);
+                return true;
+            case R.id.settings_menu_item:
+                Intent settingsIntent = new Intent(this, SettingsActivity.class);
+                startActivity(settingsIntent);
+                return true;
+            case R.id.privacy_policy_menu_item:
+                Intent privacyPolicyIntent = new Intent(this, PrivacyPolicyActivity.class);
+                startActivity(privacyPolicyIntent);
                 return true;
         }
 
@@ -125,13 +140,11 @@ public class CategoriesActivity extends AppCompatActivity implements
                 .observe(this, categories -> {
                     if (categories != null) {
                         categoriesAdapter.setCategories(categories);
+                        hideProgressBar();
                     } else {
-                        Timber.d("No list names fetched");
+                        Timber.d("No categories available");
                     }
-
-                    hideProgressBar();
                 });
-
     }
 
     protected void hideProgressBar() {
