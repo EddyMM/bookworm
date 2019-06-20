@@ -1,16 +1,11 @@
 package com.eddy.bookworm.books.list;
 
-import android.app.ActivityOptions;
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
-import android.widget.ImageView;
 
 import com.eddy.bookworm.Utils;
-import com.eddy.bookworm.books.detail.BookDetailActivity;
 import com.eddy.bookworm.books.list.base.BaseBookListActivity;
 import com.eddy.bookworm.books.list.viewmodel.BooksListViewModel;
-import com.eddy.data.models.BookWithBuyLinks;
 import com.eddy.data.models.entities.Category;
 
 import androidx.annotation.Nullable;
@@ -75,32 +70,6 @@ public class BooksListActivity extends BaseBookListActivity
                     Timber.d("No books fetched");
                 }
             });
-    }
-
-    @Override
-    public void onClick(BookWithBuyLinks bookWithBuyLinks, ImageView bookImageView) {
-        Intent intent = new Intent(this, BookDetailActivity.class);
-        intent.putExtra(BookDetailActivity.BOOK_WITH_BUY_LINKS_DETAIL_EXTRA, bookWithBuyLinks);
-
-        if (bookImageView != null) {
-            Bundle bundle = getBookTransition(bookImageView);
-            startActivity(intent, bundle);
-        } else {
-            startActivity(intent);
-        }
-    }
-
-    private Bundle getBookTransition(View view) {
-        Bundle bundle = null;
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
-            bundle = ActivityOptions
-                    .makeSceneTransitionAnimation(
-                            this,
-                            view,
-                            view.getTransitionName())
-                    .toBundle();
-        }
-        return bundle;
     }
 
     @Override
