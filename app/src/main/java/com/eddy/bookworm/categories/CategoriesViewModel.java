@@ -20,17 +20,13 @@ public class CategoriesViewModel extends AndroidViewModel {
         super(application);
     }
 
-    public LiveData<List<Category>> getCategoriesLiveData(boolean forceFetchOnline) {
-        LiveData<List<Category>> categoriesLiveData;
+    private LiveData<List<Category>> categoriesLiveData;
 
-        CategoriesRepository categoriesRepository = InjectorUtils
-                .getCategoriesRepository(getApplication());
-        categoriesLiveData = categoriesRepository.getCategories(forceFetchOnline);
-
+    LiveData<List<Category>> getCategoriesLiveData() {
         return categoriesLiveData;
     }
 
-    public LiveData<Boolean> syncNeeded() {
+    LiveData<Boolean> syncNeeded() {
         CategoriesRepository categoriesRepository = InjectorUtils
                 .getCategoriesRepository(getApplication());
 
@@ -42,5 +38,13 @@ public class CategoriesViewModel extends AndroidViewModel {
         });
 
         return syncNeeded;
+    }
+
+    LiveData<Boolean> fetchCategories(boolean forceFetchOnline) {
+        CategoriesRepository categoriesRepository = InjectorUtils
+                .getCategoriesRepository(getApplication());
+        categoriesLiveData = categoriesRepository.getCategories(forceFetchOnline);
+
+        return categoriesRepository.getSyncInProgressLiveData();
     }
 }

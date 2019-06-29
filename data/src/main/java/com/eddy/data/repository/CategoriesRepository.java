@@ -55,9 +55,15 @@ public class CategoriesRepository {
             if (fetchNeeded() || forceFetchOnline) {
                 Timber.d("Fetching data afresh");
                 categoriesDataSource.syncCategories();
+            } else {
+                categoriesDataSource.setSyncInProgress(false);
             }
         });
 
         return categoryDao.getCategories();
+    }
+
+    public LiveData<Boolean> getSyncInProgressLiveData() {
+        return categoriesDataSource.getSyncInProgress();
     }
 }

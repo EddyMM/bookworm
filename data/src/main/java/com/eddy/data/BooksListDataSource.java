@@ -25,10 +25,17 @@ public class BooksListDataSource {
     private static final Object LOCK = new Object();
     private Context context;
     private MutableLiveData<CategoryWithBooks> booksLiveData;
+    private MutableLiveData<Boolean> syncInProgressLiveData;
 
-    public BooksListDataSource(Context context) {
+
+    public MutableLiveData<Boolean> getSyncInProgressLiveData() {
+        return syncInProgressLiveData;
+    }
+
+    private BooksListDataSource(Context context) {
         this.context = context;
         booksLiveData = new MutableLiveData<>();
+        syncInProgressLiveData = new MutableLiveData<>();
     }
 
     public synchronized static BooksListDataSource getInstance(Context context) {
@@ -37,6 +44,9 @@ public class BooksListDataSource {
                 BOOKS_LIST_DATA_SOURCE = new BooksListDataSource(context);
             }
         }
+
+        // Ensure syncing is the default behaviour
+        BOOKS_LIST_DATA_SOURCE.setSyncInProgressLiveData(true);
 
         return BOOKS_LIST_DATA_SOURCE;
     }
@@ -51,7 +61,7 @@ public class BooksListDataSource {
         context.startService(intent);
     }
 
-    public void fetchBooks(Category category) {
+    void fetchBooks(Category category) {
         Call<BooksResponse> booksResponseCall = BooksApi.getInstance()
                 .listBooks(category.getCategoryCode());
 
@@ -63,9 +73,13 @@ public class BooksListDataSource {
             List<Book> books =  booksResults.getBooks();
 
             booksLiveData.postValue(new CategoryWithBooks(category, books));
+            setSyncInProgressLiveData(false);
         } catch (IOException e) {
             Timber.e(e);
         }
+    }
 
+    public void setSyncInProgressLiveData(boolean inProgress) {
+        syncInProgressLiveData.postValue(inProgress);
     }
 }

@@ -136,15 +136,21 @@ public class CategoriesActivity extends AppCompatActivity implements
 
         showProgressBar();
 
-        categoriesViewModel.getCategoriesLiveData(forceFetchOnline)
-                .observe(this, categories -> {
-                    if (categories != null) {
-                        categoriesAdapter.setCategories(categories);
-                        hideProgressBar();
-                    } else {
-                        Timber.d("No categories available");
-                    }
-                });
+        categoriesViewModel.fetchCategories(forceFetchOnline)
+            .observe(this, inProgress -> {
+                if (!inProgress) {
+                    hideProgressBar();
+                    categoriesViewModel.getCategoriesLiveData()
+                        .observe(this, (categories -> {
+                            if (categories != null) {
+                                categoriesAdapter.setCategories(categories);
+                            } else {
+                                Timber.d("No categories available");
+                            }
+                        }));
+                }
+            }
+        );
     }
 
     protected void hideProgressBar() {

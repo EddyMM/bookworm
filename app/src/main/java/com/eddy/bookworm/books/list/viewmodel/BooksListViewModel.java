@@ -12,27 +12,36 @@ import java.util.List;
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
-import androidx.lifecycle.MutableLiveData;
 
 public class BooksListViewModel extends AndroidViewModel {
+
+    public LiveData<List<BookWithBuyLinks>> getBooksLiveData() {
+        return booksLiveData;
+    }
+
+    private LiveData<List<BookWithBuyLinks>> booksLiveData;
 
     public BooksListViewModel(@NonNull Application application) {
         super(application);
     }
 
-    public LiveData<List<BookWithBuyLinks>> getBooksLiveData(Category category, boolean forceFetchOnline) {
-        LiveData<List<BookWithBuyLinks>> booksLiveData = new MutableLiveData<>();
+    private void fetchBooksList(Category category, boolean forceFetchOnline) {
         BooksListRepository booksListRepository = InjectorUtils.getBooksListRepository(getApplication());
 
         if (booksListRepository != null) {
             booksLiveData = booksListRepository.getBooksListLiveData(category, forceFetchOnline);
         }
-
-        return booksLiveData;
     }
 
     public LiveData<Boolean> syncNeeded(Category category) {
         BooksListRepository booksListRepository = InjectorUtils.getBooksListRepository(getApplication());
         return booksListRepository.syncNeeded(category);
+    }
+
+    public LiveData<Boolean> getBooksSyncInProgress(Category category, boolean forceFetchOnline) {
+        BooksListRepository booksListRepository = InjectorUtils.getBooksListRepository(getApplication());
+        fetchBooksList(category, forceFetchOnline);
+
+        return booksListRepository.getSyncInProgress();
     }
 }

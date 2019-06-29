@@ -58,16 +58,22 @@ public class BooksListActivity extends BaseBookListActivity
             booksListAdapter.setBooks(null);
         }
 
-        showProgressBar();
-
-        booksListViewModel.getBooksLiveData(category, forceFetchOnline)
-            .observe(this, bookWithBuyLinks -> {
-                if (bookWithBuyLinks != null) {
-                    booksListAdapter.setBooks(bookWithBuyLinks);
-                    hideProgressBar();
-                    Timber.d("Books from DB: %s", bookWithBuyLinks);
+        booksListViewModel.getBooksSyncInProgress(category, forceFetchOnline)
+            .observe(this, (inProgress) -> {
+                if (inProgress) {
+                    showProgressBar();
                 } else {
-                    Timber.d("No books fetched");
+                    Timber.d("Nothing");
+                    booksListViewModel.getBooksLiveData()
+                        .observe(this, bookWithBuyLinks -> {
+                            if (bookWithBuyLinks != null) {
+                                booksListAdapter.setBooks(bookWithBuyLinks);
+                                Timber.d("Books from DB: %s", bookWithBuyLinks);
+                            } else {
+                                Timber.d("No books fetched");
+                            }
+                            hideProgressBar();
+                        });
                 }
             });
     }

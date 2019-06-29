@@ -23,12 +23,17 @@ public class CategoriesDataSource {
     private final Context context;
 
     private final MutableLiveData<List<Category>> fetchedCategories;
-
     private CategoriesDataSource(Context context) {
         this.context = context;
 
         fetchedCategories = new MutableLiveData<>();
     }
+
+    public MutableLiveData<Boolean> getSyncInProgress() {
+        return syncInProgress;
+    }
+
+    private final MutableLiveData<Boolean> syncInProgress = new MutableLiveData<>();
 
     public synchronized static CategoriesDataSource getInstance(Context context) {
         if (CATEGORIES_DATA_SOURCE == null) {
@@ -45,11 +50,12 @@ public class CategoriesDataSource {
     }
 
     public void syncCategories() {
+        syncInProgress.postValue(true);
         Intent intent = new Intent(context, SyncCategoriesIntentService.class);
         context.startService(intent);
     }
 
-    public void fetchCategories() {
+    void fetchCategories() {
         BooksApiService booksApiService = BooksApi.getInstance();
         Call<CategoriesResponse> listNameResponseCall = booksApiService.categories();
 
@@ -59,8 +65,13 @@ public class CategoriesDataSource {
             List<Category> categories = Objects.requireNonNull(categoriesResponse)
                     .getCategories();
             fetchedCategories.postValue(categories);
+            syncInProgress.postValue(false);
         } catch (IOException e) {
             Timber.e(e);
         }
+    }
+
+    public void setSyncInProgress(boolean inProgress) {
+        syncInProgress.postValue(inProgress);
     }
 }

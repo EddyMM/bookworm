@@ -4,6 +4,7 @@ import com.eddy.data.BooksListDataSource;
 import com.eddy.data.dao.BookCategoryDao;
 import com.eddy.data.dao.BookDao;
 import com.eddy.data.models.BookWithBuyLinks;
+import com.eddy.data.models.CategoryWithBooks;
 import com.eddy.data.models.entities.Book;
 import com.eddy.data.models.entities.BookCategory;
 import com.eddy.data.models.entities.Category;
@@ -13,6 +14,7 @@ import java.util.concurrent.Executors;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
+import androidx.lifecycle.Observer;
 
 public class BooksListRepository {
 
@@ -26,8 +28,7 @@ public class BooksListRepository {
         this.booksListDataSource = booksListDataSource;
         this.bookDao = bookDao;
 
-        booksListDataSource.getBooksLiveData()
-            .observeForever((categoryWithBooks) -> Executors.newSingleThreadExecutor()
+        Observer<CategoryWithBooks> syncObserver = categoryWithBooks -> Executors.newSingleThreadExecutor()
                 .execute(() -> {
                     List<Book> books = categoryWithBooks.getBooks();
                     String categoryCode = categoryWithBooks.getCategory().getCategoryCode();
@@ -39,7 +40,10 @@ public class BooksListRepository {
 
                         bookDao.addBuyLinks(bookIds[n], books.get(n).getBuyLinks());
                     }
-                }));
+                });
+
+        booksListDataSource.getBooksLiveData()
+            .observeForever(syncObserver);
     }
 
     public synchronized static BooksListRepository getInstance(
@@ -55,6 +59,10 @@ public class BooksListRepository {
         return BOOKS_LIST_REPOSITORY;
     }
 
+    public LiveData<Boolean> getSyncInProgress() {
+        return booksListDataSource.getSyncInProgressLiveData();
+    }
+
     private boolean fetchNeeded(Category category) {
         return (bookDao.countBooksByCategoryCode(category.getCategoryCode()) <= 0);
     }
@@ -64,6 +72,8 @@ public class BooksListRepository {
             .execute(() -> {
                 if (fetchNeeded(category) || forceFetchOnline) {
                     initializeData(category);
+                } else {
+                    booksListDataSource.setSyncInProgressLiveData(false);
                 }
         });
 
@@ -71,6 +81,7 @@ public class BooksListRepository {
     }
 
     private void initializeData(Category category) {
+        booksListDataSource.setSyncInProgressLiveData(true);
         booksListDataSource.startSyncingBooks(category);
     }
 
