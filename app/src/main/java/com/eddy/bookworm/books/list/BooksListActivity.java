@@ -6,7 +6,9 @@ import android.os.Bundle;
 import com.eddy.bookworm.Utils;
 import com.eddy.bookworm.books.list.base.BaseBookListActivity;
 import com.eddy.bookworm.books.list.viewmodel.BooksListViewModel;
+import com.eddy.bookworm.books.list.viewmodel.BooksListViewModelFactory;
 import com.eddy.data.models.entities.Category;
+import com.google.android.material.snackbar.Snackbar;
 
 import androidx.annotation.Nullable;
 import androidx.lifecycle.ViewModelProviders;
@@ -40,46 +42,42 @@ public class BooksListActivity extends BaseBookListActivity
     }
 
     private void setUpBooksListViewModel() {
-        booksListViewModel = ViewModelProviders.of(this)
-                .get(BooksListViewModel.class);
-        refresh(false);
-    }
+        booksListViewModel = ViewModelProviders.of(
+                this, new BooksListViewModelFactory(this, category)).get(
+                        BooksListViewModel.class);
 
-    private void refresh(boolean forceFetchOnline) {
-        booksListViewModel.syncNeeded(category).observe(this, (syncNeeded) -> {
-            if (!Utils.isConnected(this) && (syncNeeded || forceFetchOnline)) {
-                showNoInternetUI();
+        // List of books
+        booksListViewModel.getBooksLiveData().observe(this, (bookWithBuyLinks -> {
+            if (bookWithBuyLinks != null) {
+                booksListAdapter.setBooks(bookWithBuyLinks);
             } else {
-                showBooksList();
+                Timber.d("No books fetched");
+            }
+        }));
+
+        // Loading state
+        booksListViewModel.getBooksSyncInProgress().observe(this, (isLoading) -> {
+            if (isLoading) {
+                if (Utils.isConnected(this)) {
+                    showBooksList();
+                    showProgressBar();
+                } else {
+                    showNoInternetUI();
+                }
+            } else {
+                hideProgressBar();
             }
         });
 
-        if (forceFetchOnline) {
-            booksListAdapter.setBooks(null);
-        }
-
-        booksListViewModel.getBooksSyncInProgress(category, forceFetchOnline)
-            .observe(this, (inProgress) -> {
-                if (inProgress) {
-                    showProgressBar();
-                } else {
-                    Timber.d("Nothing");
-                    booksListViewModel.getBooksLiveData()
-                        .observe(this, bookWithBuyLinks -> {
-                            if (bookWithBuyLinks != null) {
-                                booksListAdapter.setBooks(bookWithBuyLinks);
-                                Timber.d("Books from DB: %s", bookWithBuyLinks);
-                            } else {
-                                Timber.d("No books fetched");
-                            }
-                            hideProgressBar();
-                        });
-                }
-            });
+        // Errors
+        booksListViewModel.getErrorLiveData().observe(this, (throwable ->
+                Snackbar.make(booksRecyclerView, throwable.getMessage()
+                , Snackbar.LENGTH_SHORT).show()));
     }
+
 
     @Override
     public void onRefresh() {
-        refresh(true);
+        booksListViewModel.refreshBooks();
     }
 }

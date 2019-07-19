@@ -16,7 +16,10 @@ import androidx.room.PrimaryKey;
 @Entity(tableName = "buy_link",
         indices = {@Index(value = "book_id")},
         foreignKeys = {
-            @ForeignKey(entity = Book.class, parentColumns = "id", childColumns = "book_id")
+            @ForeignKey(entity = Book.class,
+                    parentColumns = "id",
+                    childColumns = "book_id",
+                    onDelete = ForeignKey.CASCADE)
         })
 public class BuyLink implements Parcelable {
 

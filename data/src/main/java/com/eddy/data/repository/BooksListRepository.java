@@ -13,7 +13,6 @@ import java.util.List;
 import java.util.concurrent.Executors;
 
 import androidx.lifecycle.LiveData;
-import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Observer;
 
 public class BooksListRepository {
@@ -32,6 +31,11 @@ public class BooksListRepository {
                 .execute(() -> {
                     List<Book> books = categoryWithBooks.getBooks();
                     String categoryCode = categoryWithBooks.getCategory().getCategoryCode();
+
+                    // Remove old list books under this category
+                    bookCategoryDao.deleteBooksByCategory(categoryCode);
+
+                    // Add the fresh list of books
                     long[] bookIds = bookDao.addBooks(books);
 
                     for (int n = 0; n < bookIds.length; n++) {
@@ -67,10 +71,10 @@ public class BooksListRepository {
         return (bookDao.countBooksByCategoryCode(category.getCategoryCode()) <= 0);
     }
 
-    public LiveData<List<BookWithBuyLinks>> getBooksListLiveData(Category category, boolean forceFetchOnline) {
+    public LiveData<List<BookWithBuyLinks>> getBooksListLiveData(Category category) {
         Executors.newSingleThreadExecutor()
             .execute(() -> {
-                if (fetchNeeded(category) || forceFetchOnline) {
+                if (fetchNeeded(category)) {
                     initializeData(category);
                 } else {
                     booksListDataSource.setSyncInProgressLiveData(false);
@@ -81,19 +85,7 @@ public class BooksListRepository {
     }
 
     private void initializeData(Category category) {
-        booksListDataSource.setSyncInProgressLiveData(true);
-        booksListDataSource.startSyncingBooks(category);
-    }
-
-    public LiveData<Boolean> syncNeeded(Category category) {
-        MutableLiveData<Boolean> syncNeededLiveData = new MutableLiveData<>();
-
-        Executors.newSingleThreadExecutor().execute(() -> {
-            boolean syncNeeded = (bookDao.countBooksByCategoryCode(category.getCategoryCode()) <= 0);
-            syncNeededLiveData.postValue(syncNeeded);
-        });
-
-        return syncNeededLiveData;
+        syncBooks(category);
     }
 
     public void updateBook(Book book) {
@@ -102,5 +94,13 @@ public class BooksListRepository {
 
     public LiveData<List<BookWithBuyLinks>> getBookmarkedBooks() {
         return bookDao.getBookmarkedBooks();
+    }
+
+    public void syncBooks(Category category) {
+        booksListDataSource.startSyncingBooks(category);
+    }
+
+    public LiveData<Throwable> getBooksListError() {
+        return booksListDataSource.getBooksListSyncError();
     }
 }

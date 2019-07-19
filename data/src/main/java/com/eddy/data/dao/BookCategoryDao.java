@@ -21,4 +21,10 @@ public interface BookCategoryDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void addBookCategory(BookCategory bookCategory);
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    void addBookCategories(List<BookCategory> bookCategory);
+
+    @Query("DELETE FROM book_category WHERE category_code=:categoryCode")
+    void deleteBooksByCategory(String categoryCode);
 }

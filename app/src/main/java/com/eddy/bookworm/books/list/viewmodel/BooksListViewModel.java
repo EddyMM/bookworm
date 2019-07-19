@@ -15,33 +15,34 @@ import androidx.lifecycle.LiveData;
 
 public class BooksListViewModel extends AndroidViewModel {
 
+    private final BooksListRepository booksListRepository;
+    private final Category category;
+
+    private LiveData<List<BookWithBuyLinks>> booksLiveData;
+
+    BooksListViewModel(@NonNull Application application, Category category) {
+        super(application);
+
+        this.category = category;
+
+        booksListRepository = InjectorUtils.getBooksListRepository(getApplication());
+
+        booksLiveData = booksListRepository.getBooksListLiveData(category);
+    }
+
     public LiveData<List<BookWithBuyLinks>> getBooksLiveData() {
         return booksLiveData;
     }
 
-    private LiveData<List<BookWithBuyLinks>> booksLiveData;
-
-    public BooksListViewModel(@NonNull Application application) {
-        super(application);
-    }
-
-    private void fetchBooksList(Category category, boolean forceFetchOnline) {
-        BooksListRepository booksListRepository = InjectorUtils.getBooksListRepository(getApplication());
-
-        if (booksListRepository != null) {
-            booksLiveData = booksListRepository.getBooksListLiveData(category, forceFetchOnline);
-        }
-    }
-
-    public LiveData<Boolean> syncNeeded(Category category) {
-        BooksListRepository booksListRepository = InjectorUtils.getBooksListRepository(getApplication());
-        return booksListRepository.syncNeeded(category);
-    }
-
-    public LiveData<Boolean> getBooksSyncInProgress(Category category, boolean forceFetchOnline) {
-        BooksListRepository booksListRepository = InjectorUtils.getBooksListRepository(getApplication());
-        fetchBooksList(category, forceFetchOnline);
-
+    public LiveData<Boolean> getBooksSyncInProgress() {
         return booksListRepository.getSyncInProgress();
+    }
+
+    public void refreshBooks() {
+        booksListRepository.syncBooks(category);
+    }
+
+    public LiveData<Throwable> getErrorLiveData() {
+        return booksListRepository.getBooksListError();
     }
 }

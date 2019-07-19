@@ -11,8 +11,10 @@ import androidx.room.Index;
         primaryKeys = {"book_id", "category_code"},
         indices = {@Index(value = "category_code")},
         foreignKeys = {
-            @ForeignKey(entity = Book.class, parentColumns = "id", childColumns = "book_id"),
-            @ForeignKey(entity = Category.class, parentColumns = "category_code", childColumns = "category_code")
+            @ForeignKey(entity = Book.class, parentColumns = "id",
+                    childColumns = "book_id", onDelete = ForeignKey.CASCADE),
+            @ForeignKey(entity = Category.class, parentColumns = "category_code",
+                    childColumns = "category_code", onDelete = ForeignKey.CASCADE)
         })
 public class BookCategory {
 
