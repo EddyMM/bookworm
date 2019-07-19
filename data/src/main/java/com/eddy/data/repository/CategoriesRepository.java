@@ -16,7 +16,6 @@ public class CategoriesRepository {
     private static CategoriesRepository CATEGORIES_REPOSITORY;
     private final CategoriesDataSource categoriesDataSource;
     private final CategoryDao categoryDao;
-    private LiveData<List<Category>> categoriesLiveData;
 
     public synchronized static CategoriesRepository getInstance(
             CategoriesDataSource categoriesDataSource, CategoryDao categoryDao) {
@@ -35,7 +34,8 @@ public class CategoriesRepository {
         this.categoriesDataSource = categoriesDataSource;
         this.categoryDao = categoryDao;
 
-        categoriesLiveData = categoriesDataSource.getFetchedCategories();
+        LiveData<List<Category>> categoriesLiveData = categoriesDataSource.
+                getFetchedCategories();
 
         // If syncing in the background, no need to observe data changes
 
@@ -46,15 +46,15 @@ public class CategoriesRepository {
         });
     }
 
-    public boolean fetchNeeded() {
+    private boolean fetchNeeded() {
         return categoryDao.countCategories() <= 0;
     }
 
-    public LiveData<List<Category>> getCategories(boolean forceFetchOnline) {
+    public LiveData<List<Category>> getCategories() {
         Executors.newFixedThreadPool(1).execute(() -> {
-            if (fetchNeeded() || forceFetchOnline) {
+            if (fetchNeeded()) {
                 Timber.d("Fetching data afresh");
-                categoriesDataSource.syncCategories();
+                syncCategories();
             } else {
                 categoriesDataSource.setSyncInProgress(false);
             }
@@ -65,5 +65,13 @@ public class CategoriesRepository {
 
     public LiveData<Boolean> getSyncInProgressLiveData() {
         return categoriesDataSource.getSyncInProgress();
+    }
+
+    public LiveData<Throwable> getCategoriesErrorLiveData() {
+        return categoriesDataSource.getCategoriesSyncError();
+    }
+
+    public void syncCategories() {
+        categoriesDataSource.syncCategories();
     }
 }

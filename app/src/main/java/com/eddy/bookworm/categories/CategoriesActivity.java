@@ -17,6 +17,7 @@ import com.eddy.bookworm.books.list.BookmarksActivity;
 import com.eddy.bookworm.books.list.BooksListActivity;
 import com.eddy.data.SettingsActivity;
 import com.eddy.data.models.entities.Category;
+import com.google.android.material.snackbar.Snackbar;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.Group;
@@ -107,7 +108,34 @@ public class CategoriesActivity extends AppCompatActivity implements
     private void setUpViewModel() {
        categoriesViewModel = ViewModelProviders.of(this).get(
                 CategoriesViewModel.class);
-        refresh(false);
+
+
+       categoriesViewModel.getCategoriesLiveData().observe(this, (categories) -> {
+           if (categories != null) {
+               showBooksList();
+               categoriesAdapter.setCategories(categories);
+           } else {
+               Timber.d("No categories available");
+           }
+       });
+
+       categoriesViewModel.getLoadingState().observe(this, (isLoading) -> {
+           if (isLoading) {
+               if (Utils.isConnected(this)) {
+                   showProgressBar();
+               } else {
+                   showNoInternetUI();
+               }
+           } else {
+               hideProgressBar();
+           }
+       });
+
+       categoriesViewModel.getErrorLiveData().observe(this, (throwable) -> {
+           Timber.e(throwable);
+           Snackbar.make(listNamesRecyclerView,
+                   throwable.getMessage(), Snackbar.LENGTH_SHORT).show();
+       });
     }
 
     private void showNoInternetUI() {
@@ -118,39 +146,6 @@ public class CategoriesActivity extends AppCompatActivity implements
     private void showBooksList() {
         listNamesRecyclerView.setVisibility(View.VISIBLE);
         noInternetWidgets.setVisibility(View.GONE);
-    }
-
-    private void refresh(boolean forceFetchOnline) {
-        categoriesViewModel.syncNeeded()
-            .observe(this, (syncNeeded) -> {
-                if (!Utils.isConnected(this) && (syncNeeded || forceFetchOnline)) {
-                    showNoInternetUI();
-                } else {
-                    showBooksList();
-                }
-            });
-
-        if (forceFetchOnline) {
-            categoriesAdapter.setCategories(null);
-        }
-
-        showProgressBar();
-
-        categoriesViewModel.fetchCategories(forceFetchOnline)
-            .observe(this, inProgress -> {
-                if (!inProgress) {
-                    hideProgressBar();
-                    categoriesViewModel.getCategoriesLiveData()
-                        .observe(this, (categories -> {
-                            if (categories != null) {
-                                categoriesAdapter.setCategories(categories);
-                            } else {
-                                Timber.d("No categories available");
-                            }
-                        }));
-                }
-            }
-        );
     }
 
     protected void hideProgressBar() {
@@ -171,7 +166,6 @@ public class CategoriesActivity extends AppCompatActivity implements
 
     @Override
     public void onRefresh() {
-        refresh(true);
+        categoriesViewModel.refreshCategories();
     }
-
 }

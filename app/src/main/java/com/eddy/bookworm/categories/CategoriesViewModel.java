@@ -7,44 +7,44 @@ import com.eddy.data.models.entities.Category;
 import com.eddy.data.repository.CategoriesRepository;
 
 import java.util.List;
-import java.util.concurrent.Executors;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
-import androidx.lifecycle.MutableLiveData;
 
 
 public class CategoriesViewModel extends AndroidViewModel {
-    public CategoriesViewModel(@NonNull Application application) {
-        super(application);
-    }
+
+    private final CategoriesRepository categoriesRepository;
 
     private LiveData<List<Category>> categoriesLiveData;
+    private LiveData<Boolean> loadingLiveData;
+    private LiveData<Throwable> errorLiveData;
+
+    public CategoriesViewModel(@NonNull Application application) {
+        super(application);
+
+        categoriesRepository = InjectorUtils
+                .getCategoriesRepository(getApplication());
+
+        categoriesLiveData = categoriesRepository.getCategories();
+        loadingLiveData = categoriesRepository.getSyncInProgressLiveData();
+        errorLiveData = categoriesRepository.getCategoriesErrorLiveData();
+    }
+
+    LiveData<Throwable> getErrorLiveData() {
+        return errorLiveData;
+    }
 
     LiveData<List<Category>> getCategoriesLiveData() {
         return categoriesLiveData;
     }
 
-    LiveData<Boolean> syncNeeded() {
-        CategoriesRepository categoriesRepository = InjectorUtils
-                .getCategoriesRepository(getApplication());
-
-        MutableLiveData<Boolean> syncNeeded = new MutableLiveData<>();
-
-        Executors.newSingleThreadExecutor().execute(() -> {
-            boolean fetchNeeded = categoriesRepository.fetchNeeded();
-            syncNeeded.postValue(fetchNeeded);
-        });
-
-        return syncNeeded;
+    LiveData<Boolean> getLoadingState() {
+        return loadingLiveData;
     }
 
-    LiveData<Boolean> fetchCategories(boolean forceFetchOnline) {
-        CategoriesRepository categoriesRepository = InjectorUtils
-                .getCategoriesRepository(getApplication());
-        categoriesLiveData = categoriesRepository.getCategories(forceFetchOnline);
-
-        return categoriesRepository.getSyncInProgressLiveData();
+    void refreshCategories() {
+        categoriesRepository.syncCategories();
     }
 }

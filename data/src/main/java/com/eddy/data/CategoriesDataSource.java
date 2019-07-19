@@ -3,6 +3,7 @@ package com.eddy.data;
 import android.content.Context;
 import android.content.Intent;
 
+import com.eddy.data.errors.CategoriesSyncThrowable;
 import com.eddy.data.models.entities.Category;
 import com.eddy.data.models.rest.CategoriesResponse;
 import com.eddy.data.rest.BooksApi;
@@ -23,6 +24,11 @@ public class CategoriesDataSource {
     private final Context context;
 
     private final MutableLiveData<List<Category>> fetchedCategories;
+
+    private final MutableLiveData<Boolean> syncInProgress = new MutableLiveData<>();
+
+    private final MutableLiveData<Throwable> categoriesSyncError = new MutableLiveData<>();
+
     private CategoriesDataSource(Context context) {
         this.context = context;
 
@@ -33,7 +39,9 @@ public class CategoriesDataSource {
         return syncInProgress;
     }
 
-    private final MutableLiveData<Boolean> syncInProgress = new MutableLiveData<>();
+    public MutableLiveData<Throwable> getCategoriesSyncError() {
+        return categoriesSyncError;
+    }
 
     public synchronized static CategoriesDataSource getInstance(Context context) {
         if (CATEGORIES_DATA_SOURCE == null) {
@@ -50,7 +58,7 @@ public class CategoriesDataSource {
     }
 
     public void syncCategories() {
-        syncInProgress.postValue(true);
+        setSyncInProgress(true);
         Intent intent = new Intent(context, SyncCategoriesIntentService.class);
         context.startService(intent);
     }
@@ -62,12 +70,19 @@ public class CategoriesDataSource {
         try {
             Response<CategoriesResponse> response = listNameResponseCall.execute();
             CategoriesResponse categoriesResponse = response.body();
+            if (response.errorBody() != null) {
+                Timber.e("Error Response: %s", response.errorBody().string());
+                categoriesSyncError.postValue(
+                        new CategoriesSyncThrowable());
+            }
             List<Category> categories = Objects.requireNonNull(categoriesResponse)
                     .getCategories();
             fetchedCategories.postValue(categories);
-            syncInProgress.postValue(false);
+            setSyncInProgress(false);
         } catch (IOException e) {
             Timber.e(e);
+            categoriesSyncError.postValue(new CategoriesSyncThrowable());
+            setSyncInProgress(false);
         }
     }
 
