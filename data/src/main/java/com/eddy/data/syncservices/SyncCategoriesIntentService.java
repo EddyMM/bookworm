@@ -1,7 +1,10 @@
-package com.eddy.data;
+package com.eddy.data.syncservices;
 
 import android.app.IntentService;
 import android.content.Intent;
+
+import com.eddy.data.InjectorUtils;
+import com.eddy.data.datasources.CategoriesDataSource;
 
 import androidx.annotation.Nullable;
 

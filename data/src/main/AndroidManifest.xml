@@ -2,9 +2,9 @@
           package="com.eddy.data">
 
     <application>
-        <service android:name=".SyncCategoriesIntentService"/>
-        <service android:name=".SyncBooksIntentService"/>
+        <service android:name=".syncservices.SyncCategoriesIntentService"/>
+        <service android:name=".syncservices.SyncBooksIntentService"/>
 
-        <activity android:name=".SettingsActivity"/>
+        <activity android:name=".settings.SettingsActivity"/>
     </application>
 </manifest>

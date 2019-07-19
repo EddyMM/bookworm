@@ -1,8 +1,9 @@
-package com.eddy.data;
+package com.eddy.data.datasources;
 
 import android.content.Context;
 import android.content.Intent;
 
+import com.eddy.data.syncservices.SyncCategoriesIntentService;
 import com.eddy.data.errors.CategoriesSyncThrowable;
 import com.eddy.data.models.entities.Category;
 import com.eddy.data.models.rest.CategoriesResponse;
@@ -63,7 +64,7 @@ public class CategoriesDataSource {
         context.startService(intent);
     }
 
-    void fetchCategories() {
+    public void fetchCategories() {
         BooksApiService booksApiService = BooksApi.getInstance();
         Call<CategoriesResponse> listNameResponseCall = booksApiService.categories();
 

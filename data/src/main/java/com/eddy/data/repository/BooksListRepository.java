@@ -1,6 +1,6 @@
 package com.eddy.data.repository;
 
-import com.eddy.data.BooksListDataSource;
+import com.eddy.data.datasources.BooksListDataSource;
 import com.eddy.data.dao.BookCategoryDao;
 import com.eddy.data.dao.BookDao;
 import com.eddy.data.models.BookWithBuyLinks;

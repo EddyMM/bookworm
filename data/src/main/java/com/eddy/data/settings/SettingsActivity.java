@@ -1,6 +1,8 @@
-package com.eddy.data;
+package com.eddy.data.settings;
 
 import android.os.Bundle;
+
+import com.eddy.data.R;
 
 import androidx.appcompat.app.AppCompatActivity;
 

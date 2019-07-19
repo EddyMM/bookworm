@@ -5,6 +5,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:name="com.eddy.data.SettingsFragment"
-    tools:context="com.eddy.data.SettingsActivity"/>
+    android:name="com.eddy.data.settings.SettingsFragment"
+    tools:context="com.eddy.data.settings.SettingsActivity"/>
 

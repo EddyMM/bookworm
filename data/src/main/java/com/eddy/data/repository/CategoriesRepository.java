@@ -1,6 +1,6 @@
 package com.eddy.data.repository;
 
-import com.eddy.data.CategoriesDataSource;
+import com.eddy.data.datasources.CategoriesDataSource;
 import com.eddy.data.dao.CategoryDao;
 import com.eddy.data.models.entities.Category;
 

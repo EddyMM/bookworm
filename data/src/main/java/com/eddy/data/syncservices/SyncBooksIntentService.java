@@ -1,8 +1,9 @@
-package com.eddy.data;
+package com.eddy.data.syncservices;
 
 import android.app.IntentService;
 import android.content.Intent;
 
+import com.eddy.data.datasources.BooksListDataSource;
 import com.eddy.data.models.entities.Category;
 
 import androidx.annotation.Nullable;

@@ -3,7 +3,7 @@ package com.eddy.bookworm.base;
 import android.app.Application;
 
 import com.eddy.bookworm.BuildConfig;
-import com.eddy.data.SettingsFragment;
+import com.eddy.data.settings.SettingsFragment;
 
 import timber.log.Timber;
 

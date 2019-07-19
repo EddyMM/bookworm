@@ -2,6 +2,8 @@ package com.eddy.data;
 
 import android.content.Context;
 
+import com.eddy.data.datasources.BooksListDataSource;
+import com.eddy.data.datasources.CategoriesDataSource;
 import com.eddy.data.repository.BooksListRepository;
 import com.eddy.data.repository.CategoriesRepository;
 

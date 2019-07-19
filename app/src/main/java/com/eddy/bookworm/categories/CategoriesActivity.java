@@ -15,7 +15,7 @@ import com.eddy.bookworm.Utils;
 import com.eddy.bookworm.base.customui.BookwormSwipeRefreshLayout;
 import com.eddy.bookworm.books.list.BookmarksActivity;
 import com.eddy.bookworm.books.list.BooksListActivity;
-import com.eddy.data.SettingsActivity;
+import com.eddy.data.settings.SettingsActivity;
 import com.eddy.data.models.entities.Category;
 import com.google.android.material.snackbar.Snackbar;
 

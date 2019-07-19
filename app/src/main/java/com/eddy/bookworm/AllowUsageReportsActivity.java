@@ -4,7 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 
 import com.eddy.bookworm.categories.CategoriesActivity;
-import com.eddy.data.SettingsFragment;
+import com.eddy.data.settings.SettingsFragment;
 import com.eddy.data.repository.UsageReportsRepository;
 
 import androidx.appcompat.app.AppCompatActivity;
