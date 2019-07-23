@@ -5,13 +5,12 @@ import android.content.Context;
 import com.eddy.data.dao.BookDao;
 import com.eddy.data.models.entities.Book;
 import com.eddy.data.models.entities.BuyLink;
-import com.eddy.data.models.entities.Category;
 
 import androidx.room.Database;
 import androidx.room.Room;
 import androidx.room.RoomDatabase;
 
-@Database(entities = {Book.class, Category.class, BuyLink.class},
+@Database(entities = {Book.class, BuyLink.class},
         version = 1)
 public abstract class BookwormDatabase extends RoomDatabase {
 

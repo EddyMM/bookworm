@@ -112,10 +112,10 @@ public class BookDetailActivity extends AppCompatActivity {
                 this, new BookDetailViewModelFactory(this, book))
                 .get(BookDetailViewModel.class);
 
-        bookDetailViewModel.getBookmarkState().observe(
-                this, (isBookmarked) -> {
+        bookDetailViewModel.getBookmark().observe(
+                this, (book) -> {
+                    this.isBookmarked = (book!=null);
                     showBookmarkState(isBookmarked);
-                    this.isBookmarked = isBookmarked;
                 });
     }
 

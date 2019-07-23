@@ -10,13 +10,9 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Objects;
 
-import androidx.annotation.NonNull;
-import androidx.room.ColumnInfo;
-import androidx.room.Entity;
-import androidx.room.PrimaryKey;
 import timber.log.Timber;
 
-@Entity(tableName = "category")
+
 public class Category implements Parcelable {
 
     @SerializedName("display_name")
@@ -25,9 +21,6 @@ public class Category implements Parcelable {
     @SerializedName("list_name")
     String listName;
 
-    @PrimaryKey
-    @NonNull
-    @ColumnInfo(name = "category_code")
     @SerializedName("list_name_encoded")
     String categoryCode;
 

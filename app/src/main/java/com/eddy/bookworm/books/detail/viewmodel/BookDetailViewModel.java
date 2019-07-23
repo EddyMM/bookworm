@@ -6,45 +6,33 @@ import com.eddy.data.models.entities.Book;
 import com.eddy.data.repository.BookmarksRepository;
 
 import androidx.annotation.NonNull;
-import androidx.lifecycle.MutableLiveData;
+import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModel;
 
 public class BookDetailViewModel extends ViewModel {
 
-    private final MutableLiveData<Boolean> bookmarkState;
     @NonNull private final Application application;
     private final Book book;
+    private final LiveData<Book> bookmark;
     private BookmarksRepository bookmarksRepository;
 
     BookDetailViewModel(@NonNull Application application, Book book) {
+        bookmarksRepository = BookmarksRepository.getInstance(application);
+
         this.application = application;
         this.book = book;
-        bookmarkState = new MutableLiveData<>();
-
-        loadBookmarkState();
+        bookmark = bookmarksRepository.getBookmark(book);
     }
 
-    public MutableLiveData<Boolean> getBookmarkState() {
-        return bookmarkState;
-    }
-
-    private void loadBookmarkState() {
-        bookmarksRepository = BookmarksRepository.getInstance();
-        refreshBookmarkState();
+    public LiveData<Book> getBookmark() {
+        return bookmark;
     }
 
     public void addBookmark(Book book) {
         bookmarksRepository.addBook(book);
-        refreshBookmarkState();
     }
 
     public void removeBookmark(Book book) {
         bookmarksRepository.removeBook(book);
-        refreshBookmarkState();
-    }
-
-    private void refreshBookmarkState() {
-        boolean bookmarkState = bookmarksRepository.isBookmarked(book);
-        this.bookmarkState.setValue(bookmarkState);
     }
 }
