@@ -2,26 +2,32 @@ package com.eddy.bookworm.books.list.viewmodel;
 
 import android.app.Application;
 
-import com.eddy.data.InjectorUtils;
-import com.eddy.data.models.BookWithBuyLinks;
-import com.eddy.data.repository.BooksListRepository;
+import com.eddy.data.models.entities.Book;
+import com.eddy.data.repository.BookmarksRepository;
 
 import java.util.List;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
 
 public class BookmarksViewModel extends AndroidViewModel {
 
+    private MutableLiveData<List<Book>> bookmarkedBooks;
+
     public BookmarksViewModel(@NonNull Application application) {
         super(application);
+
+        BookmarksRepository bookmarksRepository = BookmarksRepository.getInstance();
+        bookmarkedBooks = bookmarksRepository.getBookmarkedBooks();
     }
 
-    public LiveData<List<BookWithBuyLinks>> getBookmarkedBooksLiveData() {
-        BooksListRepository booksListRepository = InjectorUtils.
-                getBooksListRepository(getApplication());
+    public LiveData<List<Book>> getBookmarkedBooksLiveData() {
+        return bookmarkedBooks;
+    }
 
-        return booksListRepository.getBookmarkedBooks();
+    public void refresh() {
+        // TODO: Refresh
     }
 }

@@ -18,6 +18,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import timber.log.Timber;
 
 public class BuyingLinksAdapter extends RecyclerView.Adapter<BuyingLinksAdapter.BuyingLinksViewHolder> {
 
@@ -40,6 +41,7 @@ public class BuyingLinksAdapter extends RecyclerView.Adapter<BuyingLinksAdapter.
 
     @Override
     public void onBindViewHolder(@NonNull BuyingLinksViewHolder holder, int position) {
+        Timber.d("BUY LINKS: %s", buyLinks);
         holder.bind(buyLinks.get(position));
     }
 

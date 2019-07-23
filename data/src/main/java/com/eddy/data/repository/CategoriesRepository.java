@@ -1,77 +1,75 @@
 package com.eddy.data.repository;
 
-import com.eddy.data.datasources.CategoriesDataSource;
-import com.eddy.data.dao.CategoryDao;
+import com.eddy.data.errors.CategoriesSyncThrowable;
 import com.eddy.data.models.entities.Category;
+import com.eddy.data.models.rest.CategoriesResponse;
+import com.eddy.data.rest.BooksApi;
+import com.eddy.data.rest.BooksApiService;
 
+import java.io.IOException;
 import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.Executors;
 
-import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
+import retrofit2.Call;
+import retrofit2.Response;
 import timber.log.Timber;
 
 public class CategoriesRepository {
 
-    private static final Object LOCK = new Object();
-    private static CategoriesRepository CATEGORIES_REPOSITORY;
-    private final CategoriesDataSource categoriesDataSource;
-    private final CategoryDao categoryDao;
+    private final MutableLiveData<List<Category>> categoriesLiveData;
+    private final MutableLiveData<Boolean> loadingInProgress;
+    private final MutableLiveData<Throwable> categoriesError;
 
-    public synchronized static CategoriesRepository getInstance(
-            CategoriesDataSource categoriesDataSource, CategoryDao categoryDao) {
-        if (CATEGORIES_REPOSITORY == null) {
-            synchronized (LOCK) {
-                CATEGORIES_REPOSITORY = new CategoriesRepository(categoriesDataSource,
-                        categoryDao);
-            }
-        }
+    public CategoriesRepository() {
+        categoriesError = new MutableLiveData<>();
+        loadingInProgress = new MutableLiveData<>();
+        categoriesLiveData = new MutableLiveData<>();
 
-        return CATEGORIES_REPOSITORY;
+        fetchCategories();
     }
 
-    private CategoriesRepository(CategoriesDataSource categoriesDataSource,
-                                 CategoryDao categoryDao) {
-        this.categoriesDataSource = categoriesDataSource;
-        this.categoryDao = categoryDao;
+    public MutableLiveData<List<Category>> getCategoriesLiveData() {
+        return categoriesLiveData;
+    }
 
-        LiveData<List<Category>> categoriesLiveData = categoriesDataSource.
-                getFetchedCategories();
+    public MutableLiveData<Boolean> getLoadingInProgress() {
+        return loadingInProgress;
+    }
 
-        // If syncing in the background, no need to observe data changes
+    public MutableLiveData<Throwable> getCategoriesError() {
+        return categoriesError;
+    }
 
-        categoriesLiveData.observeForever((categories) -> {
-            Timber.d("Categories from API: %s", categories.toString());
-            Executors.newFixedThreadPool(1).execute(() ->
-                    categoryDao.addCategories(categories));
+    public void fetchCategories() {
+        setLoadingInProgress(true);
+
+        Executors.newSingleThreadExecutor().execute(() -> {
+            BooksApiService booksApiService = BooksApi.getInstance();
+            Call<CategoriesResponse> listNameResponseCall = booksApiService.categories();
+
+            try {
+                Response<CategoriesResponse> response = listNameResponseCall.execute();
+                CategoriesResponse categoriesResponse = response.body();
+                if (response.errorBody() != null) {
+                    Timber.e("Error Response: %s", response.errorBody().string());
+                    categoriesError.postValue(
+                            new CategoriesSyncThrowable());
+                }
+                List<Category> categories = Objects.requireNonNull(categoriesResponse)
+                        .getCategories();
+                categoriesLiveData.postValue(categories);
+                setLoadingInProgress(false);
+            } catch (IOException e) {
+                Timber.e(e);
+                categoriesError.postValue(new CategoriesSyncThrowable());
+                setLoadingInProgress(false);
+            }
         });
     }
 
-    private boolean fetchNeeded() {
-        return categoryDao.countCategories() <= 0;
-    }
-
-    public LiveData<List<Category>> getCategories() {
-        Executors.newFixedThreadPool(1).execute(() -> {
-            if (fetchNeeded()) {
-                Timber.d("Fetching data afresh");
-                syncCategories();
-            } else {
-                categoriesDataSource.setSyncInProgress(false);
-            }
-        });
-
-        return categoryDao.getCategories();
-    }
-
-    public LiveData<Boolean> getSyncInProgressLiveData() {
-        return categoriesDataSource.getSyncInProgress();
-    }
-
-    public LiveData<Throwable> getCategoriesErrorLiveData() {
-        return categoriesDataSource.getCategoriesSyncError();
-    }
-
-    public void syncCategories() {
-        categoriesDataSource.syncCategories();
+    private void setLoadingInProgress(boolean inProgress) {
+        loadingInProgress.postValue(inProgress);
     }
 }

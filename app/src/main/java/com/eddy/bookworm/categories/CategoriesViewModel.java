@@ -2,7 +2,6 @@ package com.eddy.bookworm.categories;
 
 import android.app.Application;
 
-import com.eddy.data.InjectorUtils;
 import com.eddy.data.models.entities.Category;
 import com.eddy.data.repository.CategoriesRepository;
 
@@ -24,12 +23,13 @@ public class CategoriesViewModel extends AndroidViewModel {
     public CategoriesViewModel(@NonNull Application application) {
         super(application);
 
-        categoriesRepository = InjectorUtils
-                .getCategoriesRepository(getApplication());
+        categoriesRepository = new CategoriesRepository();
 
-        categoriesLiveData = categoriesRepository.getCategories();
-        loadingLiveData = categoriesRepository.getSyncInProgressLiveData();
-        errorLiveData = categoriesRepository.getCategoriesErrorLiveData();
+        categoriesLiveData = categoriesRepository.getCategoriesLiveData();
+        loadingLiveData = categoriesRepository.getLoadingInProgress();
+        errorLiveData = categoriesRepository.getCategoriesError();
+
+        refreshCategories();
     }
 
     LiveData<Throwable> getErrorLiveData() {
@@ -45,6 +45,6 @@ public class CategoriesViewModel extends AndroidViewModel {
     }
 
     void refreshCategories() {
-        categoriesRepository.syncCategories();
+        categoriesRepository.fetchCategories();
     }
 }

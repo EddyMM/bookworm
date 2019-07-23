@@ -1,106 +1,84 @@
 package com.eddy.data.repository;
 
-import com.eddy.data.datasources.BooksListDataSource;
-import com.eddy.data.dao.BookCategoryDao;
-import com.eddy.data.dao.BookDao;
-import com.eddy.data.models.BookWithBuyLinks;
-import com.eddy.data.models.CategoryWithBooks;
+import com.eddy.data.errors.BooksListSyncThrowable;
 import com.eddy.data.models.entities.Book;
-import com.eddy.data.models.entities.BookCategory;
 import com.eddy.data.models.entities.Category;
+import com.eddy.data.models.rest.BooksResponse;
+import com.eddy.data.models.rest.BooksResults;
+import com.eddy.data.rest.BooksApi;
 
+import java.io.IOException;
 import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.Executors;
 
 import androidx.lifecycle.LiveData;
-import androidx.lifecycle.Observer;
+import androidx.lifecycle.MutableLiveData;
+import retrofit2.Call;
+import retrofit2.Response;
+import timber.log.Timber;
 
 public class BooksListRepository {
 
-    private static BooksListRepository BOOKS_LIST_REPOSITORY;
-    private static final Object LOCK = new Object();
-    private BooksListDataSource booksListDataSource;
-    private BookDao bookDao;
+    private MutableLiveData<List<Book>> booksLiveData;
+    private MutableLiveData<Boolean> loadingInProgressLiveData;
+    private MutableLiveData<Throwable> booksErrorLiveData;
+    private Category category;
 
-    public BooksListRepository(BooksListDataSource booksListDataSource, BookDao bookDao,
-                               BookCategoryDao bookCategoryDao) {
-        this.booksListDataSource = booksListDataSource;
-        this.bookDao = bookDao;
+    public BooksListRepository(Category category) {
+        this.category = category;
 
-        Observer<CategoryWithBooks> syncObserver = categoryWithBooks -> Executors.newSingleThreadExecutor()
-                .execute(() -> {
-                    List<Book> books = categoryWithBooks.getBooks();
-                    String categoryCode = categoryWithBooks.getCategory().getCategoryCode();
+        booksLiveData = new MutableLiveData<>();
+        loadingInProgressLiveData = new MutableLiveData<>();
+        booksErrorLiveData = new MutableLiveData<>();
 
-                    // Remove old list books under this category
-                    bookCategoryDao.deleteBooksByCategory(categoryCode);
-
-                    // Add the fresh list of books
-                    long[] bookIds = bookDao.addBooks(books);
-
-                    for (int n = 0; n < bookIds.length; n++) {
-                        BookCategory bookCategory = new BookCategory(bookIds[n], categoryCode);
-                        bookCategoryDao.addBookCategory(bookCategory);
-
-                        bookDao.addBuyLinks(bookIds[n], books.get(n).getBuyLinks());
-                    }
-                });
-
-        booksListDataSource.getBooksLiveData()
-            .observeForever(syncObserver);
+        fetchBooks();
     }
 
-    public synchronized static BooksListRepository getInstance(
-            BooksListDataSource booksListDataSource, BookDao bookWithBuyLinksDao,
-            BookCategoryDao bookCategoryDao) {
-        if (BOOKS_LIST_REPOSITORY == null) {
-            synchronized (LOCK) {
-                BOOKS_LIST_REPOSITORY = new BooksListRepository(
-                        booksListDataSource, bookWithBuyLinksDao, bookCategoryDao);
-            }
-        }
-
-        return BOOKS_LIST_REPOSITORY;
+    public LiveData<List<Book>> getBooksLiveData() {
+        return booksLiveData;
     }
 
-    public LiveData<Boolean> getSyncInProgress() {
-        return booksListDataSource.getSyncInProgressLiveData();
+    public LiveData<Boolean> getLoadingInProgressLiveData() {
+        return loadingInProgressLiveData;
     }
 
-    private boolean fetchNeeded(Category category) {
-        return (bookDao.countBooksByCategoryCode(category.getCategoryCode()) <= 0);
+    public LiveData<Throwable> getBooksErrorLiveData() {
+        return booksErrorLiveData;
     }
 
-    public LiveData<List<BookWithBuyLinks>> getBooksListLiveData(Category category) {
-        Executors.newSingleThreadExecutor()
-            .execute(() -> {
-                if (fetchNeeded(category)) {
-                    initializeData(category);
-                } else {
-                    booksListDataSource.setSyncInProgressLiveData(false);
+    public void fetchBooks() {
+        setLoadingInProgressLiveData(true);
+
+        Executors.newSingleThreadExecutor().execute(() -> {
+            Call<BooksResponse> booksResponseCall = BooksApi.getInstance()
+                    .listBooks(category.getCategoryCode());
+
+            try {
+                Response<BooksResponse> response = booksResponseCall.execute();
+                BooksResponse booksResponse = response.body();
+                if (!response.isSuccessful()) {
+                    booksErrorLiveData.postValue(new BooksListSyncThrowable());
                 }
+                BooksResults booksResults = Objects.requireNonNull(booksResponse)
+                        .getBooksResults();
+                List<Book> books =  booksResults.getBooks();
+
+                booksLiveData.postValue(books);
+            } catch (IOException e) {
+                Timber.e(e);
+                booksErrorLiveData.postValue(new BooksListSyncThrowable());
+            } finally {
+                setLoadingInProgressLiveData(false);
+            }
         });
-
-        return bookDao.getBooksByCategoryCode(category.getCategoryCode());
     }
 
-    private void initializeData(Category category) {
-        syncBooks(category);
+    private void setLoadingInProgressLiveData(boolean inProgress) {
+        loadingInProgressLiveData.postValue(inProgress);
     }
 
-    public void updateBook(Book book) {
-        Executors.newSingleThreadExecutor().execute(() -> bookDao.updateBook(book));
-    }
-
-    public LiveData<List<BookWithBuyLinks>> getBookmarkedBooks() {
-        return bookDao.getBookmarkedBooks();
-    }
-
-    public void syncBooks(Category category) {
-        booksListDataSource.startSyncingBooks(category);
-    }
-
-    public LiveData<Throwable> getBooksListError() {
-        return booksListDataSource.getBooksListSyncError();
+    public void refresh() {
+        fetchBooks();
     }
 }

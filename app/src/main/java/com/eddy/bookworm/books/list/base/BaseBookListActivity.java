@@ -10,7 +10,7 @@ import com.eddy.bookworm.R;
 import com.eddy.bookworm.base.customui.BookwormSwipeRefreshLayout;
 import com.eddy.bookworm.books.detail.BookDetailActivity;
 import com.eddy.bookworm.books.list.BooksListAdapter;
-import com.eddy.data.models.BookWithBuyLinks;
+import com.eddy.data.models.entities.Book;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -65,9 +65,10 @@ public abstract class BaseBookListActivity extends AppCompatActivity implements
         swipeRefreshBookListLayout.setRefreshing(true);
     }
 
-    public void onClick(BookWithBuyLinks bookWithBuyLinks, ImageView imageView) {
+    @Override
+    public void onClick(Book book, ImageView imageView) {
         Intent intent = new Intent(this, BookDetailActivity.class);
-        intent.putExtra(BookDetailActivity.BOOK_WITH_BUY_LINKS_DETAIL_EXTRA, bookWithBuyLinks);
+        intent.putExtra(BookDetailActivity.BOOK_DETAIL_EXTRA, book);
 
         if (imageView != null) {
             Bundle bundle = getBookTransition(imageView);

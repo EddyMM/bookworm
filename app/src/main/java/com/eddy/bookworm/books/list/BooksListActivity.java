@@ -13,6 +13,7 @@ import com.google.android.material.snackbar.Snackbar;
 import androidx.annotation.Nullable;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+
 import timber.log.Timber;
 
 public class BooksListActivity extends BaseBookListActivity
@@ -47,9 +48,9 @@ public class BooksListActivity extends BaseBookListActivity
                         BooksListViewModel.class);
 
         // List of books
-        booksListViewModel.getBooksLiveData().observe(this, (bookWithBuyLinks -> {
-            if (bookWithBuyLinks != null) {
-                booksListAdapter.setBooks(bookWithBuyLinks);
+        booksListViewModel.getBooksLiveData().observe(this, (books -> {
+            if (books != null) {
+                booksListAdapter.setBooks(books);
             } else {
                 Timber.d("No books fetched");
             }

@@ -2,8 +2,7 @@ package com.eddy.bookworm.books.list.viewmodel;
 
 import android.app.Application;
 
-import com.eddy.data.InjectorUtils;
-import com.eddy.data.models.BookWithBuyLinks;
+import com.eddy.data.models.entities.Book;
 import com.eddy.data.models.entities.Category;
 import com.eddy.data.repository.BooksListRepository;
 
@@ -16,33 +15,29 @@ import androidx.lifecycle.LiveData;
 public class BooksListViewModel extends AndroidViewModel {
 
     private final BooksListRepository booksListRepository;
-    private final Category category;
 
-    private LiveData<List<BookWithBuyLinks>> booksLiveData;
+    private LiveData<List<Book>> booksLiveData;
 
     BooksListViewModel(@NonNull Application application, Category category) {
         super(application);
 
-        this.category = category;
-
-        booksListRepository = InjectorUtils.getBooksListRepository(getApplication());
-
-        booksLiveData = booksListRepository.getBooksListLiveData(category);
+        booksListRepository = new BooksListRepository(category);
+        booksLiveData = booksListRepository.getBooksLiveData();
     }
 
-    public LiveData<List<BookWithBuyLinks>> getBooksLiveData() {
+    public LiveData<List<Book>> getBooksLiveData() {
         return booksLiveData;
     }
 
     public LiveData<Boolean> getBooksSyncInProgress() {
-        return booksListRepository.getSyncInProgress();
+        return booksListRepository.getLoadingInProgressLiveData();
     }
 
     public void refreshBooks() {
-        booksListRepository.syncBooks(category);
+        booksListRepository.refresh();
     }
 
     public LiveData<Throwable> getErrorLiveData() {
-        return booksListRepository.getBooksListError();
+        return booksListRepository.getBooksErrorLiveData();
     }
 }

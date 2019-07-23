@@ -10,10 +10,9 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.eddy.bookworm.R;
-import com.eddy.data.InjectorUtils;
-import com.eddy.data.models.BookWithBuyLinks;
+import com.eddy.bookworm.books.detail.viewmodel.BookDetailViewModel;
+import com.eddy.bookworm.books.detail.viewmodel.BookDetailViewModelFactory;
 import com.eddy.data.models.entities.Book;
-import com.eddy.data.repository.BooksListRepository;
 import com.google.android.material.appbar.CollapsingToolbarLayout;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.squareup.picasso.Picasso;
@@ -23,14 +22,16 @@ import java.util.Objects;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.cardview.widget.CardView;
+import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import timber.log.Timber;
 
 public class BookDetailActivity extends AppCompatActivity {
 
-    public static final String BOOK_WITH_BUY_LINKS_DETAIL_EXTRA = "BOOK_WITH_BUY_LINKS_DETAIL_EXTRA";
+    public static final String BOOK_DETAIL_EXTRA = "BOOK_DETAIL_EXTRA";
 
     @BindView(R.id.book_detail_photo_iv)
     ImageView bookImageView;
@@ -70,7 +71,10 @@ public class BookDetailActivity extends AppCompatActivity {
 
     @BindView(R.id.fab)
     FloatingActionButton fab;
-    private BookWithBuyLinks bookWithBuyLinks;
+
+    private Book book;
+    private BookDetailViewModel bookDetailViewModel;
+    private boolean isBookmarked;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -82,35 +86,49 @@ public class BookDetailActivity extends AppCompatActivity {
 
         fab.setOnClickListener((view) -> {
             // Toggle bookmark tag
-            Book book = bookWithBuyLinks.getBook();
-            book.setBookmarked(!book.isBookmarked());
-
-            updateBook(book);
-            showBookmarkState();
+            if (isBookmarked) {
+                removeFromBookmarks();
+            } else {
+                addToBookmarks();
+            }
         });
 
         Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
 
         Intent intent = getIntent();
         if (intent != null) {
-            bookWithBuyLinks = intent.getParcelableExtra(BOOK_WITH_BUY_LINKS_DETAIL_EXTRA);
+            book = intent.getParcelableExtra(BOOK_DETAIL_EXTRA);
 
-            updateUI(bookWithBuyLinks);
+            Timber.d("BOOK: %s", book);
+
+            updateUI();
+
+            setupBookDetailViewModel();
         }
     }
 
-    private void updateBook(Book book) {
-        BooksListRepository booksListRepository = InjectorUtils
-                .getBooksListRepository(this);
-        booksListRepository.updateBook(book);
+    private void setupBookDetailViewModel() {
+        bookDetailViewModel = ViewModelProviders.of(
+                this, new BookDetailViewModelFactory(this, book))
+                .get(BookDetailViewModel.class);
+
+        bookDetailViewModel.getBookmarkState().observe(
+                this, (isBookmarked) -> {
+                    showBookmarkState(isBookmarked);
+                    this.isBookmarked = isBookmarked;
+                });
     }
 
-    private void updateUI(BookWithBuyLinks bookWithBuyLinks) {
-        if (bookWithBuyLinks != null) {
-            showBookmarkState();
+    private void addToBookmarks() {
+        bookDetailViewModel.addBookmark(book);
+    }
 
-            Book book = bookWithBuyLinks.getBook();
+    private void removeFromBookmarks() {
+        bookDetailViewModel.removeBookmark(book);
+    }
 
+    private void updateUI() {
+        if (book != null) {
             Picasso.get()
                     .load(book.getBookImageUrl())
                     .into(bookImageView);
@@ -124,7 +142,7 @@ public class BookDetailActivity extends AppCompatActivity {
             weeksOnListTextView.setText(String.valueOf(book.getWeeksOnList()));
 
             BuyingLinksAdapter buyingLinksAdapter = new BuyingLinksAdapter(
-                    this, bookWithBuyLinks.getBuyLinks());
+                    this, book.getBuyLinks());
             buyingLinksRecyclerView.setLayoutManager(new LinearLayoutManager(this));
             buyingLinksRecyclerView.setAdapter(buyingLinksAdapter);
 
@@ -140,9 +158,8 @@ public class BookDetailActivity extends AppCompatActivity {
         }
     }
 
-    private void showBookmarkState() {
-        Book book = bookWithBuyLinks.getBook();
-        if (book.isBookmarked()) {
+    private void showBookmarkState(boolean isBookmarked) {
+        if (isBookmarked) {
             fab.setImageResource(R.drawable.ic_bookmark_black_24dp);
         } else {
             fab.setImageResource(R.drawable.ic_bookmark_border_black_24dp);

@@ -76,8 +76,8 @@ public class CategoriesActivity extends AppCompatActivity implements
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.bookmark_menu_item:
-                Intent booksintent = new Intent(this, BookmarksActivity.class);
-                startActivity(booksintent);
+                Intent booksIntent = new Intent(this, BookmarksActivity.class);
+                startActivity(booksIntent);
                 return true;
             case R.id.about_menu_item:
                 Intent aboutIntent = new Intent(this, AboutActivity.class);

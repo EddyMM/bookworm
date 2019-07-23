@@ -7,6 +7,7 @@ import com.google.gson.annotations.SerializedName;
 
 import java.util.Objects;
 
+import androidx.annotation.NonNull;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.ForeignKey;
@@ -14,47 +15,70 @@ import androidx.room.Index;
 import androidx.room.PrimaryKey;
 
 @Entity(tableName = "buy_link",
-        indices = {@Index(value = "book_id")},
+        indices = {@Index(value = {"book_title", "book_author"})},
         foreignKeys = {
-            @ForeignKey(entity = Book.class,
-                    parentColumns = "id",
-                    childColumns = "book_id",
-                    onDelete = ForeignKey.CASCADE)
+                @ForeignKey(entity = Book.class,
+                        parentColumns = {"title", "author"},
+                        childColumns = {"book_title", "book_author"},
+                        onDelete = ForeignKey.CASCADE)
         })
 public class BuyLink implements Parcelable {
-
-    @PrimaryKey(autoGenerate = true)
-    long id;
 
     @SerializedName("name")
     String name;
 
+    @PrimaryKey
     @SerializedName("url")
+    @NonNull
     String url;
 
-    @ColumnInfo(name = "book_id")
-    long bookId;
+    @ColumnInfo(name = "book_title")
+    String bookTitle;
+
+    @ColumnInfo(name = "book_author")
+    String bookAuthor;
 
     public BuyLink() {}
 
+
     protected BuyLink(Parcel in) {
-        id = in.readLong();
         name = in.readString();
         url = in.readString();
-        bookId = in.readLong();
+        bookTitle = in.readString();
+        bookAuthor = in.readString();
     }
 
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeLong(id);
-        dest.writeString(name);
-        dest.writeString(url);
-        dest.writeLong(bookId);
+    public String getName() {
+        return name;
     }
 
-    @Override
-    public int describeContents() {
-        return 0;
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    @NonNull
+    public String getUrl() {
+        return url;
+    }
+
+    public void setUrl(@NonNull String url) {
+        this.url = url;
+    }
+
+    public String getBookTitle() {
+        return bookTitle;
+    }
+
+    public void setBookTitle(String bookTitle) {
+        this.bookTitle = bookTitle;
+    }
+
+    public String getBookAuthor() {
+        return bookAuthor;
+    }
+
+    public void setBookAuthor(String bookAuthor) {
+        this.bookAuthor = bookAuthor;
     }
 
     public static final Creator<BuyLink> CREATOR = new Creator<BuyLink>() {
@@ -69,46 +93,17 @@ public class BuyLink implements Parcelable {
         }
     };
 
-    public long getId() {
-        return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getUrl() {
-        return url;
-    }
-
-    public void setUrl(String url) {
-        this.url = url;
-    }
-
-    public long getBookId() {
-        return bookId;
-    }
-
-    public void setBookId(long bookId) {
-        this.bookId = bookId;
+    @Override
+    public int describeContents() {
+        return 0;
     }
 
     @Override
-    public String toString() {
-        return "BuyLink{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", url='" + url + '\'' +
-                ", bookId='" + bookId + '\'' +
-                '}';
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(name);
+        dest.writeString(url);
+        dest.writeString(bookTitle);
+        dest.writeString(bookAuthor);
     }
 
     @Override
@@ -116,15 +111,25 @@ public class BuyLink implements Parcelable {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         BuyLink buyLink = (BuyLink) o;
-        return Objects.equals(id, buyLink.id) &&
-                Objects.equals(name, buyLink.name) &&
+        return Objects.equals(name, buyLink.name) &&
                 Objects.equals(url, buyLink.url) &&
-                Objects.equals(bookId, buyLink.bookId);
+                Objects.equals(bookTitle, buyLink.bookTitle) &&
+                Objects.equals(bookAuthor, buyLink.bookAuthor);
     }
 
     @Override
     public int hashCode() {
 
-        return Objects.hash(id, name, url, bookId);
+        return Objects.hash(name, url, bookTitle, bookAuthor);
+    }
+
+    @Override
+    public String toString() {
+        return "BuyLink{" +
+                "name='" + name + '\'' +
+                ", url='" + url + '\'' +
+                ", bookTitle='" + bookTitle + '\'' +
+                ", bookAuthor='" + bookAuthor + '\'' +
+                '}';
     }
 }

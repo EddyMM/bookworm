@@ -5,13 +5,10 @@ import android.os.Bundle;
 import com.eddy.bookworm.R;
 import com.eddy.bookworm.books.list.base.BaseBookListActivity;
 import com.eddy.bookworm.books.list.viewmodel.BookmarksViewModel;
-import com.eddy.data.models.BookWithBuyLinks;
 
-import java.util.List;
-
-import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+
 import timber.log.Timber;
 
 public class BookmarksActivity  extends BaseBookListActivity
@@ -32,27 +29,19 @@ public class BookmarksActivity  extends BaseBookListActivity
         bookmarksViewModel = ViewModelProviders.of(this)
                 .get(BookmarksViewModel.class);
 
-        refresh(bookmarksViewModel.getBookmarkedBooksLiveData());
-    }
-
-    private void refresh(LiveData<List<BookWithBuyLinks>> bookLiveData) {
-        showBooksList();
-        showProgressBar();
-
-        bookLiveData.observe(this, bookWithBuyLinks -> {
-            if (bookWithBuyLinks != null) {
-                booksListAdapter.setBooks(bookWithBuyLinks);
-                Timber.d("Books from DB: %s", bookWithBuyLinks);
-            } else {
-                Timber.d("No list names fetched");
-            }
-
-            hideProgressBar();
-        });
+        bookmarksViewModel.getBookmarkedBooksLiveData()
+                .observe(this, (books) -> {
+                    if (books != null) {
+                        booksListAdapter.setBooks(books);
+                        Timber.d("Books from DB: %s", books);
+                    } else {
+                        Timber.d("No list names fetched");
+                    }
+                });
     }
 
     @Override
     public void onRefresh() {
-        refresh(bookmarksViewModel.getBookmarkedBooksLiveData());
+        bookmarksViewModel.refresh();
     }
 }
