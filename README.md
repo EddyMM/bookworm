@@ -2,7 +2,7 @@
 
 An Android Application to show details on the best-selling books based on the New York Times ratings.
 
-Get the latest APK release [here](https://github.com/EddyMM/bookworm/releases)
+Get it on Google Play using this [link](https://play.google.com/store/apps/details?id=com.eddy.bookworm)
 
 
 <img src="github_assets/imgs/intro.jpg" alt="intro" width=250 height=450 /> <img src="github_assets/imgs/categories-screen.jpg" alt="categories" width=250 height=450 /> <img src="github_assets/imgs/book-list.jpg" alt="book list" width=250 height=450 /> <img src="github_assets/imgs/book-detail.jpg" alt="book detail" width=250 height=450 />
