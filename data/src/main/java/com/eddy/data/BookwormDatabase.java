@@ -11,7 +11,7 @@ import androidx.room.Room;
 import androidx.room.RoomDatabase;
 
 @Database(entities = {Book.class, BuyLink.class},
-        version = 1)
+        version = 2)
 public abstract class BookwormDatabase extends RoomDatabase {
 
     private static final Object LOCK = new Object();
@@ -22,7 +22,9 @@ public abstract class BookwormDatabase extends RoomDatabase {
         if (BOOKWORM_DATABASE == null) {
             synchronized (LOCK) {
                 BOOKWORM_DATABASE = Room.databaseBuilder(
-                        context, BookwormDatabase.class, DB_NAME).build();
+                        context, BookwormDatabase.class, DB_NAME)
+                        .addMigrations(Migrations.MIGRATION_1_2)
+                        .build();
             }
         }
 
