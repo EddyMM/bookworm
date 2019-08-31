@@ -12,7 +12,10 @@ jobs:
           key: jars-{{ checksum "build.gradle" }}-{{ checksum  "app/build.gradle" }}
       - run:
           name: add_production_google_service
-          command: echo $PRODUCTION_GOOGLE_SERVICES | base64 -di > app/google-services.json
+          command: echo $PRODUCTION_GOOGLE_SERVICES | base64 -di > app/src/main/google-services.json
+      - run:
+          name: add_debug_google_service
+          command: echo $DEBUG_GOOGLE_SERVICES | base64 -di > app/src/debug/google-services.json
       - run:
           name: Download Dependencies
           command: ./gradlew androidDependencies
